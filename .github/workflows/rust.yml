@@ -17,14 +17,17 @@ jobs:
         uses: hecrj/setup-rust-action@v1.0.2
         with:
           rust-version: ${{ matrix.rust }}
-    
+
       - uses: actions/checkout@v1
+
+      - name: Install tools
+        run: rustup component add clippy
 
       - name: Lint
         run: cargo clippy --all-features --all-targets -- -D warnings
 
-      - name: Build on ${{matrix.os }}
+      - name: Build on ${{matrix.os }} for ${{ matrix.rust }}
         run: cargo build --verbose
 
-      - name: Run tests on ${{ matrix.os }}
+      - name: Run tests on ${{ matrix.os }} for ${{ matrix.rust }}
         run: cargo test --verbose
