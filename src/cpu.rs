@@ -14,31 +14,27 @@ pub enum Register {
     L,
 
     // Computed 16bit
-    AF,
+    #[allow(dead_code)]
+    AF, // FIXME: Remove the decoration
     BC,
     DE,
     HL,
 
     // 16bit
     SP,
-    PC,
+    #[allow(dead_code)]
+    PC, // FIXME: Remove the decoration
 }
 
 bitflags! {
     /// Bitflags for the CPU state. The Gameboy's Z80 doesn't use the lower four flags,
     /// so they should always be `0`.
     pub struct Flags: u8 {
-        const CLEAR = 0b00000000;
-        const CARRY = 0b00010000;
-        const HALF_CARRY = 0b00100000;
-        const SUBTRACTION = 0b0100000;
-        const ZERO = 0b10000000;
-    }
-}
-
-impl Flags {
-    fn reset(&mut self) {
-        self.bits = 0;
+        const CLEAR = 0b0000_0000;
+        const CARRY = 0b0001_0000;
+        const HALF_CARRY = 0b0010_0000;
+        const SUBTRACTION = 0b010_0000;
+        const ZERO = 0b1000_0000;
     }
 }
 
@@ -97,7 +93,7 @@ impl CPU {
         }
     }
 
-    pub fn get(&self, register: &Register) -> Result<u8, String> {
+    pub fn get(&self, register: Register) -> Result<u8, String> {
         let selected = match register {
             Register::A => self.a,
             Register::B => self.b,
@@ -112,7 +108,7 @@ impl CPU {
         Ok(selected)
     }
 
-    pub fn set<F>(&mut self, register: &Register, f: F) -> Result<(), String>
+    pub fn set<F>(&mut self, register: Register, f: F) -> Result<(), String>
     where
         F: FnOnce(&u8) -> u8,
     {
@@ -132,6 +128,8 @@ impl CPU {
         Ok(())
     }
 
+    // FIXME: Remove this annotation after implementing RET and friends
+    #[allow(dead_code)]
     pub fn has_flag(&self, flag: Flags) -> bool {
         self.f & flag == flag
     }
@@ -142,10 +140,6 @@ impl CPU {
 
     pub fn clear_flag(&mut self, flag: Flags) {
         self.f -= flag;
-    }
-
-    pub fn reset_flags(&mut self) {
-        self.f.reset()
     }
 
     pub fn set_clock<F>(&mut self, f: F)
