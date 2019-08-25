@@ -26,8 +26,8 @@ jobs:
       - name: Lint
         run: cargo clippy --all-features --all-targets -- -D warnings
 
-      - name: Build on ${{matrix.os }} for ${{ matrix.rust }}
+      - name: Build
         run: cargo build --verbose
 
-      - name: Run tests on ${{ matrix.os }} for ${{ matrix.rust }}
+      - name: Test
         run: cargo test --verbose
