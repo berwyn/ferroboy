@@ -5,11 +5,26 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        rust: [1.35.0, 1.36.0, stable]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - name: Set up a Rust toolchain
+        uses: hecrj/setup-rust-action@v1.0.2
+        with:
+          rust-version: ${{ matrix.rust }}
+    
+      - uses: actions/checkout@v1
+
+      - name: Lint
+        run: cargo clippy --all-features --all-targets -- -D warnings
+
+      - name: Build on ${{matrix.os }}
+        run: cargo build --verbose
+
+      - name: Run tests on ${{ matrix.os }}
+        run: cargo test --verbose
