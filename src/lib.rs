@@ -1,3 +1,5 @@
+#![deny(clippy::all)]
+
 use std::sync::Mutex;
 
 use lazy_static::lazy_static;
@@ -31,7 +33,7 @@ extern "C" fn retro_run() {
 
 fn tick(state: &mut State) -> Result<(), String> {
     let opcode = 0x00;
-    let ops: Vec<Box<Operation>> = match opcode {
+    let ops: Vec<Box<dyn Operation>> = match opcode {
         0x00 => vec![Box::new(IncrementClockOperation(4))],
         0x03 => vec![
             Box::new(Inc16Operation(Register::BC)),
@@ -74,7 +76,7 @@ fn tick(state: &mut State) -> Result<(), String> {
             Box::new(IncrementClockOperation(8)),
         ],
         0x80 => vec![
-            Box::new(Add8Operation(Register::A, state.cpu.get(&Register::B)?)),
+            Box::new(Add8Operation(Register::A, state.cpu.get(Register::B)?)),
             Box::new(IncrementClockOperation(4)),
         ],
         _ => return Err("Bad opcode".into()),
