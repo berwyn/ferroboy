@@ -13,6 +13,9 @@ pub use inc16::*;
 mod increment_clock;
 pub use increment_clock::*;
 
+mod load8;
+pub use load8::*;
+
 mod load16;
 pub use load16::*;
 

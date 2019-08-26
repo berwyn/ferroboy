@@ -8,7 +8,7 @@ use crate::cpu::Register;
 use crate::helpers::word_to_u16;
 use crate::operations::{
     Add8Operation, Inc16Operation, Inc8Operation, IncrementClockOperation,
-    Load16ImmediateOperation, Operation,
+    Load16ImmediateOperation, Load8ImmediateOperation, Operation,
 };
 use crate::state::State;
 
@@ -53,9 +53,17 @@ fn tick(state: &mut State) -> Result<(), String> {
             Box::new(Inc8Operation(Register::B)),
             Box::new(IncrementClockOperation(4)),
         ],
+        0x06 => vec![
+            Box::new(Load8ImmediateOperation(Register::B, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x0C => vec![
             Box::new(Inc8Operation(Register::C)),
             Box::new(IncrementClockOperation(4)),
+        ],
+        0x0E => vec![
+            Box::new(Load8ImmediateOperation(Register::C, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
         ],
         0x11 => vec![
             Box::new(Load16ImmediateOperation(
@@ -72,9 +80,17 @@ fn tick(state: &mut State) -> Result<(), String> {
             Box::new(Inc8Operation(Register::D)),
             Box::new(IncrementClockOperation(4)),
         ],
+        0x16 => vec![
+            Box::new(Load8ImmediateOperation(Register::D, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x1C => vec![
             Box::new(Inc8Operation(Register::E)),
             Box::new(IncrementClockOperation(4)),
+        ],
+        0x1E => vec![
+            Box::new(Load8ImmediateOperation(Register::E, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
         ],
         0x21 => vec![
             Box::new(Load16ImmediateOperation(
@@ -91,9 +107,17 @@ fn tick(state: &mut State) -> Result<(), String> {
             Box::new(Inc8Operation(Register::H)),
             Box::new(IncrementClockOperation(4)),
         ],
+        0x26 => vec![
+            Box::new(Load8ImmediateOperation(Register::H, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x2C => vec![
             Box::new(Inc8Operation(Register::L)),
             Box::new(IncrementClockOperation(4)),
+        ],
+        0x2E => vec![
+            Box::new(Load8ImmediateOperation(Register::L, state.read_byte()?)),
+            Box::new(IncrementClockOperation(8)),
         ],
         0x31 => vec![
             Box::new(Load16ImmediateOperation(
@@ -104,6 +128,10 @@ fn tick(state: &mut State) -> Result<(), String> {
         ],
         0x33 => vec![
             Box::new(Inc16Operation(Register::SP)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x3E => vec![
+            Box::new(Load8ImmediateOperation(Register::A, state.read_byte()?)),
             Box::new(IncrementClockOperation(8)),
         ],
         0x80 => vec![
