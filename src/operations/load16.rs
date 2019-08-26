@@ -1,4 +1,4 @@
-use crate::cpu::{Register, CPU};
+use crate::cpu::Register;
 use crate::operations::Operation;
 use crate::state::State;
 
@@ -6,7 +6,7 @@ pub struct Load16ImmediateOperation(pub Register, pub u16);
 
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        let (high, low) = CPU::reg16_to_reg8(self.0)?;
+        let (high, low) = self.0.to_8bit_pair()?;
 
         let high_value = (self.1 >> 8) as u8;
         let low_value = (self.1 & 0xFF) as u8;

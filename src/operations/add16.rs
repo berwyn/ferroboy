@@ -1,4 +1,4 @@
-use crate::cpu::{Flags, Register, CPU};
+use crate::cpu::{Flags, Register};
 use crate::operations::Operation;
 use crate::state::State;
 
@@ -7,7 +7,7 @@ pub struct Add16Operation(Register, u16);
 
 impl Operation for Add16Operation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        let (high, low) = CPU::reg16_to_reg8(self.0)?;
+        let (high, low) = self.0.to_8bit_pair()?;
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
 

@@ -1,4 +1,4 @@
-use crate::cpu::{Flags, Register, CPU};
+use crate::cpu::{Flags, Register};
 use crate::operations::Operation;
 use crate::state::State;
 
@@ -11,7 +11,7 @@ impl Operation for Inc16Operation {
         match self.0 {
             Register::SP => state.cpu.set16(self.0, |old| old + 1).map(|_| ())?,
             _ => {
-                let (high, low) = CPU::reg16_to_reg8(self.0)?;
+                let (high, low) = self.0.to_8bit_pair()?;
 
                 let mut lower = u16::from(state.cpu.get(low)?);
                 lower += 1;

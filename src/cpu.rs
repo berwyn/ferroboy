@@ -25,6 +25,18 @@ pub enum Register {
     PC,
 }
 
+impl Register {
+    pub fn to_8bit_pair(self) -> Result<(Register, Register), String> {
+        match self {
+            Register::AF => Ok((Register::A, Register::F)),
+            Register::BC => Ok((Register::B, Register::C)),
+            Register::DE => Ok((Register::D, Register::E)),
+            Register::HL => Ok((Register::H, Register::L)),
+            _ => Err("Invalid 16bit register pair".into()),
+        }
+    }
+}
+
 bitflags! {
     /// Bitflags for the CPU state. The Gameboy's Z80 doesn't use the lower four flags,
     /// so they should always be `0`.
@@ -79,16 +91,6 @@ impl CPU {
 
             sp: 0,
             pc: 0,
-        }
-    }
-
-    pub fn reg16_to_reg8(register: Register) -> Result<(Register, Register), String> {
-        match register {
-            Register::AF => Ok((Register::A, Register::F)),
-            Register::BC => Ok((Register::B, Register::C)),
-            Register::DE => Ok((Register::D, Register::E)),
-            Register::HL => Ok((Register::H, Register::L)),
-            _ => Err("Invalid 16bit register pair".into()),
         }
     }
 
@@ -212,22 +214,22 @@ mod tests {
 
     #[test]
     fn it_converts_16bit_register_to_8bit_pairs() {
-        let (high, low) = CPU::reg16_to_reg8(Register::AF).unwrap();
+        let (high, low) = Register::AF.to_8bit_pair().unwrap();
 
         assert_eq!(Register::A, high);
         assert_eq!(Register::F, low);
 
-        let (high, low) = CPU::reg16_to_reg8(Register::BC).unwrap();
+        let (high, low) = Register::BC.to_8bit_pair().unwrap();
 
         assert_eq!(Register::B, high);
         assert_eq!(Register::C, low);
 
-        let (high, low) = CPU::reg16_to_reg8(Register::DE).unwrap();
+        let (high, low) = Register::DE.to_8bit_pair().unwrap();
 
         assert_eq!(Register::D, high);
         assert_eq!(Register::E, low);
 
-        let (high, low) = CPU::reg16_to_reg8(Register::HL).unwrap();
+        let (high, low) = Register::HL.to_8bit_pair().unwrap();
 
         assert_eq!(Register::H, high);
         assert_eq!(Register::L, low);
@@ -235,16 +237,16 @@ mod tests {
 
     #[test]
     fn it_prevents_invalid_16bit_register_conversions() {
-        assert!(CPU::reg16_to_reg8(Register::A).is_err());
-        assert!(CPU::reg16_to_reg8(Register::B).is_err());
-        assert!(CPU::reg16_to_reg8(Register::C).is_err());
-        assert!(CPU::reg16_to_reg8(Register::D).is_err());
-        assert!(CPU::reg16_to_reg8(Register::E).is_err());
-        assert!(CPU::reg16_to_reg8(Register::F).is_err());
-        assert!(CPU::reg16_to_reg8(Register::H).is_err());
-        assert!(CPU::reg16_to_reg8(Register::L).is_err());
+        assert!(Register::A.to_8bit_pair().is_err());
+        assert!(Register::B.to_8bit_pair().is_err());
+        assert!(Register::C.to_8bit_pair().is_err());
+        assert!(Register::D.to_8bit_pair().is_err());
+        assert!(Register::E.to_8bit_pair().is_err());
+        assert!(Register::F.to_8bit_pair().is_err());
+        assert!(Register::H.to_8bit_pair().is_err());
+        assert!(Register::L.to_8bit_pair().is_err());
 
-        assert!(CPU::reg16_to_reg8(Register::SP).is_err());
-        assert!(CPU::reg16_to_reg8(Register::PC).is_err());
+        assert!(Register::SP.to_8bit_pair().is_err());
+        assert!(Register::PC.to_8bit_pair().is_err());
     }
 }
