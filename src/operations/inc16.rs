@@ -9,13 +9,13 @@ pub struct Inc16Operation(pub Register);
 impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> Result<(), String> {
         match self.0 {
-            Register::SP => state.cpu.set(self.0, |old| old + 1)?,
+            Register::SP => state.cpu.set16(self.0, |old| old + 1).map(|_| ())?,
             _ => {
                 let (high, low) = CPU::reg16_to_reg8(self.0)?;
 
                 let mut lower = u16::from(state.cpu.get(low)?);
                 lower += 1;
-                state.cpu.set(low, |_| lower as u8)?;
+                state.cpu.set(low, |_| lower as u8).map(|_| ())?;
 
                 if lower / 0xFF > 0 {
                     state.cpu.set_flag(Flags::HALF_CARRY);
@@ -26,7 +26,7 @@ impl Operation for Inc16Operation {
                         state.cpu.set_flag(Flags::CARRY);
                     }
 
-                    state.cpu.set(high, |_| upper as u8)?;
+                    state.cpu.set(high, |_| upper as u8).map(|_| ())?;
                 }
             }
         };

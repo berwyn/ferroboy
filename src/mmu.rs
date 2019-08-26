@@ -2,10 +2,10 @@ use arrayvec::ArrayVec;
 
 #[derive(Debug)]
 pub struct MMU {
-    bios: ArrayVec<[u8; 256]>,
-    rom: ArrayVec<[u8; 16_384]>,
-    vram: ArrayVec<[u8; 8192]>,
-    wram: ArrayVec<[u8; 4096]>,
+    pub bios: ArrayVec<[u8; 256]>,
+    pub rom: ArrayVec<[u8; 16_384]>,
+    pub vram: ArrayVec<[u8; 8192]>,
+    pub wram: ArrayVec<[u8; 4096]>,
 }
 
 impl MMU {
@@ -16,5 +16,15 @@ impl MMU {
             vram: ArrayVec::new(),
             wram: ArrayVec::new(),
         }
+    }
+}
+
+#[cfg(test)]
+impl MMU {
+    pub fn mutate<F>(&mut self, mutator: F)
+    where
+        F: FnOnce(&mut MMU),
+    {
+        mutator(self);
     }
 }

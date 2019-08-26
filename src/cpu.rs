@@ -22,8 +22,7 @@ pub enum Register {
 
     // 16bit
     SP,
-    #[allow(dead_code)]
-    PC, // FIXME: Remove the decoration
+    PC,
 }
 
 bitflags! {
@@ -108,7 +107,17 @@ impl CPU {
         Ok(selected)
     }
 
-    pub fn set<F>(&mut self, register: Register, f: F) -> Result<(), String>
+    pub fn get16(&self, register: Register) -> Result<u16, String> {
+        let selected = match register {
+            Register::SP => self.sp,
+            Register::PC => self.pc,
+            _ => return Err("Invalid register".into()),
+        };
+
+        Ok(selected)
+    }
+
+    pub fn set<F>(&mut self, register: Register, f: F) -> Result<u8, String>
     where
         F: FnOnce(&u8) -> u8,
     {
@@ -125,7 +134,22 @@ impl CPU {
 
         *selected = f(selected);
 
-        Ok(())
+        Ok(*selected)
+    }
+
+    pub fn set16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
+    where
+        F: FnOnce(&u16) -> u16,
+    {
+        let selected = match register {
+            Register::SP => &mut self.sp,
+            Register::PC => &mut self.pc,
+            _ => return Err("Invalid register".into()),
+        };
+
+        *selected = f(selected);
+
+        Ok(*selected)
     }
 
     // FIXME: Remove this annotation after implementing RET and friends
