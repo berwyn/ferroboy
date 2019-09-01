@@ -1,7 +1,7 @@
 use crate::cpu::{Register, CPU};
 use crate::mmu::MMU;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct State {
     pub cpu: CPU,
     pub mmu: MMU,

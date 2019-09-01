@@ -49,8 +49,14 @@ bitflags! {
     }
 }
 
+impl Default for Flags {
+    fn default() -> Self {
+        Flags::CLEAR
+    }
+}
+
 /// An implementation of a Zilog Z80 DMG-01 variant
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CPU {
     halt: bool,
     interrupt_mode_enabled: bool,

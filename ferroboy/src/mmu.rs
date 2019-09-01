@@ -1,6 +1,6 @@
 use arrayvec::ArrayVec;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct MMU {
     pub bios: ArrayVec<[u8; 256]>,
     pub rom: ArrayVec<[u8; 16_384]>,

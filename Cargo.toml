@@ -1,13 +1,6 @@
-[package]
-name = "ferroboy"
-version = "0.1.0"
-authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
-edition = "2018"
+[workspace]
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-lazy_static = "1.4.0"
-arrayvec = "0.4.11"
-bitflags = "1.1.0"
+members = [
+    "ferroboy",
+    "ferroboy-core"
+]

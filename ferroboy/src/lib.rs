@@ -1,16 +1,14 @@
+#![deny(nonstandard_style, rust_2018_idioms, future_incompatible)]
 #![deny(clippy::all)]
-
-use std::sync::Mutex;
-
-use lazy_static::lazy_static;
 
 use crate::cpu::Register;
 use crate::helpers::word_to_u16;
 use crate::operations::{
     Add8Operation, Inc16Operation, Inc8Operation, IncrementClockOperation,
-    Load16ImmediateOperation, Load8ImmediateOperation, Operation,
+    Load16ImmediateOperation, Load8ImmediateOperation, Load8RegisterCopyOperation, Operation,
 };
-use crate::state::State;
+
+pub use crate::state::State;
 
 mod cpu;
 mod helpers;
@@ -18,25 +16,19 @@ mod mmu;
 mod operations;
 mod state;
 
-lazy_static! {
-    static ref STATE: Mutex<State> = Mutex::new(State::new());
-}
-
-#[no_mangle]
-extern "C" fn retro_init() {
-    lazy_static::initialize(&STATE);
-}
-
-#[no_mangle]
-extern "C" fn retro_run() {
-    let mut lock = STATE.lock().unwrap();
-    let state = &mut *lock;
-    tick(state).unwrap();
-}
-
-fn tick(state: &mut State) -> Result<(), String> {
+pub fn tick(state: &mut State) -> Result<(), String> {
     let opcode = 0x00;
-    let ops: Vec<Box<dyn Operation>> = match opcode {
+    let ops = parse_opcode(opcode, state)?;
+
+    for op in ops {
+        op.act(state)?;
+    }
+
+    Ok(())
+}
+
+fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>, String> {
+    let op: Vec<Box<dyn Operation>> = match opcode {
         0x00 => vec![Box::new(IncrementClockOperation(4))],
         0x01 => vec![
             Box::new(Load16ImmediateOperation(
@@ -134,6 +126,34 @@ fn tick(state: &mut State) -> Result<(), String> {
             Box::new(Load8ImmediateOperation(Register::A, state.read_byte()?)),
             Box::new(IncrementClockOperation(8)),
         ],
+        0x40 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::B)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x41 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::C)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x42 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::D)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x43 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::E)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x44 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::H)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x45 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::L)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x47 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::B, Register::A)),
+            Box::new(IncrementClockOperation(4)),
+        ],
         0x80 => vec![
             Box::new(Add8Operation(Register::A, state.cpu.get(Register::B)?)),
             Box::new(IncrementClockOperation(4)),
@@ -141,9 +161,5 @@ fn tick(state: &mut State) -> Result<(), String> {
         _ => return Err("Bad opcode".into()),
     };
 
-    for op in ops {
-        op.act(state)?;
-    }
-
-    Ok(())
+    Ok(op)
 }

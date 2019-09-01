@@ -1,0 +1,12 @@
+[package]
+name = "ferroboy-core"
+version = "0.1.0"
+authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ferroboy = { path = "../ferroboy" }
+lazy_static = "1.4.0"
