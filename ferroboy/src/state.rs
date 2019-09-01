@@ -9,15 +9,12 @@ pub struct State {
 
 impl State {
     pub fn new() -> Self {
-        Self {
-            cpu: CPU::new(),
-            mmu: MMU::new(),
-        }
+        Default::default()
     }
 
     pub fn read_byte(&mut self) -> Result<u8, String> {
         let pc = self.cpu.get16(Register::PC)?;
-        let word = self.mmu.rom[pc as usize];
+        let word = self.mmu[pc];
 
         self.cpu.set16(Register::PC, |old| old + 1)?;
 
@@ -26,11 +23,11 @@ impl State {
 
     pub fn read_word(&mut self) -> Result<(u8, u8), String> {
         let mut pc = self.cpu.get16(Register::PC)?;
-        let high = self.mmu.rom[pc as usize];
+        let high = self.mmu[pc];
 
         pc = self.cpu.set16(Register::PC, |old| old + 1)?;
 
-        let low = self.mmu.rom[pc as usize];
+        let low = self.mmu[pc];
 
         self.cpu.set16(Register::PC, |old| old + 1)?;
 
@@ -47,7 +44,7 @@ mod tests {
         let mut state = State::new();
 
         state.cpu.set16(Register::PC, |_| 0x00).unwrap();
-        state.mmu.mutate(|mmu| mmu.rom.insert(0x00, 0xFE));
+        state.mmu.mutate(|mmu| mmu[0x00] = 0xFE);
 
         let byte = state.read_byte().unwrap();
 
@@ -60,8 +57,8 @@ mod tests {
         let mut state = State::new();
 
         state.cpu.set16(Register::PC, |_| 0x00).unwrap();
-        state.mmu.mutate(|mmu| mmu.rom.insert(0x00, 0xBE));
-        state.mmu.mutate(|mmu| mmu.rom.insert(0x01, 0xEF));
+        state.mmu.mutate(|mmu| mmu[0x00] = 0xBE);
+        state.mmu.mutate(|mmu| mmu[0x01] = 0xEF);
 
         let word = state.read_word().unwrap();
 

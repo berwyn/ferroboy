@@ -5,7 +5,8 @@ use crate::cpu::Register;
 use crate::helpers::word_to_u16;
 use crate::operations::{
     Add8Operation, Inc16Operation, Inc8Operation, IncrementClockOperation,
-    Load16ImmediateOperation, Load8ImmediateOperation, Load8RegisterCopyOperation, Operation,
+    Load16ImmediateOperation, Load8FromMemoryOperation, Load8ImmediateOperation,
+    Load8RegisterCopyOperation, Operation,
 };
 
 pub use crate::state::State;
@@ -150,8 +151,40 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
             Box::new(Load8RegisterCopyOperation(Register::B, Register::L)),
             Box::new(IncrementClockOperation(4)),
         ],
+        0x46 => vec![
+            Box::new(Load8FromMemoryOperation(Register::B, Register::HL)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x47 => vec![
             Box::new(Load8RegisterCopyOperation(Register::B, Register::A)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x48 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::B)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x49 => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::C)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x4A => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::D)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x4B => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::E)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x4C => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::H)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x4D => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::L)),
+            Box::new(IncrementClockOperation(4)),
+        ],
+        0x4F => vec![
+            Box::new(Load8RegisterCopyOperation(Register::C, Register::A)),
             Box::new(IncrementClockOperation(4)),
         ],
         0x80 => vec![

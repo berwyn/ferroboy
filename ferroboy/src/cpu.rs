@@ -80,24 +80,7 @@ pub struct CPU {
 
 impl CPU {
     pub fn new() -> Self {
-        Self {
-            halt: false,
-            interrupt_mode_enabled: false,
-
-            clock: 0,
-            f: Flags::CLEAR,
-
-            a: 0,
-            b: 0,
-            c: 0,
-            d: 0,
-            e: 0,
-            h: 0,
-            l: 0,
-
-            sp: 0,
-            pc: 0,
-        }
+        Default::default()
     }
 
     pub fn get(&self, register: Register) -> Result<u8, String> {
