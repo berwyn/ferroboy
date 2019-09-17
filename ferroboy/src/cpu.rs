@@ -1,9 +1,12 @@
+use crate::helpers::{u16_to_word, word_to_u16};
 use bitflags::bitflags;
 
-/// Selectors for CPU registers
+/// `Register` is an enum to help indicate which registers
+/// an operation should apply to.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Register {
     // 8bit
+    /// Register A is the 6502's accumulator.
     A,
     B,
     C,
@@ -14,18 +17,31 @@ pub enum Register {
     L,
 
     // Computed 16bit
-    #[allow(dead_code)]
-    AF, // FIXME: Remove the decoration
+    /// Register AF uses the Accumulator as the high byte and
+    /// the flags as the low byte, creating a pseudo-16bit register.
+    AF,
+    /// Register BC uses Register B as the high byte and register
+    /// C as the low byte, creating a pseudo-16bit register.
     BC,
+    /// Register DE uses Register D as the high byte and register
+    /// E as the low byte, creating a pseudo-16bit register.
     DE,
+    /// Register HL uses Register H as the high byte and register
+    /// L as the low byte, creating a pseudo-16bit register.
     HL,
 
     // 16bit
+    /// The stack pointer
     SP,
+    /// The program counter
     PC,
 }
 
 impl Register {
+    /// Registers AF, BC, DE, and HL aren't actually registers but instead
+    /// use two registers to create a pseuo-16bit register. This function will
+    /// take those pseudo-16bit register selectors and return the appropriate
+    /// (high, low) selector tuple to index into the 8bit registers they use.
     pub fn to_8bit_pair(self) -> Result<(Register, Register), String> {
         match self {
             Register::AF => Ok((Register::A, Register::F)),
@@ -44,7 +60,7 @@ bitflags! {
         const CLEAR = 0b0000_0000;
         const CARRY = 0b0001_0000;
         const HALF_CARRY = 0b0010_0000;
-        const SUBTRACTION = 0b010_0000;
+        const SUBTRACTION = 0b0100_0000;
         const ZERO = 0b1000_0000;
     }
 }
@@ -102,6 +118,12 @@ impl CPU {
         let selected = match register {
             Register::SP => self.sp,
             Register::PC => self.pc,
+            Register::AF | Register::BC | Register::DE | Register::HL => {
+                let (high, low) = register.to_8bit_pair()?;
+                let (high, low) = (self.get(high)?, self.get(low)?);
+
+                word_to_u16((high, low))
+            }
             _ => return Err("Invalid register".into()),
         };
 
@@ -133,14 +155,30 @@ impl CPU {
         F: FnOnce(&u16) -> u16,
     {
         let selected = match register {
-            Register::SP => &mut self.sp,
-            Register::PC => &mut self.pc,
+            Register::SP => {
+                self.sp = f(&self.sp);
+                self.sp
+            }
+            Register::PC => {
+                self.pc = f(&self.pc);
+                self.pc
+            }
+            Register::AF | Register::BC | Register::DE | Register::HL => {
+                let word = self.get16(register)?;
+                let word = f(&word);
+
+                let (high_byte, low_byte) = u16_to_word(word);
+                let (high, low) = register.to_8bit_pair()?;
+
+                self.set(high, |_| high_byte)?;
+                self.set(low, |_| low_byte)?;
+
+                word
+            },
             _ => return Err("Invalid register".into()),
         };
 
-        *selected = f(selected);
-
-        Ok(*selected)
+        Ok(selected)
     }
 
     // FIXME: Remove this annotation after implementing RET and friends

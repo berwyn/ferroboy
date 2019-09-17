@@ -6,13 +6,7 @@ pub struct Load16ImmediateOperation(pub Register, pub u16);
 
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        let (high, low) = self.0.to_8bit_pair()?;
-
-        let high_value = (self.1 >> 8) as u8;
-        let low_value = (self.1 & 0xFF) as u8;
-
-        state.cpu.set(high, |_| high_value)?;
-        state.cpu.set(low, |_| low_value)?;
+        state.cpu.set16(self.0, |_| self.1)?;
 
         Ok(())
     }

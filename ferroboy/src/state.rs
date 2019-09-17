@@ -16,7 +16,7 @@ impl State {
         let pc = self.cpu.get16(Register::PC)?;
         let word = self.mmu[pc];
 
-        self.cpu.set16(Register::PC, |old| old + 1)?;
+        self.increment_program_counter()?;
 
         Ok(word)
     }
@@ -25,13 +25,17 @@ impl State {
         let mut pc = self.cpu.get16(Register::PC)?;
         let high = self.mmu[pc];
 
-        pc = self.cpu.set16(Register::PC, |old| old + 1)?;
+        pc = self.increment_program_counter()?;
 
         let low = self.mmu[pc];
 
-        self.cpu.set16(Register::PC, |old| old + 1)?;
+        self.increment_program_counter()?;
 
         Ok((high, low))
+    }
+
+    pub fn increment_program_counter(&mut self) -> Result<u16, String> {
+        self.cpu.set16(Register::PC, |old| old + 1)
     }
 }
 

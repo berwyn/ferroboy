@@ -8,7 +8,6 @@ use crate::operations::{
     Load16ImmediateOperation, Load8FromMemoryOperation, Load8ImmediateOperation,
     Load8RegisterCopyOperation, Operation,
 };
-
 pub use crate::state::State;
 
 mod cpu;
