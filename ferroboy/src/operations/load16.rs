@@ -6,7 +6,7 @@ pub struct Load16ImmediateOperation(pub Register, pub u16);
 
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        state.cpu.set16(self.0, |_| self.1)?;
+        state.cpu.set16(self.0, self.1)?;
 
         Ok(())
     }

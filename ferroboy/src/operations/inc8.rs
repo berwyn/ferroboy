@@ -11,7 +11,7 @@ impl Operation for Inc8Operation {
         let mut temp = u16::from(state.cpu.get(self.0)?);
         temp += 1;
 
-        state.cpu.set(self.0, |_| temp as u8)?;
+        state.cpu.set(self.0, temp as u8)?;
 
         Ok(())
     }

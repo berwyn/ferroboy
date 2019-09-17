@@ -130,7 +130,11 @@ impl CPU {
         Ok(selected)
     }
 
-    pub fn set<F>(&mut self, register: Register, f: F) -> Result<u8, String>
+    pub fn set(&mut self, register: Register, value: u8) -> Result<u8, String> {
+        self.mutate(register, |_| value)
+    }
+
+    pub fn mutate<F>(&mut self, register: Register, f: F) -> Result<u8, String>
     where
         F: FnOnce(&u8) -> u8,
     {
@@ -150,7 +154,11 @@ impl CPU {
         Ok(*selected)
     }
 
-    pub fn set16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
+    pub fn set16(&mut self, register: Register, value: u16) -> Result<u16, String> {
+        self.mutate16(register, |_| value)
+    }
+
+    pub fn mutate16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
     where
         F: FnOnce(&u16) -> u16,
     {
@@ -170,11 +178,11 @@ impl CPU {
                 let (high_byte, low_byte) = u16_to_word(word);
                 let (high, low) = register.to_8bit_pair()?;
 
-                self.set(high, |_| high_byte)?;
-                self.set(low, |_| low_byte)?;
+                self.set(high, high_byte)?;
+                self.set(low, low_byte)?;
 
                 word
-            },
+            }
             _ => return Err("Invalid register".into()),
         };
 

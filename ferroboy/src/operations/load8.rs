@@ -7,7 +7,7 @@ pub struct Load8ImmediateOperation(pub Register, pub u8);
 
 impl Operation for Load8ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        state.cpu.set(self.0, |_| self.1).map(|_| ())
+        state.cpu.set(self.0, self.1).map(|_| ())
     }
 }
 
@@ -16,7 +16,7 @@ pub struct Load8RegisterCopyOperation(pub Register, pub Register);
 impl Operation for Load8RegisterCopyOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
         let value = state.cpu.get(self.1)?;
-        state.cpu.set(self.0, |_| value).map(|_| ())
+        state.cpu.set(self.0, value).map(|_| ())
     }
 }
 
@@ -31,7 +31,7 @@ impl Operation for Load8FromMemoryOperation {
         let address = word_to_u16((address_high, address_low));
         let value = state.mmu[address];
 
-        state.cpu.set(self.0, |_| value).map(|_| ())
+        state.cpu.set(self.0, value).map(|_| ())
     }
 }
 
@@ -56,7 +56,7 @@ mod tests {
         let mut state = State::new();
         let op = Load8RegisterCopyOperation(Register::B, Register::A);
 
-        state.cpu.set(Register::A, |_| 0xFE).unwrap();
+        state.cpu.set(Register::A, 0xFE).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0xFE, state.cpu.get(Register::A).unwrap());
@@ -73,8 +73,8 @@ mod tests {
         let op = Load8FromMemoryOperation(Register::B, Register::HL);
 
         state.mmu.mutate(|mmu| mmu[0x5E50] = 0xFE);
-        state.cpu.set(Register::H, |_| 0x5E).unwrap();
-        state.cpu.set(Register::L, |_| 0x50).unwrap();
+        state.cpu.set(Register::H, 0x5E).unwrap();
+        state.cpu.set(Register::L, 0x50).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
 

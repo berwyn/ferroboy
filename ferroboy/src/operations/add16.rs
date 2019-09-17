@@ -15,7 +15,7 @@ impl Operation for Add16Operation {
         let upper_arg = self.1 >> 8;
 
         let calculated_lower = u16::from(state.cpu.get(low)?) + lower_arg;
-        state.cpu.set(low, |_| calculated_lower as u8)?;
+        state.cpu.set(low, calculated_lower as u8)?;
 
         if calculated_lower / 0xFF > 0 {
             state.cpu.set_flag(Flags::HALF_CARRY);
@@ -24,7 +24,7 @@ impl Operation for Add16Operation {
         let calculated_upper =
             u16::from(state.cpu.get(high)?) + upper_arg + (calculated_lower / 0xFF);
 
-        state.cpu.set(high, |_| calculated_upper as u8)?;
+        state.cpu.set(high, calculated_upper as u8)?;
 
         if calculated_upper / 0xFF > 0 {
             state.cpu.set_flag(Flags::CARRY);
@@ -75,7 +75,7 @@ mod tests {
         let mut state = State::new();
         let op = Add16Operation(Register::BC, 0x00FF);
 
-        state.cpu.set(Register::C, |_| 1).unwrap();
+        state.cpu.set(Register::C, 1).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0x01, state.cpu.get(Register::C).unwrap());
@@ -93,8 +93,8 @@ mod tests {
         let mut state = State::new();
         let op = Add16Operation(Register::BC, 0x0001);
 
-        state.cpu.set(Register::B, |_| 0xFF).unwrap();
-        state.cpu.set(Register::C, |_| 0xFF).unwrap();
+        state.cpu.set(Register::B, 0xFF).unwrap();
+        state.cpu.set(Register::C, 0xFF).unwrap();
 
         assert_eq!(0xFF, state.cpu.get(Register::B).unwrap());
         assert_eq!(0xFF, state.cpu.get(Register::C).unwrap());

@@ -35,7 +35,7 @@ impl State {
     }
 
     pub fn increment_program_counter(&mut self) -> Result<u16, String> {
-        self.cpu.set16(Register::PC, |old| old + 1)
+        self.cpu.mutate16(Register::PC, |old| old + 1)
     }
 }
 
@@ -47,7 +47,7 @@ mod tests {
     fn it_reads_a_byte() {
         let mut state = State::new();
 
-        state.cpu.set16(Register::PC, |_| 0x00).unwrap();
+        state.cpu.set16(Register::PC, 0x00).unwrap();
         state.mmu.mutate(|mmu| mmu[0x00] = 0xFE);
 
         let byte = state.read_byte().unwrap();
@@ -60,7 +60,7 @@ mod tests {
     fn it_reads_a_word() {
         let mut state = State::new();
 
-        state.cpu.set16(Register::PC, |_| 0x00).unwrap();
+        state.cpu.set16(Register::PC, 0x00).unwrap();
         state.mmu.mutate(|mmu| mmu[0x00] = 0xBE);
         state.mmu.mutate(|mmu| mmu[0x01] = 0xEF);
 

@@ -9,13 +9,13 @@ pub struct Inc16Operation(pub Register);
 impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> Result<(), String> {
         match self.0 {
-            Register::SP => state.cpu.set16(self.0, |old| old + 1).map(|_| ())?,
+            Register::SP => state.cpu.mutate16(self.0, |old| old + 1).map(|_| ())?,
             _ => {
                 let (high, low) = self.0.to_8bit_pair()?;
 
                 let mut lower = u16::from(state.cpu.get(low)?);
                 lower += 1;
-                state.cpu.set(low, |_| lower as u8).map(|_| ())?;
+                state.cpu.set(low, lower as u8).map(|_| ())?;
 
                 if lower / 0xFF > 0 {
                     state.cpu.set_flag(Flags::HALF_CARRY);
@@ -26,7 +26,7 @@ impl Operation for Inc16Operation {
                         state.cpu.set_flag(Flags::CARRY);
                     }
 
-                    state.cpu.set(high, |_| upper as u8).map(|_| ())?;
+                    state.cpu.set(high, upper as u8).map(|_| ())?;
                 }
             }
         };
@@ -58,7 +58,7 @@ mod tests {
         let mut state = State::new();
         let op = Inc16Operation(Register::BC);
 
-        state.cpu.set(Register::C, |_| 0xFF).unwrap();
+        state.cpu.set(Register::C, 0xFF).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0xFF, state.cpu.get(Register::C).unwrap());
@@ -75,8 +75,8 @@ mod tests {
         let mut state = State::new();
         let op = Inc16Operation(Register::BC);
 
-        state.cpu.set(Register::B, |_| 0xFF).unwrap();
-        state.cpu.set(Register::C, |_| 0xFF).unwrap();
+        state.cpu.set(Register::B, 0xFF).unwrap();
+        state.cpu.set(Register::C, 0xFF).unwrap();
 
         assert_eq!(0xFF, state.cpu.get(Register::B).unwrap());
         assert_eq!(0xFF, state.cpu.get(Register::C).unwrap());
