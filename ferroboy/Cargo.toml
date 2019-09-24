@@ -6,4 +6,4 @@ edition = "2018"
 
 [dependencies]
 arrayvec = { version = "0.4.11", features = ["std", "array-sizes-33-128", "array-sizes-129-255"] }
-bitflags = "1.1.0"
+bitflags = "1.2.0"
