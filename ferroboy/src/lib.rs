@@ -6,7 +6,7 @@ use crate::helpers::word_to_u16;
 use crate::operations::{
     Add8Operation, Inc16Operation, Inc8Operation, IncrementClockOperation,
     Load16ImmediateOperation, Load8FromMemoryOperation, Load8ImmediateOperation,
-    Load8RegisterCopyOperation, Operation,
+    Load8RegisterCopyOperation, Load8RegisterToMemoryOperation, Operation,
 };
 pub use crate::state::State;
 
@@ -37,6 +37,10 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
             )),
             Box::new(IncrementClockOperation(12)),
         ],
+        0x02 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::BC, Register::A)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x03 => vec![
             Box::new(Inc16Operation(Register::BC)),
             Box::new(IncrementClockOperation(8)),
@@ -63,6 +67,10 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
                 word_to_u16(state.read_word()?),
             )),
             Box::new(IncrementClockOperation(12)),
+        ],
+        0x12 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::DE, Register::A)),
+            Box::new(IncrementClockOperation(8)),
         ],
         0x13 => vec![
             Box::new(Inc16Operation(Register::DE)),
@@ -91,6 +99,7 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
             )),
             Box::new(IncrementClockOperation(12)),
         ],
+        // TODO(berwyn): ld (hl+), A <-- what is HL+?
         0x23 => vec![
             Box::new(Inc16Operation(Register::HL)),
             Box::new(IncrementClockOperation(8)),
@@ -118,6 +127,7 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
             )),
             Box::new(IncrementClockOperation(12)),
         ],
+        // TODO(berwyn): ld (hl-), A <-- what is HL-?
         0x33 => vec![
             Box::new(Inc16Operation(Register::SP)),
             Box::new(IncrementClockOperation(8)),
@@ -186,9 +196,41 @@ fn parse_opcode(opcode: u8, state: &mut State) -> Result<Vec<Box<dyn Operation>>
             Box::new(Load8RegisterCopyOperation(Register::C, Register::A)),
             Box::new(IncrementClockOperation(4)),
         ],
+        0x70 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::B)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x71 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::C)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x72 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::D)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x73 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::E)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x74 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::H)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x75 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::L)),
+            Box::new(IncrementClockOperation(8)),
+        ],
+        0x77 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::HL, Register::A)),
+            Box::new(IncrementClockOperation(8)),
+        ],
         0x80 => vec![
             Box::new(Add8Operation(Register::A, state.cpu.get(Register::B)?)),
             Box::new(IncrementClockOperation(4)),
+        ],
+        0xE2 => vec![
+            Box::new(Load8RegisterToMemoryOperation(Register::C, Register::A)),
+            Box::new(IncrementClockOperation(8)),
         ],
         _ => return Err("Bad opcode".into()),
     };

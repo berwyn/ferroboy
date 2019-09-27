@@ -35,6 +35,23 @@ impl Operation for Load8FromMemoryOperation {
     }
 }
 
+pub struct Load8RegisterToMemoryOperation(pub Register, pub Register);
+
+impl Operation for Load8RegisterToMemoryOperation {
+    fn act(&self, state: &mut State) -> Result<(), String> {
+        let address = match self.0 {
+            Register::PC | Register::BC | Register::DE | Register::HL => state.cpu.get16(self.0)?,
+            Register::C => u16::from(state.cpu.get(self.0)?),
+            _ => return Err("Invalid register provided".into()),
+        };
+
+        let value = state.cpu.get(self.1)?;
+        state.mmu[address] = value;
+
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -81,5 +98,20 @@ mod tests {
         op.act(&mut state).unwrap();
 
         assert_eq!(0xFE, state.cpu.get(Register::B).unwrap());
+    }
+
+    #[test]
+    fn it_writes_a_register_into_memory() {
+        let mut state = State::new();
+        let op = Load8RegisterToMemoryOperation(Register::PC, Register::A);
+
+        state.cpu.set16(Register::PC, 0x5E50).unwrap();
+        state.cpu.set(Register::A, 0xBE).unwrap();
+
+        assert_eq!(0x00, state.mmu[0x5E50]);
+
+        op.act(&mut state).unwrap();
+
+        assert_eq!(0xBE, state.mmu[0x5E50]);
     }
 }
