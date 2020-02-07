@@ -10,3 +10,4 @@ crate-type = ["cdylib"]
 [dependencies]
 ferroboy = { path = "../ferroboy" }
 lazy_static = "1.4.0"
+libretro-backend = "0.2.1"
