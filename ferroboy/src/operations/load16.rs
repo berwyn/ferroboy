@@ -1,12 +1,14 @@
 use crate::cpu::Register;
+use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
 
-pub struct Load16ImmediateOperation(pub Register, pub u16);
+pub struct Load16ImmediateOperation(pub Register);
 
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        state.cpu.set16(self.0, self.1)?;
+        let word = word_to_u16(state.read_word()?);
+        state.cpu.set16(self.0, word)?;
 
         Ok(())
     }
@@ -19,7 +21,12 @@ mod tests {
     #[test]
     fn it_loads_an_immediate_into_the_registers() {
         let mut state = State::new();
-        let op = Load16ImmediateOperation(Register::BC, 0xBEEF);
+        state.mmu.mutate(|m| {
+            m[0x00] = 0xBE;
+            m[0x01] = 0xEF;
+        });
+
+        let op = Load16ImmediateOperation(Register::BC);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0x00, state.cpu.get(Register::C).unwrap());

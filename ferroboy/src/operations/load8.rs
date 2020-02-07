@@ -3,11 +3,12 @@ use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
 
-pub struct Load8ImmediateOperation(pub Register, pub u8);
+pub struct Load8ImmediateOperation(pub Register);
 
 impl Operation for Load8ImmediateOperation {
     fn act(&self, state: &mut State) -> Result<(), String> {
-        state.cpu.set(self.0, self.1).map(|_| ())
+        let value = state.read_byte()?;
+        state.cpu.set(self.0, value).map(|_| ())
     }
 }
 
@@ -59,7 +60,9 @@ mod tests {
     #[test]
     fn it_loads_an_immediate_into_the_register() {
         let mut state = State::new();
-        let op = Load8ImmediateOperation(Register::B, 0xFE);
+        state.mmu.mutate(|m| m[0x00] = 0xFE);
+
+        let op = Load8ImmediateOperation(Register::B);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
 
