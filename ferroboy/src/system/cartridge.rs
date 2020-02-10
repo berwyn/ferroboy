@@ -105,13 +105,13 @@ pub struct Cartridge {
 }
 
 impl Cartridge {
-    pub fn from_buffer(buffer: Vec<u8>) -> Result<Self, String> {
+    pub fn from_buffer(buffer: &[u8]) -> Result<Self, String> {
         Self::parse_cartridge_header(&buffer)?;
 
-        let title = Self::parse_cartridge_title(&buffer)?;
+        let title = Self::parse_cartridge_title(buffer)?;
         let cartridge_type = CartridgeType::from_byte(buffer[0x147])?;
-        let bank_count = Self::parse_bank_count(&buffer)?;
-        let ram_size = Self::parse_ram_size(&buffer)?;
+        let bank_count = Self::parse_bank_count(buffer)?;
+        let ram_size = Self::parse_ram_size(buffer)?;
         let is_japanese = buffer[0x14A] == 0;
 
         Ok(Self {
@@ -131,7 +131,7 @@ impl Cartridge {
             .read_to_end(&mut buffer)
             .map_err(|e| e.to_string())?;
 
-        Self::from_buffer(buffer)
+        Self::from_buffer(&buffer)
     }
 
     fn parse_cartridge_header(buffer: &[u8]) -> Result<(), String> {

@@ -3,17 +3,22 @@
 
 use std::env;
 
+use ferroboy::State;
 use libretro_backend::{
     AudioVideoInfo, Core, CoreInfo, GameData, LoadGameResult, PixelFormat, Region, RuntimeHandle,
 };
 
 pub struct FerroboyCore {
     game_data: Option<GameData>,
+    state: State,
 }
 
 impl FerroboyCore {
     fn new() -> Self {
-        Self { game_data: None }
+        Self {
+            game_data: None,
+            state: Default::default(),
+        }
     }
 }
 
@@ -33,13 +38,10 @@ impl Core for FerroboyCore {
             return LoadGameResult::Failed(game_data);
         }
 
-        // TODO(berwyn): Actually use a real type here
-        let result: Result<&str, &str> = if let Some(_data) = game_data.data() {
-            // TODO(berwyn): load the ROM from a buffer
-            Ok("")
-        } else if let Some(_path) = game_data.path() {
-            // TODO(berwyn): open the file and read the ROM
-            Ok("")
+        let result: Result<(), String> = if let Some(data) = game_data.data() {
+            self.state.load_cartridge_from_buffer(data)
+        } else if let Some(path) = game_data.path() {
+            self.state.load_cartridge_from_file(path)
         } else {
             // Since the game data isn't empty, we must have a path or a buffer
             unreachable!();

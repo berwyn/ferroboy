@@ -48,6 +48,14 @@ impl State {
 
         Ok(())
     }
+
+    pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> Result<(), String> {
+        let cartridge = Cartridge::from_buffer(buffer)?;
+
+        self.cartridge = Some(cartridge);
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
