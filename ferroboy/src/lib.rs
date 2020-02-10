@@ -4,7 +4,6 @@
 use crate::opcodes::OPCODES;
 pub use crate::state::State;
 
-mod cpu;
 mod helpers;
 mod mmu;
 mod opcodes;

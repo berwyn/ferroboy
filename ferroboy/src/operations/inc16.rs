@@ -1,6 +1,6 @@
-use crate::cpu::{Flags, Register};
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::{Flags, Register};
 
 /// Increments a singular 16bit register.
 /// Does not affect flags.

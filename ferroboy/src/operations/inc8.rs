@@ -1,6 +1,6 @@
-use crate::cpu::Register;
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::Register;
 
 /// Increments a single 8bit register.
 /// Does not affect flags.

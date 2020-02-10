@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 
 use once_cell::sync::Lazy;
 
-use crate::cpu::Register;
 use crate::operations::*;
+use crate::system::Register;
 
 type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
 

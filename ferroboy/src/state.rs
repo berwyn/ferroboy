@@ -1,6 +1,5 @@
-use crate::cpu::{Register, CPU};
 use crate::mmu::MMU;
-use crate::system::Cartridge;
+use crate::system::{Cartridge, Register, CPU};
 
 #[derive(Debug, Default)]
 pub struct State {

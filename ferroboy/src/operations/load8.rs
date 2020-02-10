@@ -1,7 +1,7 @@
-use crate::cpu::Register;
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::Register;
 
 pub struct Load8ImmediateOperation(pub Register);
 

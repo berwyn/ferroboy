@@ -1,6 +1,6 @@
-use crate::cpu::{Flags, Register};
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::{Flags, Register};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Add16Operation(Register, u16);

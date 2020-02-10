@@ -1,6 +1,6 @@
-use crate::cpu::{Flags, Register};
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::{Flags, Register};
 
 pub struct Add8Operation(pub Register, pub Register);
 
