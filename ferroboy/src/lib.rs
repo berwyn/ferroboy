@@ -1,12 +1,10 @@
 #![deny(nonstandard_style, rust_2018_idioms, future_incompatible)]
 #![deny(clippy::all)]
 
-use crate::opcodes::OPCODES;
 pub use crate::state::State;
+pub use crate::system::OPCODES;
 
 mod helpers;
-mod mmu;
-mod opcodes;
 mod operations;
 mod state;
 mod system;

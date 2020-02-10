@@ -7,7 +7,7 @@ use crate::system::Register;
 
 type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
 
-pub(crate) static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
+pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     let mut map = BTreeMap::new();
 
     load_rank_0_ops(&mut map);
