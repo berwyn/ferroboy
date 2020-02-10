@@ -10,6 +10,7 @@ mod mmu;
 mod opcodes;
 mod operations;
 mod state;
+mod system;
 
 pub fn tick(state: &mut State) -> Result<(), String> {
     let opcode = 0x00;

@@ -1,10 +1,12 @@
 use crate::cpu::{Register, CPU};
 use crate::mmu::MMU;
+use crate::system::Cartridge;
 
 #[derive(Debug, Default)]
 pub struct State {
     pub cpu: CPU,
     pub mmu: MMU,
+    pub cartridge: Option<Cartridge>,
 }
 
 impl State {
@@ -36,6 +38,15 @@ impl State {
 
     pub fn increment_program_counter(&mut self) -> Result<u16, String> {
         self.cpu.mutate16(Register::PC, |old| old + 1)
+    }
+
+    pub fn load_cartridge_from_file(&mut self, path: &str) -> Result<(), String> {
+        let file = std::fs::File::open(path).map_err(|_| "Couldn't open file".to_string())?;
+        let cartridge = Cartridge::from_file(file)?;
+
+        self.cartridge = Some(cartridge);
+
+        Ok(())
     }
 }
 
