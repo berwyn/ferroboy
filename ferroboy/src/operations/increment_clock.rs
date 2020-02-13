@@ -1,6 +1,7 @@
 use crate::operations::Operation;
 use crate::state::State;
 
+#[derive(Debug)]
 pub struct IncrementClockOperation(pub u64);
 
 impl Operation for IncrementClockOperation {

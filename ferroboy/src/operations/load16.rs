@@ -3,6 +3,7 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::Register;
 
+#[derive(Debug)]
 pub struct Load16ImmediateOperation(pub Register);
 
 impl Operation for Load16ImmediateOperation {

@@ -1,6 +1,7 @@
 use crate::operations::Operation;
 use crate::State;
 
+#[derive(Debug)]
 struct Compose2<A, B>
 where
     A: Operation,

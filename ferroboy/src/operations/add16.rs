@@ -2,7 +2,7 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Debug)]
 pub struct Add16Operation(Register, u16);
 
 impl Operation for Add16Operation {

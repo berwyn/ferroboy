@@ -1,10 +1,11 @@
 use std::ops::{Index, IndexMut};
 
 pub struct MMU {
+    rom: [u8; 32_768],
     /// The first ROM bank, fixed, in cart
-    bank0: [u8; 16_384],
+    // bank0: &'a [u8],
     /// The second ROM bank, switchable, in cart
-    bank1: [u8; 16_384],
+    // bank1: &'a [u8],
     /// VRAM, fixed for DMG, switchable in CGB
     vram: [u8; 8_192],
     /// Switchable external RAM, in cart
@@ -22,9 +23,12 @@ pub struct MMU {
 
 impl MMU {
     pub fn new() -> Self {
+        let rom = [0; 0x8000];
+
         Self {
-            bank0: [0; 16_384],
-            bank1: [0; 16_384],
+            rom,
+            // bank0: &rom[0x0000..=0x3FFF],
+            // bank1: &rom[0x0000..=0x7FFF],
             vram: [0; 8_192],
             eram: [0; 8_192],
             wram0: [0; 4_096],
@@ -34,6 +38,10 @@ impl MMU {
             hram: [0; 127],
             fake: 0,
         }
+    }
+
+    pub fn load_bank_0(&mut self, buffer: &[u8]) {
+        self.rom[0x0000..=0x7FFF].copy_from_slice(buffer);
     }
 }
 
@@ -55,8 +63,8 @@ impl Index<u16> for MMU {
     fn index(&self, index: u16) -> &Self::Output {
         let actual_index = index as usize;
         match index {
-            0x0000..=0x3FFF => &self.bank0[actual_index],
-            0x4000..=0x7FFF => &self.bank1[actual_index - 0x3FFF],
+            0x0000..=0x3FFF => &self.rom[actual_index], // bank0
+            0x4000..=0x7FFF => &self.rom[actual_index - 0x3FFF], // bank1
             0x8000..=0x9FFF => &self.vram[actual_index - 0x8000],
             0xA000..=0xBFFF => &self.eram[actual_index - 0xA000],
             0xC000..=0xCFFF => &self.wram0[actual_index - 0xC000],
@@ -75,8 +83,8 @@ impl IndexMut<u16> for MMU {
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
         let actual_index = index as usize;
         match index {
-            0x0000..=0x3FFF => &mut self.bank0[actual_index],
-            0x4000..=0x7FFF => &mut self.bank1[actual_index - 0x3FFF],
+            0x0000..=0x3FFF => &mut self.rom[actual_index], // bank0
+            0x4000..=0x7FFF => &mut self.rom[actual_index - 0x3FFF], // bank1
             0x8000..=0x9FFF => &mut self.vram[actual_index - 0x8000],
             0xA000..=0xBFFF => &mut self.eram[actual_index - 0xA000],
             0xC000..=0xCFFF => &mut self.wram0[actual_index - 0xC000],

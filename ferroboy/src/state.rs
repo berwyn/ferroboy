@@ -1,4 +1,4 @@
-use crate::system::{Cartridge, Register, CPU, MMU};
+use crate::system::{Cartridge, CartridgeType, Register, CPU, MMU};
 
 #[derive(Debug, Default)]
 pub struct State {
@@ -36,6 +36,26 @@ impl State {
 
     pub fn increment_program_counter(&mut self) -> Result<u16, String> {
         self.cpu.mutate16(Register::PC, |old| old + 1)
+    }
+
+    pub fn jump(&mut self, destination: u16) -> Result<(), String> {
+        // FIXME(berwyn): Validate jump target
+        self.cpu.set16(Register::PC, destination)?;
+
+        Ok(())
+    }
+
+    pub fn map_cartridge(&mut self) -> Result<(), String> {
+        if let Some(cart) = &self.cartridge {
+            match cart.cartridge_type {
+                CartridgeType::RomOnly => {
+                    self.mmu.load_bank_0(&cart.data);
+                }
+                _ => return Err("Unsupported memory controller".into()),
+            }
+        }
+
+        Ok(())
     }
 
     pub fn load_cartridge_from_file(&mut self, path: &str) -> Result<(), String> {

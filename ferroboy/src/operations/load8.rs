@@ -3,6 +3,7 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::Register;
 
+#[derive(Debug)]
 pub struct Load8ImmediateOperation(pub Register);
 
 impl Operation for Load8ImmediateOperation {
@@ -12,6 +13,7 @@ impl Operation for Load8ImmediateOperation {
     }
 }
 
+#[derive(Debug)]
 pub struct Load8RegisterCopyOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterCopyOperation {
@@ -21,6 +23,7 @@ impl Operation for Load8RegisterCopyOperation {
     }
 }
 
+#[derive(Debug)]
 pub struct Load8FromMemoryOperation(pub Register, pub Register);
 
 impl Operation for Load8FromMemoryOperation {
@@ -36,6 +39,7 @@ impl Operation for Load8FromMemoryOperation {
     }
 }
 
+#[derive(Debug)]
 pub struct Load8RegisterToMemoryOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterToMemoryOperation {

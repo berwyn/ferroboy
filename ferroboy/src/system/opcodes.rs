@@ -17,6 +17,8 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     load_rank_4_ops(&mut map);
     load_rank_7_ops(&mut map);
     load_rank_8_ops(&mut map);
+    load_rank_C_ops(&mut map);
+    load_rank_D_ops(&mut map);
     load_rank_E_ops(&mut map);
 
     map
@@ -27,8 +29,7 @@ fn leak<T>(value: T) -> &'static T {
 }
 
 fn load_rank_0_ops(map: &mut OpCodeMap) {
-    map.insert(0x00, Box::leak(Box::new(IncrementClockOperation(4))))
-        .unwrap();
+    map.insert(0x00, leak(IncrementClockOperation(4)));
 
     map.insert(
         0x01,
@@ -129,6 +130,11 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
     );
 
     map.insert(
+        0x18,
+        leak(chain(JumpRelativeOperation(JumpRelativeFlag::Nop))),
+    );
+
+    map.insert(
         0x1C,
         leak(compose_operations(
             Inc8Operation(Register::E),
@@ -146,6 +152,11 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
 }
 
 fn load_rank_2_ops(map: &mut OpCodeMap) {
+    map.insert(
+        0x20,
+        leak(chain(JumpRelativeOperation(JumpRelativeFlag::NotZero))),
+    );
+
     map.insert(
         0x21,
         leak(compose_operations(
@@ -181,6 +192,11 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
     );
 
     map.insert(
+        0x28,
+        leak(chain(JumpRelativeOperation(JumpRelativeFlag::Zero))),
+    );
+
+    map.insert(
         0x2C,
         leak(compose_operations(
             Inc8Operation(Register::L),
@@ -199,6 +215,11 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
 
 fn load_rank_3_ops(map: &mut OpCodeMap) {
     map.insert(
+        0x30,
+        leak(chain(JumpRelativeOperation(JumpRelativeFlag::NotCarry))),
+    );
+
+    map.insert(
         0x31,
         leak(compose_operations(
             Load16ImmediateOperation(Register::SP),
@@ -215,6 +236,11 @@ fn load_rank_3_ops(map: &mut OpCodeMap) {
     );
 
     // TODO(berwyn): ld (hl-), A <-- what is HL-?
+
+    map.insert(
+        0x38,
+        leak(chain(JumpRelativeOperation(JumpRelativeFlag::Carry))),
+    );
 
     map.insert(
         0x3E,
@@ -416,6 +442,37 @@ fn load_rank_8_ops(map: &mut OpCodeMap) {
 }
 
 #[allow(non_snake_case)] // `E` is a hex number here, not a letter
+fn load_rank_C_ops(map: &mut OpCodeMap) {
+    map.insert(
+        0xC2,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::NotZero))),
+    );
+
+    map.insert(
+        0xC3,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::Nop))),
+    );
+
+    map.insert(
+        0xCA,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::Zero))),
+    );
+}
+
+#[allow(non_snake_case)] // `E` is a hex number here, not a letter
+fn load_rank_D_ops(map: &mut OpCodeMap) {
+    map.insert(
+        0xD2,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::NotCarry))),
+    );
+
+    map.insert(
+        0xDA,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::Carry))),
+    );
+}
+
+#[allow(non_snake_case)] // `E` is a hex number here, not a letter
 fn load_rank_E_ops(map: &mut OpCodeMap) {
     map.insert(
         0xE2,
@@ -423,5 +480,10 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
             Load8RegisterToMemoryOperation(Register::C, Register::A),
             IncrementClockOperation(8),
         )),
+    );
+
+    map.insert(
+        0xE9,
+        leak(chain(JumpPositionOperation(JumpPositionFlags::Register))),
     );
 }

@@ -102,6 +102,7 @@ pub struct Cartridge {
     pub bank_count: u8,
     pub ram_size: u8,
     pub is_japanese: bool,
+    pub data: Vec<u8>,
 }
 
 impl Cartridge {
@@ -113,6 +114,7 @@ impl Cartridge {
         let bank_count = Self::parse_bank_count(buffer)?;
         let ram_size = Self::parse_ram_size(buffer)?;
         let is_japanese = buffer[0x14A] == 0;
+        let data = Vec::from(buffer);
 
         Ok(Self {
             title,
@@ -120,6 +122,7 @@ impl Cartridge {
             bank_count,
             ram_size,
             is_japanese,
+            data,
         })
     }
 

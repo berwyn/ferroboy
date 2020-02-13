@@ -4,6 +4,9 @@ pub use add8::*;
 mod add16;
 pub use add16::*;
 
+mod chain;
+pub use chain::*;
+
 mod compose;
 pub use compose::*;
 
@@ -15,6 +18,9 @@ pub use inc16::*;
 
 mod increment_clock;
 pub use increment_clock::*;
+
+mod jump;
+pub use jump::*;
 
 mod load8;
 pub use load8::*;

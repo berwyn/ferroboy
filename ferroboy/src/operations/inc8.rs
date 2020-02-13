@@ -4,6 +4,7 @@ use crate::system::Register;
 
 /// Increments a single 8bit register.
 /// Does not affect flags.
+#[derive(Debug)]
 pub struct Inc8Operation(pub Register);
 
 impl Operation for Inc8Operation {

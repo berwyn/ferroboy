@@ -4,6 +4,7 @@ use crate::system::{Flags, Register};
 
 /// Increments a singular 16bit register.
 /// Does not affect flags.
+#[derive(Debug)]
 pub struct Inc16Operation(pub Register);
 
 impl Operation for Inc16Operation {

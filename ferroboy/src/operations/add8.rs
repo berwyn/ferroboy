@@ -2,6 +2,7 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
+#[derive(Debug)]
 pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
