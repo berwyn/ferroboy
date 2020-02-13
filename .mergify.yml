@@ -2,7 +2,9 @@ pull_request_rules:
   - name: Automatic merge on approval
     conditions:
       - "#approved-reviews-by>=1"
-      - status-success=Rust
+      - status-success~=^build
+      - -closed
+      - label!=work-in-progress
     actions:
       merge:
         method: rebase
@@ -10,7 +12,18 @@ pull_request_rules:
   - name: Automatic Dependabot merge
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$
-      - status-success=Rust
+      - status-success~=^build
+    actions:
+      merge:
+        method: rebase
+        strict: true
+  - name: Automatic merge for contributors
+    conditions:
+      - author=berwyn
+      - "#review-requested=0"
+      - status-success~=^build
+      - -closed
+      - label!=work-in-progress
     actions:
       merge:
         method: rebase
