@@ -7,26 +7,22 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        rust: [1.40.0, stable]
+        rust: [stable, beta]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Set up a Rust toolchain
-        uses: hecrj/setup-rust-action@v1.0.2
+        uses: hecrj/setup-rust-action@v1.3.1
         with:
           rust-version: ${{ matrix.rust }}
-
-      - uses: actions/checkout@v1
-
-      - name: Install tools
-        run: rustup component add clippy
-
+          components: clippy,rustfmt
+      - uses: actions/checkout@v2
       - name: Lint
         run: cargo clippy --all-features --all-targets -- -D warnings
-
+      - name: Format
+        run: cargo fmt -- --check
       - name: Build
-        run: cargo build --verbose
-
+        run: cargo build --all-targets --verbose
       - name: Test
         run: cargo test --verbose
