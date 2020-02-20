@@ -1,0 +1,3 @@
+[submodule "ferroboy/assets/gb-test-roms"]
+	path = ferroboy/assets/gb-test-roms
+	url = git@github.com:retrio/gb-test-roms.git

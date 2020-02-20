@@ -63,7 +63,7 @@ mod tests {
 
     #[test]
     fn it_loads_an_immediate_into_the_register() {
-        let mut state = State::new();
+        let mut state = State::default();
         state.mmu.mutate(|m| m[0x00] = 0xFE);
 
         let op = Load8ImmediateOperation(Register::B);
@@ -77,7 +77,7 @@ mod tests {
 
     #[test]
     fn it_loads_a_value_from_one_register_to_another() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Load8RegisterCopyOperation(Register::B, Register::A);
 
         state.cpu.set(Register::A, 0xFE).unwrap();
@@ -93,7 +93,7 @@ mod tests {
 
     #[test]
     fn it_loads_a_value_from_memory_to_register() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Load8FromMemoryOperation(Register::B, Register::HL);
 
         state.mmu.mutate(|mmu| mmu[0x5E50] = 0xFE);
@@ -109,7 +109,7 @@ mod tests {
 
     #[test]
     fn it_writes_a_register_into_memory() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Load8RegisterToMemoryOperation(Register::PC, Register::A);
 
         state.cpu.set16(Register::PC, 0x5E50).unwrap();

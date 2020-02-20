@@ -42,7 +42,7 @@ mod tests {
 
     #[test]
     fn it_increments_the_lower_byte() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Inc16Operation(Register::BC);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn it_increments_the_upper_byte() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Inc16Operation(Register::BC);
 
         state.cpu.set(Register::C, 0xFF).unwrap();
@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn it_wraps_over() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Inc16Operation(Register::BC);
 
         state.cpu.set(Register::B, 0xFF).unwrap();

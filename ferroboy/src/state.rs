@@ -1,17 +1,14 @@
-use crate::system::{Cartridge, CartridgeType, Register, CPU, MMU};
+use crate::system::{Cartridge, CartridgeType, Config, Register, CPU, MMU};
 
 #[derive(Debug, Default)]
 pub struct State {
+    pub config: Config,
     pub cpu: CPU,
     pub mmu: MMU,
     pub cartridge: Option<Cartridge>,
 }
 
 impl State {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
     pub fn read_byte(&mut self) -> Result<u8, String> {
         let pc = self.cpu.get16(Register::PC)?;
         let word = self.mmu[pc];
@@ -60,7 +57,7 @@ impl State {
 
     pub fn load_cartridge_from_file(&mut self, path: &str) -> Result<(), String> {
         let file = std::fs::File::open(path).map_err(|_| "Couldn't open file".to_string())?;
-        let cartridge = Cartridge::from_file(file)?;
+        let cartridge = Cartridge::from_file(file, &self.config)?;
 
         self.cartridge = Some(cartridge);
 
@@ -68,11 +65,38 @@ impl State {
     }
 
     pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> Result<(), String> {
-        let cartridge = Cartridge::from_buffer(buffer)?;
+        let cartridge = Cartridge::from_buffer(buffer, &self.config)?;
 
         self.cartridge = Some(cartridge);
 
         Ok(())
+    }
+}
+
+pub struct StateBuilder {
+    config: Config,
+}
+
+impl StateBuilder {
+    #[allow(clippy::new_without_default)]
+    pub fn new() -> Self {
+        Self {
+            config: Default::default(),
+        }
+    }
+
+    pub fn with_config(&mut self, config: Config) -> &mut Self {
+        self.config = config;
+        self
+    }
+
+    pub fn build(&self) -> State {
+        State {
+            config: self.config.clone(),
+            cpu: Default::default(),
+            mmu: Default::default(),
+            cartridge: None,
+        }
     }
 }
 
@@ -82,7 +106,7 @@ mod tests {
 
     #[test]
     fn it_reads_a_byte() {
-        let mut state = State::new();
+        let mut state = State::default();
 
         state.cpu.set16(Register::PC, 0x00).unwrap();
         state.mmu.mutate(|mmu| mmu[0x00] = 0xFE);
@@ -95,7 +119,7 @@ mod tests {
 
     #[test]
     fn it_reads_a_word() {
-        let mut state = State::new();
+        let mut state = State::default();
 
         state.cpu.set16(Register::PC, 0x00).unwrap();
         state.mmu.mutate(|mmu| mmu[0x00] = 0xBE);

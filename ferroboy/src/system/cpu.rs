@@ -218,7 +218,7 @@ mod tests {
 
     #[test]
     fn it_checks_if_a_flag_is_set() {
-        let mut state = State::new();
+        let mut state = State::default();
         state.cpu.f = Flags::ZERO | Flags::HALF_CARRY;
 
         assert!(state.cpu.has_flag(Flags::ZERO));
@@ -227,7 +227,7 @@ mod tests {
 
     #[test]
     fn it_sets_a_flag() {
-        let mut state = State::new();
+        let mut state = State::default();
         state.cpu.f = Flags::ZERO;
 
         assert_eq!(Flags::ZERO, state.cpu.f);
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn it_clears_a_flag() {
-        let mut state = State::new();
+        let mut state = State::default();
         state.cpu.f = Flags::CARRY | Flags::HALF_CARRY;
 
         state.cpu.clear_flag(Flags::CARRY);

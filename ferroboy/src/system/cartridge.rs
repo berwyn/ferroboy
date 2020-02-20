@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
+use crate::system::Config;
+
 const CARTRIDGE_HEADER: [u8; 48] = [
     0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
     0x00, 0x08, 0x11, 0x1F, 0x88, 0x89, 0x00, 0x0E, 0xDC, 0xCC, 0x6E, 0xE6, 0xDD, 0xDD, 0xD9, 0x99,
@@ -106,8 +108,10 @@ pub struct Cartridge {
 }
 
 impl Cartridge {
-    pub fn from_buffer(buffer: &[u8]) -> Result<Self, String> {
-        Self::parse_cartridge_header(&buffer)?;
+    pub fn from_buffer(buffer: &[u8], config: &Config) -> Result<Self, String> {
+        if config.enable_boot_check {
+            Self::parse_cartridge_header(&buffer)?;
+        }
 
         let title = Self::parse_cartridge_title(buffer)?;
         let cartridge_type = CartridgeType::from_byte(buffer[0x147])?;
@@ -126,7 +130,7 @@ impl Cartridge {
         })
     }
 
-    pub fn from_file(file: File) -> Result<Self, String> {
+    pub fn from_file(file: File, config: &Config) -> Result<Self, String> {
         let mut buf_reader = BufReader::new(file);
         let mut buffer = Vec::<u8>::new();
 
@@ -134,7 +138,7 @@ impl Cartridge {
             .read_to_end(&mut buffer)
             .map_err(|e| e.to_string())?;
 
-        Self::from_buffer(&buffer)
+        Self::from_buffer(&buffer, config)
     }
 
     fn parse_cartridge_header(buffer: &[u8]) -> Result<(), String> {
@@ -181,6 +185,12 @@ impl Cartridge {
 
         Ok(value)
     }
+}
+
+pub struct CartridgeLoader {
+    verify_header: bool,
+    buffer: Option<Vec<u8>>,
+    file: Option<File>,
 }
 
 #[cfg(test)]

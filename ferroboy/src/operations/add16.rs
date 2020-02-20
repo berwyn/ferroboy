@@ -40,7 +40,7 @@ mod tests {
 
     #[test]
     fn it_adds_the_lower_byte() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Add16Operation(Register::BC, 0x0010);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn it_adds_the_upper_byte() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Add16Operation(Register::BC, 0x0F10);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn it_sets_half_carry() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Add16Operation(Register::BC, 0x00FF);
 
         state.cpu.set(Register::C, 1).unwrap();
@@ -90,7 +90,7 @@ mod tests {
 
     #[test]
     fn it_sets_carry() {
-        let mut state = State::new();
+        let mut state = State::default();
         let op = Add16Operation(Register::BC, 0x0001);
 
         state.cpu.set(Register::B, 0xFF).unwrap();

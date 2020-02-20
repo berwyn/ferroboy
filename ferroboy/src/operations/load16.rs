@@ -21,7 +21,7 @@ mod tests {
 
     #[test]
     fn it_loads_an_immediate_into_the_registers() {
-        let mut state = State::new();
+        let mut state = State::default();
         state.mmu.mutate(|m| {
             m[0x00] = 0xBE;
             m[0x01] = 0xEF;

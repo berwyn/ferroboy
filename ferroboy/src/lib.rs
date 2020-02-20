@@ -2,6 +2,8 @@
 #![deny(clippy::all)]
 
 pub use crate::state::State;
+pub use crate::state::StateBuilder;
+pub use crate::system::ConfigBuilder;
 pub use crate::system::Register;
 pub use crate::system::OPCODES;
 
