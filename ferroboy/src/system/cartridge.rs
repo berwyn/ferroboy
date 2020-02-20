@@ -187,12 +187,6 @@ impl Cartridge {
     }
 }
 
-pub struct CartridgeLoader {
-    verify_header: bool,
-    buffer: Option<Vec<u8>>,
-    file: Option<File>,
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
