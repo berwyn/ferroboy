@@ -1,47 +1,38 @@
 use std::ops::{Index, IndexMut};
 
 pub struct MMU {
-    rom: [u8; 32_768],
-    /// The first ROM bank, fixed, in cart
-    // bank0: &'a [u8],
-    /// The second ROM bank, switchable, in cart
-    // bank1: &'a [u8],
-    /// VRAM, fixed for DMG, switchable in CGB
-    vram: [u8; 8_192],
-    /// Switchable external RAM, in cart
-    eram: [u8; 8_192],
-    /// Work RAM, fixed
-    wram0: [u8; 4_096],
-    /// Work RAM, switchable in CGB mode
-    wram1: [u8; 4_096],
-    /// Sprite attribute table
-    oam: [u8; 160],
-    io: [u8; 128],
-    hram: [u8; 127],
-    fake: u8, // Use this to deal with unusable address spaces
+    memory: [u8; 0x10000],
 }
 
 impl MMU {
     pub fn new() -> Self {
-        let rom = [0; 0x8000];
-
         Self {
-            rom,
-            // bank0: &rom[0x0000..=0x3FFF],
-            // bank1: &rom[0x0000..=0x7FFF],
-            vram: [0; 8_192],
-            eram: [0; 8_192],
-            wram0: [0; 4_096],
-            wram1: [0; 4_096],
-            oam: [0; 160],
-            io: [0; 128],
-            hram: [0; 127],
-            fake: 0,
+            memory: [0; 0x10000],
         }
     }
 
-    pub fn load_bank_0(&mut self, buffer: &[u8]) {
-        self.rom[0x0000..=0x7FFF].copy_from_slice(buffer);
+    pub fn bank0(&self) -> &[u8] {
+        &self.memory[0x0000..=0x3FFF]
+    }
+
+    pub fn bank0_mut(&mut self) -> &mut [u8] {
+        &mut self.memory[0x0000..=0x3FFF]
+    }
+
+    pub fn bank1(&self) -> &[u8] {
+        &self.memory[0x4000..=0x7FFF]
+    }
+
+    pub fn bank1_mut(&mut self) -> &mut [u8] {
+        &mut self.memory[0x4000..=0x7FFF]
+    }
+
+    pub fn game_link(&self) -> &[u8] {
+        &self.memory[0xFF01..=0xFF02]
+    }
+
+    pub fn game_link_mut(&mut self) -> &mut [u8] {
+        &mut self.memory[0xFF01..=0xFF02]
     }
 }
 
@@ -59,43 +50,14 @@ impl std::fmt::Debug for MMU {
 
 impl Index<u16> for MMU {
     type Output = u8;
-
-    fn index(&self, index: u16) -> &Self::Output {
-        let actual_index = index as usize;
-        match index {
-            0x0000..=0x3FFF => &self.rom[actual_index], // bank0
-            0x4000..=0x7FFF => &self.rom[actual_index - 0x3FFF], // bank1
-            0x8000..=0x9FFF => &self.vram[actual_index - 0x8000],
-            0xA000..=0xBFFF => &self.eram[actual_index - 0xA000],
-            0xC000..=0xCFFF => &self.wram0[actual_index - 0xC000],
-            0xD000..=0xDFFF => &self.wram1[actual_index - 0xD000],
-            0xE000..=0xFDFF => &self.wram0[actual_index - 0xE000],
-            0xFE00..=0xFE9F => &self.oam[actual_index - 0xFE00],
-            0xFEA0..=0xFEFF => &0, // not usable on actual hardware
-            0xFF00..=0xFF7F => &self.io[actual_index - 0xFF00],
-            0xFF80..=0xFFFE => &self.hram[actual_index - 0xFF80],
-            0xFFFF => &0, // TODO(berwyn): Wire up to interrupt enabled/disabled
-        }
+    fn index(&self, address: u16) -> &Self::Output {
+        &self.memory[address as usize]
     }
 }
 
 impl IndexMut<u16> for MMU {
-    fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-        let actual_index = index as usize;
-        match index {
-            0x0000..=0x3FFF => &mut self.rom[actual_index], // bank0
-            0x4000..=0x7FFF => &mut self.rom[actual_index - 0x3FFF], // bank1
-            0x8000..=0x9FFF => &mut self.vram[actual_index - 0x8000],
-            0xA000..=0xBFFF => &mut self.eram[actual_index - 0xA000],
-            0xC000..=0xCFFF => &mut self.wram0[actual_index - 0xC000],
-            0xD000..=0xDFFF => &mut self.wram1[actual_index - 0xD000],
-            0xE000..=0xFDFF => &mut self.wram0[actual_index - 0xE000],
-            0xFE00..=0xFE9F => &mut self.oam[actual_index - 0xFE00],
-            0xFEA0..=0xFEFF => &mut self.fake, // Not usable on actual hardware
-            0xFF00..=0xFF7F => &mut self.io[actual_index - 0xFF00],
-            0xFF80..=0xFFFE => &mut self.hram[actual_index - 0xFF80],
-            0xFFFF => &mut self.fake, // TODO(berwyn): Wire up to interrupt enabled/disabled
-        }
+    fn index_mut(&mut self, address: u16) -> &mut Self::Output {
+        &mut self.memory[address as usize]
     }
 }
 

@@ -1,4 +1,5 @@
 use ferroboy::start;
+use ferroboy::tick;
 use ferroboy::ConfigBuilder;
 use ferroboy::StateBuilder;
 
@@ -9,7 +10,17 @@ pub fn main() {
     let config = ConfigBuilder::new().without_boot_check().build();
     let mut state = StateBuilder::new().with_config(config).build();
 
-    if let Ok(()) = state.load_cartridge_from_buffer(buf) {
-        start(&mut state).unwrap();
+    state.load_cartridge_from_buffer(buf).unwrap();
+    start(&mut state).unwrap();
+
+    if cfg!(debug_assertions) {
+        println!("{:?}", state);
+    }
+
+    loop {
+        match tick(&mut state) {
+            Ok(()) => {}
+            Err(msg) => panic!(msg),
+        }
     }
 }
