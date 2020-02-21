@@ -3,6 +3,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 
 use crate::system::Config;
+use crate::system::MMU;
 
 const CARTRIDGE_HEADER: [u8; 48] = [
     0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
@@ -108,12 +109,14 @@ pub struct Cartridge {
 }
 
 impl Cartridge {
-    pub fn from_buffer(buffer: &[u8], config: &Config) -> Result<Self, String> {
-        if config.enable_boot_check {
+    pub(crate) fn from_buffer(buffer: &[u8], config: &Config) -> Result<Self, String> {
+        let title = if config.enable_boot_check {
             Self::parse_cartridge_header(&buffer)?;
-        }
+            Self::parse_cartridge_title(buffer)?
+        } else {
+            "UNKNOWN".to_string()
+        };
 
-        let title = Self::parse_cartridge_title(buffer)?;
         let cartridge_type = CartridgeType::from_byte(buffer[0x147])?;
         let bank_count = Self::parse_bank_count(buffer)?;
         let ram_size = Self::parse_ram_size(buffer)?;
@@ -130,7 +133,7 @@ impl Cartridge {
         })
     }
 
-    pub fn from_file(file: File, config: &Config) -> Result<Self, String> {
+    pub(crate) fn from_file(file: File, config: &Config) -> Result<Self, String> {
         let mut buf_reader = BufReader::new(file);
         let mut buffer = Vec::<u8>::new();
 
@@ -139,6 +142,11 @@ impl Cartridge {
             .map_err(|e| e.to_string())?;
 
         Self::from_buffer(&buffer, config)
+    }
+
+    pub(crate) fn load_banks(&self, mmu: &mut MMU) {
+        mmu.bank0_mut().copy_from_slice(&self.data[0x0000..=0x3FFF]);
+        mmu.bank1_mut().copy_from_slice(&self.data[0x4000..=0x7FFF])
     }
 
     fn parse_cartridge_header(buffer: &[u8]) -> Result<(), String> {

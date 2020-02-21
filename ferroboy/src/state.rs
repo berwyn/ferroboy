@@ -1,4 +1,4 @@
-use crate::system::{Cartridge, CartridgeType, Config, Register, CPU, MMU};
+use crate::system::{Cartridge, Config, Register, CPU, MMU};
 
 #[derive(Debug, Default)]
 pub struct State {
@@ -44,12 +44,7 @@ impl State {
 
     pub fn map_cartridge(&mut self) -> Result<(), String> {
         if let Some(cart) = &self.cartridge {
-            match cart.cartridge_type {
-                CartridgeType::RomOnly => {
-                    self.mmu.load_bank_0(&cart.data);
-                }
-                _ => return Err("Unsupported memory controller".into()),
-            }
+            cart.load_banks(&mut self.mmu);
         }
 
         Ok(())
