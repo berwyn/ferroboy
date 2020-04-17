@@ -17,7 +17,7 @@ fn main() {
     };
 
     if let Err(e) = ferroboy::start(&mut state) {
-        println!("Cartridge failed startup: {}", e.to_string());
+        println!("Cartridge failed startup: {}", e);
     }
 
     match disassemble_rom(&mut state, &output_path) {
