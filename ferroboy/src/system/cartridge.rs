@@ -98,7 +98,6 @@ impl CartridgeType {
     }
 }
 
-#[derive(Debug)]
 pub struct Cartridge {
     pub title: String,
     pub cartridge_type: CartridgeType,
@@ -109,6 +108,14 @@ pub struct Cartridge {
 }
 
 impl Cartridge {
+    pub fn region(&self) -> String {
+        if self.is_japanese {
+            "Japan".into()
+        } else {
+            "Worldwide".into()
+        }
+    }
+
     pub(crate) fn from_buffer(buffer: &[u8], config: &Config) -> Result<Self, String> {
         let title = if config.enable_boot_check {
             Self::parse_cartridge_header(&buffer)?;
@@ -192,6 +199,19 @@ impl Cartridge {
         };
 
         Ok(value)
+    }
+}
+
+impl std::fmt::Debug for Cartridge {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct(stringify!(Cartridge))
+            .field("title", &self.title)
+            .field("cartridge_type", &self.cartridge_type)
+            .field("bank_count", &self.bank_count)
+            .field("ram_size", &self.ram_size)
+            .field("is_japanese", &self.is_japanese)
+            .field("self.data", &format!("Vec<u8> {}B", self.data.len()))
+            .finish()
     }
 }
 
