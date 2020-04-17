@@ -19,7 +19,7 @@ pub fn main() {
 
     loop {
         match tick(&mut state) {
-            Ok(()) => {}
+            Ok(_) => {}
             Err(msg) => panic!(msg),
         }
     }

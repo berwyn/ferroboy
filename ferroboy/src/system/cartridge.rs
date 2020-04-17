@@ -114,7 +114,7 @@ impl Cartridge {
             Self::parse_cartridge_header(&buffer)?;
             Self::parse_cartridge_title(buffer)?
         } else {
-            "UNKNOWN".to_string()
+            format!("{: <12}", "UNKNOWN")
         };
 
         let cartridge_type = CartridgeType::from_byte(buffer[0x147])?;

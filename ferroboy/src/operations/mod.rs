@@ -28,5 +28,8 @@ pub use load8::*;
 mod load16;
 pub use load16::*;
 
+mod nop;
+pub use nop::*;
+
 mod operation;
 pub use operation::*;

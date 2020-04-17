@@ -9,7 +9,7 @@ pub struct State {
 }
 
 impl State {
-    pub fn read_byte(&mut self) -> Result<u8, String> {
+    pub(crate) fn read_byte(&mut self) -> Result<u8, String> {
         let pc = self.cpu.get16(Register::PC)?;
         let word = self.mmu[pc];
 
@@ -18,7 +18,7 @@ impl State {
         Ok(word)
     }
 
-    pub fn read_word(&mut self) -> Result<(u8, u8), String> {
+    pub(crate) fn read_word(&mut self) -> Result<(u8, u8), String> {
         let mut pc = self.cpu.get16(Register::PC)?;
         let high = self.mmu[pc];
 
@@ -31,18 +31,18 @@ impl State {
         Ok((high, low))
     }
 
-    pub fn increment_program_counter(&mut self) -> Result<u16, String> {
+    pub(crate) fn increment_program_counter(&mut self) -> Result<u16, String> {
         self.cpu.mutate16(Register::PC, |old| old + 1)
     }
 
-    pub fn jump(&mut self, destination: u16) -> Result<(), String> {
+    pub(crate) fn jump(&mut self, destination: u16) -> Result<(), String> {
         // FIXME(berwyn): Validate jump target
         self.cpu.set16(Register::PC, destination)?;
 
         Ok(())
     }
 
-    pub fn map_cartridge(&mut self) -> Result<(), String> {
+    pub(crate) fn map_cartridge(&mut self) -> Result<(), String> {
         if let Some(cart) = &self.cartridge {
             cart.load_banks(&mut self.mmu);
         }
@@ -65,6 +65,10 @@ impl State {
         self.cartridge = Some(cartridge);
 
         Ok(())
+    }
+
+    pub fn is_halted(&self) -> bool {
+        self.cpu.is_halted()
     }
 }
 

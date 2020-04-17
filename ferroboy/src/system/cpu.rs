@@ -209,6 +209,10 @@ impl CPU {
     {
         self.clock = f(&self.clock)
     }
+
+    pub fn is_halted(&self) -> bool {
+        self.halt
+    }
 }
 
 #[cfg(test)]
