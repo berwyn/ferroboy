@@ -12,17 +12,20 @@ mod operations;
 mod state;
 mod system;
 
-pub fn start(state: &mut State) -> Result<(), String> {
+pub type Result<T> = std::result::Result<T, String>;
+
+pub fn start(state: &mut State) -> Result<()> {
     if let Some(_cart) = &state.cartridge {
-        state.map_cartridge()?;
-        state.jump(0x0100)?;
-        return Ok(());
+        return state
+            .map_cartridge()
+            .and(state.jump(0x0100))
+            .and_then(|_| Ok(()));
     }
 
     Err("Cartridge not loaded!".into())
 }
 
-pub fn tick(state: &mut State) -> Result<(), String> {
+pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operation> {
     let address = state.cpu.get16(Register::PC)?;
     let opcode = state.mmu[address];
 
@@ -38,7 +41,7 @@ pub fn tick(state: &mut State) -> Result<(), String> {
             println!("\t{:?}", operation);
         }
 
-        operation.act(state)
+        operation.act(state).and_then(|_| Ok(*operation))
     } else {
         Err(format!("Invalid opcode! PC: {}", opcode))
     }

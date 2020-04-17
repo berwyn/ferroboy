@@ -29,7 +29,13 @@ fn leak<T>(value: T) -> &'static T {
 }
 
 fn load_rank_0_ops(map: &mut OpCodeMap) {
-    map.insert(0x00, leak(IncrementClockOperation(4)));
+    map.insert(
+        0x00,
+        leak(compose_operations(
+            NopOperation(),
+            IncrementClockOperation(4),
+        )),
+    );
 
     map.insert(
         0x01,
