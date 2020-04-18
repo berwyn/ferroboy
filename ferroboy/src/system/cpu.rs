@@ -53,6 +53,31 @@ impl Register {
     }
 }
 
+impl std::fmt::Display for Register {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Register::A => "A",
+                Register::B => "B",
+                Register::C => "C",
+                Register::D => "D",
+                Register::E => "E",
+                Register::F => "F",
+                Register::H => "H",
+                Register::L => "L",
+                Register::AF => "AF",
+                Register::BC => "BC",
+                Register::DE => "DE",
+                Register::HL => "HL",
+                Register::SP => "SP",
+                Register::PC => "PC",
+            }
+        )
+    }
+}
+
 bitflags! {
     /// Bitflags for the CPU state. The Gameboy's Z80 doesn't use the lower four flags,
     /// so they should always be `0`.

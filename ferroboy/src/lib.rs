@@ -7,12 +7,13 @@ pub use crate::system::ConfigBuilder;
 pub use crate::system::Register;
 pub use crate::system::OPCODES;
 
+mod assembly;
 mod helpers;
 mod operations;
 mod state;
 mod system;
 
-pub type Result<T> = std::result::Result<T, String>;
+pub type Result<T> = core::result::Result<T, String>;
 
 pub fn start(state: &mut State) -> Result<()> {
     if let Some(_cart) = &state.cartridge {

@@ -1,3 +1,4 @@
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
@@ -15,5 +16,19 @@ impl Operation for Add8Operation {
         // TODO: H + C
 
         Ok(())
+    }
+}
+
+impl core::convert::TryFrom<Add8Operation> for AssemblyInstruction {
+    type Error = String;
+
+    fn try_from(value: Add8Operation) -> Result<AssemblyInstruction, Self::Error> {
+        let instruction = AssemblyInstructionBuilder::new()
+            .with_command("ADD")
+            .with_arg(value.0)
+            .with_arg(value.1)
+            .build()?;
+
+        Ok(instruction)
     }
 }
