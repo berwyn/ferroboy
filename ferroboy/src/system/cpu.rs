@@ -228,6 +228,10 @@ impl CPU {
         self.f -= flag;
     }
 
+    pub fn increment_clock(&mut self, amount: u64) {
+        self.clock += amount;
+    }
+
     pub fn set_clock<F>(&mut self, f: F)
     where
         F: FnOnce(&u64) -> u64,
