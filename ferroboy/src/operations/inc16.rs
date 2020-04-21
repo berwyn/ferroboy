@@ -8,7 +8,7 @@ use crate::system::{Flags, Register};
 pub struct Inc16Operation(pub Register);
 
 impl Operation for Inc16Operation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
             Register::SP => state.cpu.mutate16(self.0, |old| old + 1).map(|_| ())?,
             _ => {
@@ -31,6 +31,8 @@ impl Operation for Inc16Operation {
                 }
             }
         };
+
+        state.cpu.increment_clock(8);
 
         Ok(())
     }

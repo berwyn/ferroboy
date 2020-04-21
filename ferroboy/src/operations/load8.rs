@@ -7,9 +7,11 @@ use crate::system::Register;
 pub struct Load8ImmediateOperation(pub Register);
 
 impl Operation for Load8ImmediateOperation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let value = state.read_byte()?;
-        state.cpu.set(self.0, value).map(|_| ())
+        state.cpu.set(self.0, value).map(|_| ())?;
+        state.cpu.increment_clock(8);
+        Ok(())
     }
 }
 
@@ -17,9 +19,11 @@ impl Operation for Load8ImmediateOperation {
 pub struct Load8RegisterCopyOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterCopyOperation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let value = state.cpu.get(self.1)?;
-        state.cpu.set(self.0, value).map(|_| ())
+        state.cpu.set(self.0, value).map(|_| ())?;
+        state.cpu.increment_clock(4);
+        Ok(())
     }
 }
 
@@ -27,7 +31,7 @@ impl Operation for Load8RegisterCopyOperation {
 pub struct Load8FromMemoryOperation(pub Register, pub Register);
 
 impl Operation for Load8FromMemoryOperation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let (high, low) = Register::to_8bit_pair(self.1)?;
 
         let address_high = state.cpu.get(high)?;
@@ -35,7 +39,9 @@ impl Operation for Load8FromMemoryOperation {
         let address = word_to_u16((address_high, address_low));
         let value = state.mmu[address];
 
-        state.cpu.set(self.0, value).map(|_| ())
+        state.cpu.set(self.0, value).map(|_| ())?;
+        state.cpu.increment_clock(8);
+        Ok(())
     }
 }
 
@@ -43,7 +49,7 @@ impl Operation for Load8FromMemoryOperation {
 pub struct Load8RegisterToMemoryOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterToMemoryOperation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let address = match self.0 {
             Register::PC | Register::BC | Register::DE | Register::HL => state.cpu.get16(self.0)?,
             Register::C => u16::from(state.cpu.get(self.0)?),
@@ -52,6 +58,8 @@ impl Operation for Load8RegisterToMemoryOperation {
 
         let value = state.cpu.get(self.1)?;
         state.mmu[address] = value;
+
+        state.cpu.increment_clock(8);
 
         Ok(())
     }

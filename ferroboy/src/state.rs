@@ -9,7 +9,7 @@ pub struct State {
 }
 
 impl State {
-    pub(crate) fn read_byte(&mut self) -> Result<u8, String> {
+    pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
         let pc = self.cpu.get16(Register::PC)?;
         let word = self.mmu[pc];
 
@@ -18,7 +18,7 @@ impl State {
         Ok(word)
     }
 
-    pub(crate) fn read_word(&mut self) -> Result<(u8, u8), String> {
+    pub(crate) fn read_word(&mut self) -> crate::Result<(u8, u8)> {
         let mut pc = self.cpu.get16(Register::PC)?;
         let high = self.mmu[pc];
 
@@ -31,18 +31,18 @@ impl State {
         Ok((high, low))
     }
 
-    pub(crate) fn increment_program_counter(&mut self) -> Result<u16, String> {
+    pub(crate) fn increment_program_counter(&mut self) -> crate::Result<u16> {
         self.cpu.mutate16(Register::PC, |old| old + 1)
     }
 
-    pub(crate) fn jump(&mut self, destination: u16) -> Result<(), String> {
+    pub(crate) fn jump(&mut self, destination: u16) -> crate::Result<()> {
         // FIXME(berwyn): Validate jump target
         self.cpu.set16(Register::PC, destination)?;
 
         Ok(())
     }
 
-    pub(crate) fn map_cartridge(&mut self) -> Result<(), String> {
+    pub(crate) fn map_cartridge(&mut self) -> crate::Result<()> {
         if let Some(cart) = &self.cartridge {
             cart.load_banks(&mut self.mmu);
         }
@@ -50,7 +50,7 @@ impl State {
         Ok(())
     }
 
-    pub fn load_cartridge_from_file(&mut self, path: &str) -> Result<(), String> {
+    pub fn load_cartridge_from_file(&mut self, path: &str) -> crate::Result<()> {
         let file = std::fs::File::open(path).map_err(|_| "Couldn't open file".to_string())?;
         let cartridge = Cartridge::from_file(file, &self.config)?;
 
@@ -59,7 +59,7 @@ impl State {
         Ok(())
     }
 
-    pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> Result<(), String> {
+    pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> crate::Result<()> {
         let cartridge = Cartridge::from_buffer(buffer, &self.config)?;
 
         self.cartridge = Some(cartridge);

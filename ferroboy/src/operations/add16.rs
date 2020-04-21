@@ -6,7 +6,7 @@ use crate::system::{Flags, Register};
 pub struct Add16Operation(Register, u16);
 
 impl Operation for Add16Operation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let (high, low) = self.0.to_8bit_pair()?;
 
         state.cpu.clear_flag(Flags::SUBTRACTION);

@@ -116,7 +116,7 @@ impl Cartridge {
         }
     }
 
-    pub(crate) fn from_buffer(buffer: &[u8], config: &Config) -> Result<Self, String> {
+    pub(crate) fn from_buffer(buffer: &[u8], config: &Config) -> crate::Result<Self> {
         let title = if config.enable_boot_check {
             Self::parse_cartridge_header(&buffer)?;
             Self::parse_cartridge_title(buffer)?
@@ -140,7 +140,7 @@ impl Cartridge {
         })
     }
 
-    pub(crate) fn from_file(file: File, config: &Config) -> Result<Self, String> {
+    pub(crate) fn from_file(file: File, config: &Config) -> crate::Result<Self> {
         let mut buf_reader = BufReader::new(file);
         let mut buffer = Vec::<u8>::new();
 
@@ -156,7 +156,7 @@ impl Cartridge {
         mmu.bank1_mut().copy_from_slice(&self.data[0x4000..=0x7FFF])
     }
 
-    fn parse_cartridge_header(buffer: &[u8]) -> Result<(), String> {
+    fn parse_cartridge_header(buffer: &[u8]) -> crate::Result<()> {
         if buffer.len() < 0x134 {
             return Err("Invalid cartridge header!".into());
         }
@@ -170,13 +170,13 @@ impl Cartridge {
         Ok(())
     }
 
-    fn parse_cartridge_title(buffer: &[u8]) -> Result<String, String> {
+    fn parse_cartridge_title(buffer: &[u8]) -> crate::Result<String> {
         String::from_utf8(buffer[0x134..=0x143].into())
             .map(|s| s.trim_end_matches('\u{0}').to_string())
             .map_err(|_| "Invalid cartridge title".to_string())
     }
 
-    fn parse_bank_count(buffer: &[u8]) -> Result<u8, String> {
+    fn parse_bank_count(buffer: &[u8]) -> crate::Result<u8> {
         let value = match buffer[0x148] {
             0 => 0,
             v @ 1..=7 => 2u8.pow((v + 1).into()),
@@ -189,7 +189,7 @@ impl Cartridge {
         Ok(value)
     }
 
-    fn parse_ram_size(buffer: &[u8]) -> Result<u8, String> {
+    fn parse_ram_size(buffer: &[u8]) -> crate::Result<u8> {
         let value = match buffer[0x149] {
             0 => 0,
             1 => 2,

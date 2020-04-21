@@ -7,13 +7,15 @@ use crate::system::{Flags, Register};
 pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
-    fn act(&self, state: &mut State) -> Result<(), String> {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
         let value = state.cpu.get(self.1)?;
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
         state.cpu.mutate(self.0, |old| old + value)?;
 
         // TODO: H + C
+
+        state.cpu.increment_clock(4);
 
         Ok(())
     }
