@@ -20,7 +20,7 @@ use crate::system::{Flags, Register};
 /// | Flag | Value |
 /// |:-----|:------|
 /// | Zero | Set |
-/// | Subtract | 0 |
+/// | Subtraction | 0 |
 /// | Half-Carry | Set |
 /// | Carry | Set |
 ///

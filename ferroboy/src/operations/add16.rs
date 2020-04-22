@@ -2,6 +2,48 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
+// FIXME: This is probably better as (WideRegister)
+/*
+ * 0x09 is ADD HL,BC
+ * 0x19 is ADD HL,DE
+ * 0x29 is ADD HL,BC
+ * 0x39 is ADD HL,HL
+ * 0x49 is ADD HL,SP
+ * Since HL is the only valid target, and all the right-hand args are
+ * 16-bit registers, we can probably simplify this and keep all state
+ * reads and writes here
+ */
+
+/// Adds the contents of one 16-bit register to another
+///
+/// # Opcode Reference
+/// ## Assembly definition
+/// ```a
+/// ADD HL,SP
+/// ```
+///
+/// ## Runtime
+/// | Metric | Size |
+/// |:-------|:-----|
+/// | Length | 1 |
+/// | Cycles | 8 |
+///
+/// ## Flags
+/// | Flag | Value |
+/// |:-----|:------|
+/// | Zero | Not Affected |
+/// | Subtraction | 0 |
+/// | Half-Carry | Set |
+/// | Carry | Set |
+///
+/// # Examples
+/// ```rs
+/// let operation = Add16Operation(Register::HL, Register::SP);
+/// operation.act(&mut state).unwrap();
+/// ```
+///
+/// # Errors
+/// - The operation may fail if an 8-bit register is provided.
 #[derive(Debug)]
 pub struct Add16Operation(Register, u16);
 
@@ -105,5 +147,15 @@ mod tests {
         assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
         assert!(state.cpu.has_flag(Flags::HALF_CARRY));
         assert!(state.cpu.has_flag(Flags::CARRY));
+    }
+
+    #[test]
+    fn it_clears_the_subtraction_flag() {
+        let mut state = State::default();
+        state.cpu.set_flag(Flags::SUBTRACTION);
+
+        Add16Operation(Register::HL, 0).act(&mut state).unwrap();
+
+        assert_ne!(true, state.cpu.has_flag(Flags::SUBTRACTION));
     }
 }
