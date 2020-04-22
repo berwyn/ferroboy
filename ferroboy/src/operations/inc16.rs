@@ -1,9 +1,39 @@
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
-/// Increments a singular 16bit register.
-/// Does not affect flags.
+// FIXME: WideRegiser
+/// Increments a singular register.
+///
+/// # Opcode Reference
+/// ## Assembly Definition
+/// ```a
+/// INC BC
+/// ```
+///
+/// ## Runtime
+/// | Metric | Size |
+/// |:-------|:-----|
+/// | Length | 1 |
+/// | Cycles | 8 |
+///
+/// ## Flags
+/// | Flag | Value |
+/// |:-----|:------|
+/// | Zero | Not Affected |
+/// | Subtraction | Not Affected |
+/// | Half-Carry | Not Affected |
+/// | Carry | Not Affected |
+///
+/// # Examples
+/// ```rs
+/// let operation = Inc16Operation(Register::BC);
+/// operation.act(&mut state).unwrap();
+/// ```
+///
+/// # Errors
+/// - The operation may fail if an 8-bit register is provided.
 #[derive(Debug)]
 pub struct Inc16Operation(pub Register);
 
@@ -35,6 +65,17 @@ impl Operation for Inc16Operation {
         state.cpu.increment_clock(8);
 
         Ok(())
+    }
+}
+
+impl core::convert::TryFrom<Inc16Operation> for AssemblyInstruction {
+    type Error = String;
+
+    fn try_from(value: Inc16Operation) -> Result<AssemblyInstruction, Self::Error> {
+        AssemblyInstructionBuilder::new()
+            .with_command("INC")
+            .with_arg(value.0)
+            .build()
     }
 }
 
