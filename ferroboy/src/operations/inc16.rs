@@ -84,6 +84,16 @@ mod tests {
     use super::*;
 
     #[test]
+    fn it_disassembles_correctly() {
+        use core::convert::TryInto;
+
+        let inc = Inc16Operation(Register::BC);
+        let inc_instruction: AssemblyInstruction = inc.try_into().unwrap();
+
+        assert_eq!("INC BC", inc_instruction.to_string());
+    }
+
+    #[test]
     fn it_increments_the_lower_byte() {
         let mut state = State::default();
         let op = Inc16Operation(Register::BC);
