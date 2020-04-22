@@ -1,6 +1,7 @@
 use crate::helpers::{u16_to_word, word_to_u16};
 use bitflags::bitflags;
 
+// FIXME: Replace with Register (8bit) and WideRegister (16bit)
 /// `Register` is an enum to help indicate which registers
 /// an operation should apply to.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -120,11 +121,7 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
-    pub fn get(&self, register: Register) -> Result<u8, String> {
+    pub(crate) fn get(&self, register: Register) -> Result<u8, String> {
         let selected = match register {
             Register::A => self.a,
             Register::B => self.b,
@@ -139,7 +136,7 @@ impl CPU {
         Ok(selected)
     }
 
-    pub fn get16(&self, register: Register) -> Result<u16, String> {
+    pub(crate) fn get16(&self, register: Register) -> Result<u16, String> {
         let selected = match register {
             Register::SP => self.sp,
             Register::PC => self.pc,
@@ -155,11 +152,11 @@ impl CPU {
         Ok(selected)
     }
 
-    pub fn set(&mut self, register: Register, value: u8) -> Result<u8, String> {
+    pub(crate) fn set(&mut self, register: Register, value: u8) -> Result<u8, String> {
         self.mutate(register, |_| value)
     }
 
-    pub fn mutate<F>(&mut self, register: Register, f: F) -> Result<u8, String>
+    pub(crate) fn mutate<F>(&mut self, register: Register, f: F) -> Result<u8, String>
     where
         F: FnOnce(&u8) -> u8,
     {
@@ -179,11 +176,11 @@ impl CPU {
         Ok(*selected)
     }
 
-    pub fn set16(&mut self, register: Register, value: u16) -> Result<u16, String> {
+    pub(crate) fn set16(&mut self, register: Register, value: u16) -> Result<u16, String> {
         self.mutate16(register, |_| value)
     }
 
-    pub fn mutate16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
+    pub(crate) fn mutate16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
     where
         F: FnOnce(&u16) -> u16,
     {
@@ -214,32 +211,32 @@ impl CPU {
         Ok(selected)
     }
 
-    // FIXME: Remove this annotation after implementing RET and friends
-    #[allow(dead_code)]
-    pub fn has_flag(&self, flag: Flags) -> bool {
+    pub(crate) fn has_flag(&self, flag: Flags) -> bool {
         self.f & flag == flag
     }
 
-    pub fn set_flag(&mut self, flag: Flags) {
+    pub(crate) fn set_flag(&mut self, flag: Flags) {
         self.f |= flag
     }
 
-    pub fn clear_flag(&mut self, flag: Flags) {
+    pub(crate) fn clear_flag(&mut self, flag: Flags) {
         self.f -= flag;
     }
 
-    pub fn increment_clock(&mut self, amount: u64) {
+    pub(crate) fn increment_clock(&mut self, amount: u64) {
         self.clock += amount;
     }
 
-    pub fn set_clock<F>(&mut self, f: F)
+    // FIXME: Should this be test-only?
+    #[allow(dead_code)]
+    pub(crate) fn set_clock<F>(&mut self, f: F)
     where
         F: FnOnce(&u64) -> u64,
     {
         self.clock = f(&self.clock)
     }
 
-    pub fn is_halted(&self) -> bool {
+    pub(crate) fn is_halted(&self) -> bool {
         self.halt
     }
 }
