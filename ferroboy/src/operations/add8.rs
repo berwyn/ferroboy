@@ -71,6 +71,16 @@ mod tests {
     use super::*;
 
     #[test]
+    fn it_disassembles_correctly() {
+        use core::convert::TryInto;
+
+        let add = Add8Operation(Register::A, Register::B);
+        let add_instruction: AssemblyInstruction = add.try_into().unwrap();
+
+        assert_eq!("ADD A,B", add_instruction.to_string());
+    }
+
+    #[test]
     fn it_adds_two_registers() -> crate::Result<()> {
         let mut state = State::default();
         state.cpu.set(Register::A, 0x10)?;
