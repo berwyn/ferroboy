@@ -16,7 +16,7 @@ impl std::fmt::Display for AssemblyInstruction {
         }
 
         if let Some(arg) = &self.args[1] {
-            write!(f, " {}", arg)?;
+            write!(f, ",{}", arg)?;
         }
 
         Ok(())
@@ -165,6 +165,6 @@ mod tests {
         let res = TestOperation(Register::A, Register::D).disassemble(&State::default());
 
         assert!(res.is_ok());
-        assert_eq!("TEST A D", res.unwrap().to_string());
+        assert_eq!("TEST A,D", res.unwrap().to_string());
     }
 }
