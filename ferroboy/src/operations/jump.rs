@@ -3,15 +3,95 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
+/// Indicates what condition should trigger a relative jump command.
 #[derive(Debug)]
 pub enum JumpRelativeFlag {
+    /// The jump should always occur.
     Nop,
+    /// The jump should only occur if the zero flag is set.
     Zero,
+    /// The jump should only occur if the zero flag is unset.
     NotZero,
+    /// The jump should only occur if the carry flag is set.
     Carry,
+    /// The jump should only occur if the carry flag is unset.
     NotCarry,
 }
 
+impl std::fmt::Display for JumpRelativeFlag {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Nop => "<nop>",
+                Self::Zero => "Z",
+                Self::NotZero => "NZ",
+                Self::Carry => "C",
+                Self::NotCarry => "NC",
+            }
+        )
+    }
+}
+
+/// Reads a signed 8-bit integer and adds it to the program counter if
+/// the conditions of the flag are met.
+///
+/// # Opcode Reference
+/// ## Assembly Definition
+/// ```a
+/// ; Nop
+/// JR $78
+/// ; Zero
+/// JR Z,$78
+/// ; NotZero
+/// JR NZ,$78
+/// ; Carry
+/// JR C,$78
+/// ; NotCarry
+/// JR NC,$78
+/// ```
+/// ## Runtime
+/// | Metric | Size |
+/// |:-------|:-----|
+/// | Length | 2 |
+/// | Cycles | (see below) |
+///
+/// Cycle count for JR depends on two factors:
+/// - Does it branch?
+/// - Is the branch condition met?
+///
+/// In cases like `Nop`, where there's no branch condition, and cases
+/// where the branch condition is met `JR` consumes 12 cycles. In all
+/// other cases, `JR` consumes 8 cycles.
+///
+/// | Condition | Condition met? | Cycles |
+/// |:----------|:---------------|:-------|
+/// | `Nop` | | 12 |
+/// | `Zero` | ❌ | 8 |
+/// | `Zero` | ✅ | 12 |
+/// | `NotZero` | ❌ | 8 |
+/// | `NotZero` | ✅ | 12 |
+/// | `Carry` | ❌ | 8 |
+/// | `Carry` | ✅ | 12 |
+/// | `NotCarry` | ❌ | 8 |
+/// | `NotCarry` | ✅ | 12 |
+/// ## Flags
+/// | Flag | Value |
+/// |:-----|:------|
+/// | Zero | Not Affected |
+/// | Subtraction | Not Affected |
+/// | Half-Cary | Not Affected |
+/// | Carry | Not Affected |
+///
+/// # Examples
+/// ```rs
+/// let operation = JumpRelativeOperation(JumpRelativeFlag::Zero);
+/// operation.act(&mut state).unwrap();
+/// ```
+///
+/// # Errors
+/// - This should only error if the program counter points outside valid memory
 #[derive(Debug)]
 pub struct JumpRelativeOperation(pub JumpRelativeFlag);
 
@@ -69,6 +149,9 @@ impl Operation for JumpRelativeOperation {
         }
     }
 }
+
+// TODO: TryFrom<JumpRelativeOperation> for AssemblyInstruction
+// Challenge here is that we don't statically know the second arg
 
 #[derive(Debug, PartialEq)]
 pub enum JumpPositionFlags {
