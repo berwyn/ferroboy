@@ -1,10 +1,11 @@
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
 /// Indicates what condition should trigger a relative jump command.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum JumpRelativeFlag {
     /// The jump should always occur.
     Nop,
@@ -150,8 +151,19 @@ impl Operation for JumpRelativeOperation {
     }
 }
 
-// TODO: TryFrom<JumpRelativeOperation> for AssemblyInstruction
-// Challenge here is that we don't statically know the second arg
+impl core::convert::TryFrom<JumpRelativeOperation> for AssemblyInstruction {
+    type Error = String;
+
+    fn try_from(value: JumpRelativeOperation) -> core::result::Result<Self, Self::Error> {
+        let mut builder = AssemblyInstructionBuilder::new().with_command("JR");
+
+        if !value.0.eq(&JumpRelativeFlag::Nop) {
+            builder = builder.with_arg(value.0);
+        }
+
+        builder.with_arg("#").build()
+    }
+}
 
 #[derive(Debug, PartialEq)]
 pub enum JumpPositionFlags {
@@ -226,5 +238,23 @@ impl Operation for JumpPositionOperation {
             }
             JumpPositionFlags::Register => unreachable!(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn jump_relative_disassembles_correctly() {
+        use core::convert::TryInto;
+
+        let nop = JumpRelativeOperation(JumpRelativeFlag::Nop);
+        let nop_instruction: AssemblyInstruction = nop.try_into().unwrap();
+        assert_eq!("JR #", nop_instruction.to_string());
+
+        let zero = JumpRelativeOperation(JumpRelativeFlag::Zero);
+        let zero_instruction: AssemblyInstruction = zero.try_into().unwrap();
+        assert_eq!("JR Z,#", zero_instruction.to_string());
     }
 }
