@@ -3,7 +3,7 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
 
-// FIXME: WideRegiser
+// FIXME: WideRegister
 /// Increments a singular register.
 ///
 /// # Opcode Reference
