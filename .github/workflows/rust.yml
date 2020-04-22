@@ -12,24 +12,36 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Set up a Rust toolchain
-        uses: hecrj/setup-rust-action@v1.3.1
-        with:
-          rust-version: ${{ matrix.rust }}
-          components: clippy,rustfmt
       - uses: actions/checkout@v2
-      - name: Checkout submodules
-        shell: bash
-        run: |
-          git config --global url."https://github.com/".insteadOf "git@github.com:"
-          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-          git submodule sync --recursive
-          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Lint
-        run: cargo clippy --all-features --all-targets -- -D warnings
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Set up a Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy, rustfmt
+      - name: Check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
       - name: Format
-        run: cargo fmt -- --check
-      - name: Build
-        run: cargo build --all-targets --verbose
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --check
+      - name: Lint
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features --all-targets -- -D warnings
       - name: Test
-        run: cargo test --verbose
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all-targets --verbose --release
