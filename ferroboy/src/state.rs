@@ -1,5 +1,9 @@
 use crate::system::{Cartridge, Config, Register, CPU, MMU};
 
+/// The current state of the emulation.
+///
+/// This struct serves as the overall wrapper for the emulation system
+/// and holds all the references to the various sub-systems.
 #[derive(Debug, Default)]
 pub struct State {
     pub config: Config,
@@ -77,6 +81,7 @@ pub struct StateBuilder {
 }
 
 impl StateBuilder {
+    #[deprecated]
     #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {
