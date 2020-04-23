@@ -11,6 +11,11 @@ const CARTRIDGE_HEADER: [u8; 48] = [
     0xBB, 0xBB, 0x67, 0x63, 0x6E, 0x0E, 0xEC, 0xCC, 0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E,
 ];
 
+/// An enum to express what memory mapper a cartridge is using.
+///
+/// This does include the unlicensed memory mappers, however that doesn't mean that
+/// these memory mappers will be fully supported. They are included the sake of
+/// completeness.
 #[repr(u8)]
 #[derive(Debug)]
 pub enum CartridgeType {
@@ -98,6 +103,11 @@ impl CartridgeType {
     }
 }
 
+// TODO: Re-examine the API of this struct.
+// ? Do all these fields need to be exposed?
+// ? Should this use a builder instead of `from_buffer`/`from_file`?
+// ? Should there be flags for colour/SGB compatibility?
+/// A Gameboy cartridge.
 pub struct Cartridge {
     pub title: String,
     pub cartridge_type: CartridgeType,
