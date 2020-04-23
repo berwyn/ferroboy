@@ -2,6 +2,9 @@ use core::convert::TryInto;
 
 use crate::state::State;
 
+/// A raw 6502 assembly instruction.
+///
+/// This is mostly available for introspection and disassembly.
 pub struct AssemblyInstruction {
     command: String,
     args: [Option<String>; 2],
