@@ -15,7 +15,6 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          components: rustdoc
       - name: Build
         run: cargo doc --document-private-items
       - name: Deploy
