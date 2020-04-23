@@ -151,6 +151,7 @@ impl Operation for JumpRelativeOperation {
     }
 }
 
+// FIXME: This might need to implement Disassemble directly, because it needs the immediate
 impl core::convert::TryFrom<JumpRelativeOperation> for AssemblyInstruction {
     type Error = String;
 
@@ -165,16 +166,92 @@ impl core::convert::TryFrom<JumpRelativeOperation> for AssemblyInstruction {
     }
 }
 
+/// Indicates what conditions should trigger a jump position command
 #[derive(Debug, PartialEq)]
 pub enum JumpPositionFlags {
+    /// The jump should always occur.
     Nop,
+    /// The jump should only occur if the zero flag is set.
     Zero,
+    /// The jump should only occur if the zero flag is unset.
     NotZero,
+    /// The jump should only occur if the carry flag is set.
     Carry,
+    /// The jump should only occur if the carry flag is unset.
     NotCarry,
+    /// The jump should always occur, and read the address from HL.
     Register,
 }
 
+/// Reads a signed 8-bit integer and adds it to the program counter if
+/// the conditions of the flag are met.
+///
+/// # Opcode Reference
+/// ## Assembly Definition
+/// ```a
+/// ; Nop
+/// JP $78
+/// ; Zero
+/// JP Z,$78
+/// ; NotZero
+/// JP NZ,$78
+/// ; Carry
+/// JP C,$78
+/// ; NotCarry
+/// JP NC,$78
+/// ; Register
+/// JP (HL)
+/// ```
+/// ## Runtime
+/// | Metric | Size        |
+/// |:-------|:------------|
+/// | Length | (see below) |
+/// | Cycles | (see below) |
+///
+/// When it comes to the length of the `JP` instruction, most occurances
+/// are 3 bytes, being the opcode and the address. There is one special case,
+/// however, in that `JP (HL)` is only the opcode, and therefore 1 byte.
+///
+/// | Condition | Size |
+/// |:----------|:-----|
+/// | `Nop`     | 3    |
+/// | `Z`/`NZ`  | 3    |
+/// | `C`/`NC`  | 3    |
+/// | `Register`| 1    |
+///
+/// In regards to cycle count, this once again varies depending on the conditions.
+/// `JP` instructions that need to read the immediate 16-bit address will be
+/// 16 cycles on a successful jump, or 12 cycles where no jump is made. `JP (HL)`
+/// is once again a special case, and only consumes 4 cycles.
+///
+/// | Condition  | Condition met? | Cycles |
+/// |:-----------|:---------------|:-------|
+/// | `Nop`      |                | 16     |
+/// | `Zero`     | ❌             | 12     |
+/// | `Zero`     | ✅             | 16     |
+/// | `NotZero`  | ❌             | 12     |
+/// | `NotZero`  | ✅             | 16     |
+/// | `Carry`    | ❌             | 12     |
+/// | `Carry`    | ✅             | 16     |
+/// | `NotCarry` | ❌             | 12     |
+/// | `NotCarry` | ✅             | 16     |
+/// | `Register` |                | 4      |
+/// ## Flags
+/// | Flag          | Value         |
+/// |:--------------|:--------------|
+/// | Zero          | Not Affected  |
+/// | Subtraction   | Not Affected  |
+/// | Half-Cary     | Not Affected  |
+/// | Carry         | Not Affected  |
+///
+/// # Examples
+/// ```rs
+/// let operation = JumpPositionOperation(JumpRelativeFlag::Zero);
+/// operation.act(&mut state).unwrap();
+/// ```
+///
+/// # Errors
+/// - This should only error if the program counter points outside valid memory
 #[derive(Debug)]
 pub struct JumpPositionOperation(pub JumpPositionFlags);
 
@@ -240,6 +317,8 @@ impl Operation for JumpPositionOperation {
         }
     }
 }
+
+// TODO: Implement disassemble for JumpPositionOperation
 
 #[cfg(test)]
 mod tests {
