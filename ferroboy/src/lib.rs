@@ -15,6 +15,7 @@ mod system;
 
 pub type Result<T> = core::result::Result<T, String>;
 
+/// Prepare the system and start the emulation.
 pub fn start(state: &mut State) -> Result<()> {
     if let Some(_cart) = &state.cartridge {
         return state
@@ -26,6 +27,10 @@ pub fn start(state: &mut State) -> Result<()> {
     Err("Cartridge not loaded!".into())
 }
 
+/// Step the emulation.
+///
+/// In an ideal world, this should be done at the clock rate of the Gameboy, but technically
+/// can be done at any rate.
 pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operation> {
     let address = state.cpu.get16(Register::PC)?;
     let opcode = state.mmu[address];
