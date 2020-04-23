@@ -3,6 +3,35 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::Register;
 
+/// Loads an immediate 16-bit value into a register.
+///
+/// # Opcode Reference
+/// ## Assembly definition
+/// ```a
+/// LD BC,##
+/// ```
+///
+/// ## Runtime
+/// | Metric | Size |
+/// |:-------|:-----|
+/// | Length | 3    |
+/// | Cycles | 12   |
+///
+/// ## Flags
+/// | Flag          | Value        |
+/// |:--------------|:-------------|
+/// | Zero          | Not Affected |
+/// | Subtraction   | Not Affected |
+/// | Half-Carry    | Not Affected |
+/// | Carry         | Not Affected |
+///
+/// # Examples
+/// ```rs
+/// Load16ImmediateOperation(Register::BC)
+/// ```
+///
+/// # Errors
+/// - The operation will fail if provided an 8-bit register
 #[derive(Debug)]
 pub struct Load16ImmediateOperation(pub Register);
 
