@@ -7,14 +7,21 @@ use bitflags::bitflags;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Register {
     // 8bit
-    /// Register A is the 6502's accumulator.
+    /// The accumulator.
     A,
+    /// General purpose register
     B,
+    /// General purpose register
     C,
+    /// General purpose register
     D,
+    /// General purpose register
     E,
+    /// General purpose register
     F,
+    /// General purpose register
     H,
+    /// General purpose register
     L,
 
     // Computed 16bit
@@ -97,7 +104,7 @@ impl Default for Flags {
     }
 }
 
-/// An implementation of a Zilog Z80 DMG-01 variant
+/// An implementation of the Gameboy's LR35902 CPU.
 #[derive(Debug, Default)]
 pub struct CPU {
     halt: bool,
@@ -156,6 +163,7 @@ impl CPU {
         self.mutate(register, |_| value)
     }
 
+    #[deprecated]
     pub(crate) fn mutate<F>(&mut self, register: Register, f: F) -> Result<u8, String>
     where
         F: FnOnce(&u8) -> u8,
@@ -180,6 +188,7 @@ impl CPU {
         self.mutate16(register, |_| value)
     }
 
+    #[deprecated]
     pub(crate) fn mutate16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
     where
         F: FnOnce(&u16) -> u16,
