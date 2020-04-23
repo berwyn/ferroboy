@@ -7,6 +7,7 @@ use crate::system::Register;
 
 type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
 
+/// A compile-time map of opcodes to their Operations.
 pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     let mut map = BTreeMap::new();
 
@@ -24,6 +25,7 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     map
 });
 
+/// Leak an object reference so that it lives on for the life of the program.
 fn leak<T>(value: T) -> &'static T {
     Box::leak(Box::new(value))
 }
