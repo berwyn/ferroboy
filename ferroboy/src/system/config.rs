@@ -1,3 +1,10 @@
+// ? Do these fields need to actually be exposed on the external interface?
+// Might be better off having pub get and pub(crate) set
+/// Configuration options for the emulation.
+///
+/// This should be used to configure how emulation is handled for a
+/// given context, e.g. in the case of libretro doing a full bootcheck
+/// is probably desireable, but a test harness might not care.
 #[derive(Clone, Debug)]
 pub struct Config {
     /// Whether or not to ensure that the ROM boots correctly like a
