@@ -17,14 +17,6 @@ pub struct MMU {
 // would just defer to it for the appropriate memory range.
 
 impl MMU {
-    // TODO: Move this into Default
-    #[deprecated]
-    pub fn new() -> Self {
-        Self {
-            memory: [0; 0x10000],
-        }
-    }
-
     pub fn bank0(&self) -> &[u8] {
         &self.memory[0x0000..=0x3FFF]
     }
@@ -52,7 +44,9 @@ impl MMU {
 
 impl Default for MMU {
     fn default() -> Self {
-        Self::new()
+        Self {
+            memory: [0; 0x10000],
+        }
     }
 }
 

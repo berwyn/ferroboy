@@ -42,7 +42,7 @@ impl Operation for Add8Operation {
         state.cpu.clear_flag(Flags::SUBTRACTION);
 
         // FIXME: This probably shouldn't ever fail, revisit this
-        state.cpu.mutate(self.0, |old| old + value)?;
+        state.cpu.set(self.0, state.cpu.get(self.0)? + value)?;
 
         // TODO: H + C
 

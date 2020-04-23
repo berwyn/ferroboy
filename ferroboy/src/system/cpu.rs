@@ -160,14 +160,6 @@ impl CPU {
     }
 
     pub(crate) fn set(&mut self, register: Register, value: u8) -> Result<u8, String> {
-        self.mutate(register, |_| value)
-    }
-
-    #[deprecated]
-    pub(crate) fn mutate<F>(&mut self, register: Register, f: F) -> Result<u8, String>
-    where
-        F: FnOnce(&u8) -> u8,
-    {
         let selected = match register {
             Register::A => &mut self.a,
             Register::B => &mut self.b,
@@ -179,45 +171,32 @@ impl CPU {
             _ => return Err("Can't use 16bit registers".into()),
         };
 
-        *selected = f(selected);
+        *selected = value;
 
         Ok(*selected)
     }
 
     pub(crate) fn set16(&mut self, register: Register, value: u16) -> Result<u16, String> {
-        self.mutate16(register, |_| value)
-    }
-
-    #[deprecated]
-    pub(crate) fn mutate16<F>(&mut self, register: Register, f: F) -> Result<u16, String>
-    where
-        F: FnOnce(&u16) -> u16,
-    {
-        let selected = match register {
+        match register {
             Register::SP => {
-                self.sp = f(&self.sp);
-                self.sp
+                self.sp = value;
+                Ok(self.sp)
             }
             Register::PC => {
-                self.pc = f(&self.pc);
-                self.pc
+                self.pc = value;
+                Ok(self.pc)
             }
             Register::AF | Register::BC | Register::DE | Register::HL => {
-                let word = self.get16(register)?;
-                let word = f(&word);
-
-                let (high_byte, low_byte) = u16_to_word(word);
+                let (high_byte, low_byte) = u16_to_word(value);
                 let (high, low) = register.to_8bit_pair()?;
 
                 self.set(high, high_byte)?;
                 self.set(low, low_byte)?;
 
-                word
+                self.get16(register)
             }
-            _ => return Err("Invalid register".into()),
-        };
-
-        Ok(selected)
+            _ => Err("Invalid register".into()),
+        }
     }
 
     pub(crate) fn has_flag(&self, flag: Flags) -> bool {

@@ -39,28 +39,27 @@ pub struct Inc16Operation(pub Register);
 
 impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        match self.0 {
-            Register::SP => state.cpu.mutate16(self.0, |old| old + 1).map(|_| ())?,
-            _ => {
-                let (high, low) = self.0.to_8bit_pair()?;
+        if Register::SP.eq(&self.0) {
+            state.cpu.set16(self.0, state.cpu.get16(self.0)? + 1)?;
+        } else {
+            let (high, low) = self.0.to_8bit_pair()?;
 
-                let mut lower = u16::from(state.cpu.get(low)?);
-                lower += 1;
-                state.cpu.set(low, lower as u8).map(|_| ())?;
+            let mut lower = u16::from(state.cpu.get(low)?);
+            lower += 1;
+            state.cpu.set(low, lower as u8)?;
 
-                if lower / 0xFF > 0 {
-                    state.cpu.set_flag(Flags::HALF_CARRY);
-                    let mut upper = u16::from(state.cpu.get(high)?);
-                    upper += 1;
+            if lower / 0xFF > 0 {
+                state.cpu.set_flag(Flags::HALF_CARRY);
+                let mut upper = u16::from(state.cpu.get(high)?);
+                upper += 1;
 
-                    if upper / 0xFF > 0 {
-                        state.cpu.set_flag(Flags::CARRY);
-                    }
-
-                    state.cpu.set(high, upper as u8).map(|_| ())?;
+                if upper / 0xFF > 0 {
+                    state.cpu.set_flag(Flags::CARRY);
                 }
+
+                state.cpu.set(high, upper as u8)?;
             }
-        };
+        }
 
         state.cpu.increment_clock(8);
 

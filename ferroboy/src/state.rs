@@ -36,7 +36,8 @@ impl State {
     }
 
     pub(crate) fn increment_program_counter(&mut self) -> crate::Result<u16> {
-        self.cpu.mutate16(Register::PC, |old| old + 1)
+        self.cpu
+            .set16(Register::PC, self.cpu.get16(Register::PC)? + 1)
     }
 
     pub(crate) fn jump(&mut self, destination: u16) -> crate::Result<()> {
@@ -76,17 +77,14 @@ impl State {
     }
 }
 
+#[derive(Default)]
 pub struct StateBuilder {
     config: Config,
 }
 
 impl StateBuilder {
-    #[deprecated]
-    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
-        Self {
-            config: Default::default(),
-        }
+        Self::default()
     }
 
     pub fn with_config(&mut self, config: Config) -> &mut Self {
