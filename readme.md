@@ -42,5 +42,17 @@ A disassembler for DMG-01 ROMs that _attempts_ to output 6502 assembly.
 ### libferroboy (TODO)
 A set of C bindings for Ferroboy. Eventually.
 
+## Conventions
+### Comments
+There are a few different comment blocks used throughout the code that you might encounter:
+
+- `FIXME` directives are things that are known to be in need of cleanup work
+- `TODO`, as one might expect, are things that have yet to be done
+- `?` Indicates a question. This can range from a question about the state of code, or to elaborate an idea in another comment.
+
+### Nomenclature
+- `Wide` vs `Narrow`  
+    This refers to the divide between 8-bit (narrow) and 16-bit (wide) interfaces. In cases where both are handled, the "narrow" prefix may be omitted.
+
 
 [libretro]: https://www.libretro.com/
