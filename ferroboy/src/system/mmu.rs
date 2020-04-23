@@ -1,10 +1,24 @@
 use std::ops::{Index, IndexMut};
 
+/// The Gameboy's memory mapper.
+///
+/// The Gameboy used memory-mapped hardware, meaning things like
+/// the cartridge, link cable, video memory, inputs, etc. were all
+/// mapped into the RAM at different offsets. This struct does much
+/// the same as the hardware version did, mapping the various memory
+/// addresses to the actual implementors.
 pub struct MMU {
     memory: [u8; 0x10000],
 }
 
+// TODO: instead of having a monolithic block of bytes, break this into structs
+// Ideally, each struct should have a single responsibility, e.g. GameLink would
+// handle the memory that was associated with the GameLink cable, and this class
+// would just defer to it for the appropriate memory range.
+
 impl MMU {
+    // TODO: Move this into Default
+    #[deprecated]
     pub fn new() -> Self {
         Self {
             memory: [0; 0x10000],
