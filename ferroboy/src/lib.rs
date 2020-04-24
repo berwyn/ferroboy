@@ -4,7 +4,7 @@
 pub use crate::state::State;
 pub use crate::state::StateBuilder;
 pub use crate::system::ConfigBuilder;
-pub use crate::system::Register;
+pub use crate::system::WideRegister;
 pub use crate::system::OPCODES;
 
 mod assembly;
@@ -32,7 +32,7 @@ pub fn start(state: &mut State) -> Result<()> {
 /// In an ideal world, this should be done at the clock rate of the Gameboy, but technically
 /// can be done at any rate.
 pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operation> {
-    let address = state.cpu.get16(Register::PC)?;
+    let address = state.cpu.get16(WideRegister::PC)?;
     let opcode = state.mmu[address];
 
     state.increment_program_counter()?;

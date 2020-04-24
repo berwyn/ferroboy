@@ -120,25 +120,4 @@ mod tests {
     fn it_sets_the_zero_flag() {
         todo!();
     }
-
-    #[test]
-    fn it_returns_an_error_for_16bit_registers() {
-        let mut state = State::default();
-        state.cpu.set(Register::A, 0x10).unwrap();
-        state.cpu.set(Register::B, 0x06).unwrap();
-
-        assert!(
-            Add8Operation(Register::AF, Register::B)
-                .act(&mut state)
-                .is_err(),
-            "Add8Operation shouldn't accept left-hand 16-bit registers"
-        );
-
-        assert!(
-            Add8Operation(Register::B, Register::AF)
-                .act(&mut state)
-                .is_err(),
-            "Add8Operation shouldn't accept right-hand 16-bit registers"
-        );
-    }
 }
