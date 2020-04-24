@@ -42,9 +42,7 @@ impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
             WideRegister::PC | WideRegister::SP => {
-                state
-                    .cpu
-                    .set16(self.0.into(), state.cpu.get16(self.0.into())? + 1)?;
+                state.cpu.set16(self.0, state.cpu.get16(self.0)? + 1)?;
             }
             _ => {
                 let (high, low) = self.0.try_into()?;

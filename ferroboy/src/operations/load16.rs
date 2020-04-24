@@ -38,7 +38,7 @@ pub struct Load16ImmediateOperation(pub WideRegister);
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let word = word_to_u16(state.read_word()?);
-        state.cpu.set16(self.0.into(), word)?;
+        state.cpu.set16(self.0, word)?;
         state.cpu.increment_clock(12);
 
         Ok(())

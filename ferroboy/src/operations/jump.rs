@@ -2,7 +2,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, Register, WideRegister};
+use crate::system::{Flags, WideRegister};
 
 /// Indicates what condition should trigger a relative jump command.
 #[derive(Debug, PartialEq, Eq)]

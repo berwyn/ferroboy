@@ -1,4 +1,4 @@
-use crate::system::{Cartridge, Config, Register, WideRegister, CPU, MMU};
+use crate::system::{Cartridge, Config, WideRegister, CPU, MMU};
 
 /// The current state of the emulation.
 ///
