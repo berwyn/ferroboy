@@ -1,8 +1,10 @@
+use core::convert::TryInto;
+
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::Register;
+use crate::system::{Register, WideRegister};
 
 // ? Should this be split up into separate files?
 
@@ -37,7 +39,6 @@ use crate::system::Register;
 /// - The operation may fail if provided a 16-bit register
 #[derive(Debug)]
 pub struct Load8ImmediateOperation(pub Register);
-// FIXME: Register refactor
 
 impl Operation for Load8ImmediateOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
@@ -81,7 +82,6 @@ impl Operation for Load8ImmediateOperation {
 /// - The operation may fail if provided a 16-bit register
 #[derive(Debug)]
 pub struct Load8RegisterCopyOperation(pub Register, pub Register);
-// FIXME: Register refactor
 
 impl Operation for Load8RegisterCopyOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
@@ -138,11 +138,11 @@ impl core::convert::TryFrom<Load8RegisterCopyOperation> for AssemblyInstruction 
 /// # Errors
 /// - The operation may fail if the first argument is a 16-bit register
 #[derive(Debug)]
-pub struct Load8FromMemoryOperation(pub Register, pub Register);
+pub struct Load8FromMemoryOperation(pub Register, pub WideRegister);
 
 impl Operation for Load8FromMemoryOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let (high, low) = Register::to_8bit_pair(self.1)?;
+        let (high, low) = self.1.try_into()?;
 
         let address_high = state.cpu.get(high)?;
         let address_low = state.cpu.get(low)?;
@@ -159,6 +159,13 @@ impl Operation for Load8FromMemoryOperation {
 // TODO: LD (a16),SP (0x08)
 // TODO: LD (HL+,A) / LD (HL-),A
 // ? What are the plus and minus?
+
+#[derive(Debug)]
+pub enum Load8RegisterToMemoryTarget {
+    // ? Should this lose it's argument? Can only be C
+    Register(Register),
+    WideRegister(WideRegister),
+}
 
 // FIXME: Metrics here are based on implementation and should be fixed
 // FIXME: Doesn't support LD (a16),A
@@ -194,14 +201,13 @@ impl Operation for Load8FromMemoryOperation {
 /// # Errors
 /// - The operation may fail if a 16-bit register is provided as the source
 #[derive(Debug)]
-pub struct Load8RegisterToMemoryOperation(pub Register, pub Register);
+pub struct Load8RegisterToMemoryOperation(pub Load8RegisterToMemoryTarget, pub Register);
 
 impl Operation for Load8RegisterToMemoryOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let address = match self.0 {
-            Register::PC | Register::BC | Register::DE | Register::HL => state.cpu.get16(self.0)?,
-            Register::C => u16::from(state.cpu.get(self.0)?),
-            _ => return Err("Invalid register provided".into()),
+            Load8RegisterToMemoryTarget::WideRegister(r) => state.cpu.get16(r)?,
+            Load8RegisterToMemoryTarget::Register(r) => u16::from(state.cpu.get(r)?),
         };
 
         let value = state.cpu.get(self.1)?;
@@ -250,7 +256,7 @@ mod tests {
     #[test]
     fn it_loads_a_value_from_memory_to_register() {
         let mut state = State::default();
-        let op = Load8FromMemoryOperation(Register::B, Register::HL);
+        let op = Load8FromMemoryOperation(Register::B, WideRegister::HL);
 
         state.mmu.mutate(|mmu| mmu[0x5E50] = 0xFE);
         state.cpu.set(Register::H, 0x5E).unwrap();
@@ -266,9 +272,12 @@ mod tests {
     #[test]
     fn it_writes_a_register_into_memory() {
         let mut state = State::default();
-        let op = Load8RegisterToMemoryOperation(Register::PC, Register::A);
+        let op = Load8RegisterToMemoryOperation(
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::PC),
+            Register::A,
+        );
 
-        state.cpu.set16(Register::PC, 0x5E50).unwrap();
+        state.cpu.set16(WideRegister::PC, 0x5E50).unwrap();
         state.cpu.set(Register::A, 0xBE).unwrap();
 
         assert_eq!(0x00, state.mmu[0x5E50]);

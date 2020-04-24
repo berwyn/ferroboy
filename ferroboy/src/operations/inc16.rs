@@ -1,9 +1,10 @@
+use core::convert::TryInto;
+
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, Register};
+use crate::system::{Flags, WideRegister};
 
-// FIXME: WideRegister
 /// Increments a singular register.
 ///
 /// # Opcode Reference
@@ -35,31 +36,36 @@ use crate::system::{Flags, Register};
 /// # Errors
 /// - The operation may fail if an 8-bit register is provided.
 #[derive(Debug)]
-pub struct Inc16Operation(pub Register);
+pub struct Inc16Operation(pub WideRegister);
 
 impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        if Register::SP.eq(&self.0) {
-            state.cpu.set16(self.0, state.cpu.get16(self.0)? + 1)?;
-        } else {
-            let (high, low) = self.0.to_8bit_pair()?;
-
-            let mut lower = u16::from(state.cpu.get(low)?);
-            lower += 1;
-            state.cpu.set(low, lower as u8)?;
-
-            if lower / 0xFF > 0 {
-                state.cpu.set_flag(Flags::HALF_CARRY);
-                let mut upper = u16::from(state.cpu.get(high)?);
-                upper += 1;
-
-                if upper / 0xFF > 0 {
-                    state.cpu.set_flag(Flags::CARRY);
-                }
-
-                state.cpu.set(high, upper as u8)?;
+        match self.0 {
+            WideRegister::PC | WideRegister::SP => {
+                state
+                    .cpu
+                    .set16(self.0.into(), state.cpu.get16(self.0.into())? + 1)?;
             }
-        }
+            _ => {
+                let (high, low) = self.0.try_into()?;
+
+                let mut lower = u16::from(state.cpu.get(low)?);
+                lower += 1;
+                state.cpu.set(low, lower as u8)?;
+
+                if lower / 0xFF > 0 {
+                    state.cpu.set_flag(Flags::HALF_CARRY);
+                    let mut upper = u16::from(state.cpu.get(high)?);
+                    upper += 1;
+
+                    if upper / 0xFF > 0 {
+                        state.cpu.set_flag(Flags::CARRY);
+                    }
+
+                    state.cpu.set(high, upper as u8)?;
+                }
+            }
+        };
 
         state.cpu.increment_clock(8);
 
@@ -81,12 +87,13 @@ impl core::convert::TryFrom<Inc16Operation> for AssemblyInstruction {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::system::Register;
 
     #[test]
     fn it_disassembles_correctly() {
         use core::convert::TryInto;
 
-        let inc = Inc16Operation(Register::BC);
+        let inc = Inc16Operation(WideRegister::BC);
         let inc_instruction: AssemblyInstruction = inc.try_into().unwrap();
 
         assert_eq!("INC BC", inc_instruction.to_string());
@@ -95,7 +102,7 @@ mod tests {
     #[test]
     fn it_increments_the_lower_byte() {
         let mut state = State::default();
-        let op = Inc16Operation(Register::BC);
+        let op = Inc16Operation(WideRegister::BC);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
@@ -109,7 +116,7 @@ mod tests {
     #[test]
     fn it_increments_the_upper_byte() {
         let mut state = State::default();
-        let op = Inc16Operation(Register::BC);
+        let op = Inc16Operation(WideRegister::BC);
 
         state.cpu.set(Register::C, 0xFF).unwrap();
 
@@ -126,7 +133,7 @@ mod tests {
     #[test]
     fn it_wraps_over() {
         let mut state = State::default();
-        let op = Inc16Operation(Register::BC);
+        let op = Inc16Operation(WideRegister::BC);
 
         state.cpu.set(Register::B, 0xFF).unwrap();
         state.cpu.set(Register::C, 0xFF).unwrap();

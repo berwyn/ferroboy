@@ -10,6 +10,7 @@ pub use config::Config;
 pub use config::ConfigBuilder;
 pub use cpu::Flags;
 pub use cpu::Register;
+pub use cpu::WideRegister;
 pub use cpu::CPU;
 pub use mmu::MMU;
 pub use opcodes::OPCODES;

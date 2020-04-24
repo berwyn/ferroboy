@@ -1,7 +1,7 @@
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::Register;
+use crate::system::WideRegister;
 
 /// Loads an immediate 16-bit value into a register.
 ///
@@ -33,12 +33,12 @@ use crate::system::Register;
 /// # Errors
 /// - The operation will fail if provided an 8-bit register
 #[derive(Debug)]
-pub struct Load16ImmediateOperation(pub Register);
+pub struct Load16ImmediateOperation(pub WideRegister);
 
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let word = word_to_u16(state.read_word()?);
-        state.cpu.set16(self.0, word)?;
+        state.cpu.set16(self.0.into(), word)?;
         state.cpu.increment_clock(12);
 
         Ok(())
@@ -48,6 +48,7 @@ impl Operation for Load16ImmediateOperation {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::system::Register;
 
     #[test]
     fn it_loads_an_immediate_into_the_registers() {
@@ -57,7 +58,7 @@ mod tests {
             m[0x01] = 0xEF;
         });
 
-        let op = Load16ImmediateOperation(Register::BC);
+        let op = Load16ImmediateOperation(WideRegister::BC);
 
         assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
         assert_eq!(0x00, state.cpu.get(Register::C).unwrap());

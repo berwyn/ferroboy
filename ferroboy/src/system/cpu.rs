@@ -1,7 +1,9 @@
-use crate::helpers::{u16_to_word, word_to_u16};
+use core::convert::TryInto;
+
 use bitflags::bitflags;
 
-// FIXME: Replace with Register (8bit) and WideRegister (16bit)
+use crate::helpers::{u16_to_word, word_to_u16};
+
 /// `Register` is an enum to help indicate which registers
 /// an operation should apply to.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -23,42 +25,6 @@ pub enum Register {
     H,
     /// General purpose register
     L,
-
-    // Computed 16bit
-    /// Register AF uses the Accumulator as the high byte and
-    /// the flags as the low byte, creating a pseudo-16bit register.
-    AF,
-    /// Register BC uses Register B as the high byte and register
-    /// C as the low byte, creating a pseudo-16bit register.
-    BC,
-    /// Register DE uses Register D as the high byte and register
-    /// E as the low byte, creating a pseudo-16bit register.
-    DE,
-    /// Register HL uses Register H as the high byte and register
-    /// L as the low byte, creating a pseudo-16bit register.
-    HL,
-
-    // 16bit
-    /// The stack pointer
-    SP,
-    /// The program counter
-    PC,
-}
-
-impl Register {
-    /// Registers AF, BC, DE, and HL aren't actually registers but instead
-    /// use two registers to create a pseuo-16bit register. This function will
-    /// take those pseudo-16bit register selectors and return the appropriate
-    /// (high, low) selector tuple to index into the 8bit registers they use.
-    pub fn to_8bit_pair(self) -> Result<(Register, Register), String> {
-        match self {
-            Register::AF => Ok((Register::A, Register::F)),
-            Register::BC => Ok((Register::B, Register::C)),
-            Register::DE => Ok((Register::D, Register::E)),
-            Register::HL => Ok((Register::H, Register::L)),
-            _ => Err("Invalid 16bit register pair".into()),
-        }
-    }
 }
 
 impl std::fmt::Display for Register {
@@ -75,12 +41,65 @@ impl std::fmt::Display for Register {
                 Register::F => "F",
                 Register::H => "H",
                 Register::L => "L",
-                Register::AF => "AF",
-                Register::BC => "BC",
-                Register::DE => "DE",
-                Register::HL => "HL",
-                Register::SP => "SP",
-                Register::PC => "PC",
+            }
+        )
+    }
+}
+
+/// 16-bit registers.
+///
+/// DMG-01 has a few 16-bit registers, composed of the pseudo-16-bit
+/// registers that use 8-bit registers to store their high- and low-nybbles
+/// as well as the stack pointer and program counter which are properly
+/// 16-bit.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WideRegister {
+    /// Register AF uses the Accumulator as the high byte and
+    /// the flags as the low byte, creating a pseudo-16bit register.
+    AF,
+    /// Register BC uses Register B as the high byte and register
+    /// C as the low byte, creating a pseudo-16bit register.
+    BC,
+    /// Register DE uses Register D as the high byte and register
+    /// E as the low byte, creating a pseudo-16bit register.
+    DE,
+    /// Register HL uses Register H as the high byte and register
+    /// L as the low byte, creating a pseudo-16bit register.
+    HL,
+    /// The stack pointer
+    SP,
+    /// The program counter
+    PC,
+}
+
+impl core::convert::TryFrom<WideRegister> for (Register, Register) {
+    type Error = String;
+
+    fn try_from(value: WideRegister) -> core::result::Result<Self, Self::Error> {
+        let pair = match value {
+            WideRegister::AF => (Register::A, Register::F),
+            WideRegister::BC => (Register::B, Register::C),
+            WideRegister::DE => (Register::D, Register::E),
+            WideRegister::HL => (Register::H, Register::L),
+            _ => return Err("SP and PC cannot be represented as 8-bit registers".into()),
+        };
+
+        Ok(pair)
+    }
+}
+
+impl std::fmt::Display for WideRegister {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                WideRegister::AF => "AF",
+                WideRegister::BC => "BC",
+                WideRegister::DE => "DE",
+                WideRegister::HL => "HL",
+                WideRegister::SP => "SP",
+                WideRegister::PC => "PC",
             }
         )
     }
@@ -143,17 +162,16 @@ impl CPU {
         Ok(selected)
     }
 
-    pub(crate) fn get16(&self, register: Register) -> Result<u16, String> {
+    pub(crate) fn get16(&self, register: WideRegister) -> crate::Result<u16> {
         let selected = match register {
-            Register::SP => self.sp,
-            Register::PC => self.pc,
-            Register::AF | Register::BC | Register::DE | Register::HL => {
-                let (high, low) = register.to_8bit_pair()?;
+            WideRegister::SP => self.sp,
+            WideRegister::PC => self.pc,
+            WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
+                let (high, low) = register.try_into()?;
                 let (high, low) = (self.get(high)?, self.get(low)?);
 
                 word_to_u16((high, low))
             }
-            _ => return Err("Invalid register".into()),
         };
 
         Ok(selected)
@@ -176,26 +194,25 @@ impl CPU {
         Ok(*selected)
     }
 
-    pub(crate) fn set16(&mut self, register: Register, value: u16) -> Result<u16, String> {
+    pub(crate) fn set16(&mut self, register: WideRegister, value: u16) -> Result<u16, String> {
         match register {
-            Register::SP => {
+            WideRegister::SP => {
                 self.sp = value;
                 Ok(self.sp)
             }
-            Register::PC => {
+            WideRegister::PC => {
                 self.pc = value;
                 Ok(self.pc)
             }
-            Register::AF | Register::BC | Register::DE | Register::HL => {
+            WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
                 let (high_byte, low_byte) = u16_to_word(value);
-                let (high, low) = register.to_8bit_pair()?;
+                let (high, low) = register.try_into()?;
 
                 self.set(high, high_byte)?;
                 self.set(low, low_byte)?;
 
                 self.get16(register)
             }
-            _ => Err("Invalid register".into()),
         }
     }
 
@@ -263,43 +280,5 @@ mod tests {
         state.cpu.clear_flag(Flags::CARRY);
 
         assert_eq!(Flags::HALF_CARRY, state.cpu.f);
-    }
-
-    #[test]
-    fn it_converts_16bit_register_to_8bit_pairs() {
-        let (high, low) = Register::AF.to_8bit_pair().unwrap();
-
-        assert_eq!(Register::A, high);
-        assert_eq!(Register::F, low);
-
-        let (high, low) = Register::BC.to_8bit_pair().unwrap();
-
-        assert_eq!(Register::B, high);
-        assert_eq!(Register::C, low);
-
-        let (high, low) = Register::DE.to_8bit_pair().unwrap();
-
-        assert_eq!(Register::D, high);
-        assert_eq!(Register::E, low);
-
-        let (high, low) = Register::HL.to_8bit_pair().unwrap();
-
-        assert_eq!(Register::H, high);
-        assert_eq!(Register::L, low);
-    }
-
-    #[test]
-    fn it_prevents_invalid_16bit_register_conversions() {
-        assert!(Register::A.to_8bit_pair().is_err());
-        assert!(Register::B.to_8bit_pair().is_err());
-        assert!(Register::C.to_8bit_pair().is_err());
-        assert!(Register::D.to_8bit_pair().is_err());
-        assert!(Register::E.to_8bit_pair().is_err());
-        assert!(Register::F.to_8bit_pair().is_err());
-        assert!(Register::H.to_8bit_pair().is_err());
-        assert!(Register::L.to_8bit_pair().is_err());
-
-        assert!(Register::SP.to_8bit_pair().is_err());
-        assert!(Register::PC.to_8bit_pair().is_err());
     }
 }
