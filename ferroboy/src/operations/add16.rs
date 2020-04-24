@@ -1,6 +1,4 @@
 use crate::helpers::u16_to_word;
-use core::convert::TryInto;
-
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register, WideRegister};
