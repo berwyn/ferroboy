@@ -1,3 +1,4 @@
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
@@ -45,6 +46,17 @@ impl Operation for Load16ImmediateOperation {
     }
 }
 
+impl Disassemble for Load16ImmediateOperation {
+    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
+        let immediate = word_to_u16(state.read_word()?);
+
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(format!("${:X}", immediate))
+            .build()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -67,5 +79,20 @@ mod tests {
 
         assert_eq!(0xBE, state.cpu.get(Register::B).unwrap());
         assert_eq!(0xEF, state.cpu.get(Register::C).unwrap());
+    }
+
+    #[test]
+    fn it_disassembles_correctly() -> crate::Result<()> {
+        let mut state = State::default();
+        state.mmu.mutate(|mmu| {
+            mmu[0x00] = 0xBE;
+            mmu[0x01] = 0xEF;
+        });
+
+        let op = Load16ImmediateOperation(WideRegister::BC);
+
+        assert_eq!("LD $BEEF", op.disassemble(&mut state)?.to_string());
+
+        Ok(())
     }
 }

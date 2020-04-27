@@ -1,6 +1,6 @@
 use core::convert::TryInto;
 
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
@@ -49,7 +49,17 @@ impl Operation for Load8ImmediateOperation {
     }
 }
 
-// TODO: Implement Disassemble
+impl Disassemble for Load8ImmediateOperation {
+    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
+        let immediate = word_to_u16(state.read_word()?);
+
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(self.0)
+            .with_arg(format!("${:X}", immediate))
+            .build()
+    }
+}
 
 /// Copy the value of one register to another.
 ///
@@ -80,7 +90,7 @@ impl Operation for Load8ImmediateOperation {
 ///
 /// # Errors
 /// - The operation may fail if provided a 16-bit register
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Load8RegisterCopyOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterCopyOperation {
@@ -92,14 +102,12 @@ impl Operation for Load8RegisterCopyOperation {
     }
 }
 
-impl core::convert::TryFrom<Load8RegisterCopyOperation> for AssemblyInstruction {
-    type Error = String;
-
-    fn try_from(value: Load8RegisterCopyOperation) -> Result<Self, Self::Error> {
+impl Disassemble for Load8RegisterCopyOperation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
-            .with_arg(value.0)
-            .with_arg(value.1)
+            .with_arg(self.0)
+            .with_arg(self.1)
             .build()
     }
 }
@@ -137,7 +145,7 @@ impl core::convert::TryFrom<Load8RegisterCopyOperation> for AssemblyInstruction 
 ///
 /// # Errors
 /// - The operation may fail if the first argument is a 16-bit register
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Load8FromMemoryOperation(pub Register, pub WideRegister);
 
 impl Operation for Load8FromMemoryOperation {
@@ -155,12 +163,22 @@ impl Operation for Load8FromMemoryOperation {
     }
 }
 
+impl Disassemble for Load8FromMemoryOperation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(self.0)
+            .with_arg(format!("({})", self.1))
+            .build()
+    }
+}
+
 // TODO: LD (HL),d8 (0x36)
 // TODO: LD (a16),SP (0x08)
 // TODO: LD (HL+,A) / LD (HL-),A
 // ? What are the plus and minus?
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Load8RegisterToMemoryTarget {
     // ? Should this lose it's argument? Can only be C
     Register(Register),
@@ -200,7 +218,7 @@ pub enum Load8RegisterToMemoryTarget {
 ///
 /// # Errors
 /// - The operation may fail if a 16-bit register is provided as the source
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Load8RegisterToMemoryOperation(pub Load8RegisterToMemoryTarget, pub Register);
 
 impl Operation for Load8RegisterToMemoryOperation {
@@ -216,6 +234,22 @@ impl Operation for Load8RegisterToMemoryOperation {
         state.cpu.increment_clock(8);
 
         Ok(())
+    }
+}
+
+impl Disassemble for Load8RegisterToMemoryOperation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(format!(
+                "({})",
+                match self.0 {
+                    Load8RegisterToMemoryTarget::WideRegister(r) => r.to_string(),
+                    Load8RegisterToMemoryTarget::Register(r) => r.to_string(),
+                }
+            ))
+            .with_arg(self.1)
+            .build()
     }
 }
 
@@ -285,5 +319,48 @@ mod tests {
         op.act(&mut state).unwrap();
 
         assert_eq!(0xBE, state.mmu[0x5E50]);
+    }
+
+    #[test]
+    fn it_disassembles_immediate_to_register() {
+        let mut state = State::default();
+        state.mmu.mutate(|mmu| {
+            mmu[0x00] = 0xBE;
+            mmu[0x01] = 0xEF;
+        });
+
+        let op = Load8ImmediateOperation(Register::A);
+
+        assert_eq!(
+            "LD A,$BEEF",
+            op.disassemble(&mut state).unwrap().to_string()
+        );
+    }
+
+    #[test]
+    fn it_dissassembles_register_to_register() {
+        let op = Load8RegisterCopyOperation(Register::A, Register::B);
+        let instruction = op.disassemble(&mut State::default()).unwrap();
+
+        assert_eq!("LD A,B", instruction.to_string());
+    }
+
+    #[test]
+    fn it_disassembles_memory_to_register() {
+        let op = Load8FromMemoryOperation(Register::A, WideRegister::BC);
+        let instruction = op.disassemble(&mut State::default()).unwrap();
+
+        assert_eq!("LD A,(BC)", instruction.to_string());
+    }
+
+    #[test]
+    fn it_dissassembles_register_to_memory() {
+        let op = Load8RegisterToMemoryOperation(
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Register::A,
+        );
+        let instruction: AssemblyInstruction = op.disassemble(&mut State::default()).unwrap();
+
+        assert_eq!("LD (HL),A", instruction.to_string());
     }
 }
