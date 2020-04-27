@@ -88,9 +88,9 @@ mod assembly_instruction_display_tests {
         assert_eq!("TEST LEFT ; Distilled wisdom", single_arg.to_string());
 
         let dual_arg = AssemblyInstruction {
-            command: command.clone(),
+            command,
             args: [lhs, rhs],
-            comment: comment,
+            comment,
         };
 
         assert_eq!("TEST LEFT,RIGHT ; Distilled wisdom", dual_arg.to_string());
