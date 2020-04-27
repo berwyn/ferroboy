@@ -1,4 +1,4 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::Register;
@@ -33,7 +33,7 @@ use crate::system::Register;
 ///
 /// # Errors
 /// - The operation may fail if a 16-bit register is provided.
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Inc8Operation(pub Register);
 
 impl Operation for Inc8Operation {
@@ -49,13 +49,11 @@ impl Operation for Inc8Operation {
     }
 }
 
-impl core::convert::TryFrom<Inc8Operation> for AssemblyInstruction {
-    type Error = String;
-
-    fn try_from(value: Inc8Operation) -> Result<AssemblyInstruction, Self::Error> {
+impl Disassemble for Inc8Operation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("INC")
-            .with_arg(value.0)
+            .with_arg(self.0)
             .build()
     }
 }
@@ -75,10 +73,10 @@ mod tests {
 
     #[test]
     fn it_disassembles_correctly() {
-        use core::convert::TryInto;
-        let assembly_instruction: AssemblyInstruction =
-            Inc8Operation(Register::A).try_into().unwrap();
+        let instruction = Inc8Operation(Register::A)
+            .disassemble(&mut State::default())
+            .unwrap();
 
-        assert_eq!("INC A", assembly_instruction.to_string());
+        assert_eq!("INC A", instruction.to_string());
     }
 }

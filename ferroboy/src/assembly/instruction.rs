@@ -1,13 +1,10 @@
-use core::convert::TryInto;
-
-use crate::state::State;
-
 /// A raw 6502 assembly instruction.
 ///
 /// This is mostly available for introspection and disassembly.
 pub struct AssemblyInstruction {
     command: String,
     args: [Option<String>; 2],
+    comment: Option<String>,
 }
 
 impl std::fmt::Display for AssemblyInstruction {
@@ -22,13 +19,88 @@ impl std::fmt::Display for AssemblyInstruction {
             write!(f, ",{}", arg)?;
         }
 
+        if let Some(comment) = &self.comment {
+            write!(f, " ; {}", comment)?;
+        }
+
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod assembly_instruction_display_tests {
+    use super::*;
+
+    #[test]
+    fn it_formats_noarg_instructions() {
+        let instruction = AssemblyInstruction {
+            command: String::from("TEST"),
+            args: [None, None],
+            comment: None,
+        };
+
+        assert_eq!("TEST", instruction.to_string());
+    }
+
+    #[test]
+    fn it_formats_single_argument_instructions() {
+        let instruction = AssemblyInstruction {
+            command: String::from("TEST"),
+            args: [Some(String::from("A")), None],
+            comment: None,
+        };
+
+        assert_eq!("TEST A", instruction.to_string());
+    }
+
+    #[test]
+    fn it_formats_dual_argument_instructions() {
+        let instruction = AssemblyInstruction {
+            command: String::from("TEST"),
+            args: [Some(String::from("A")), Some(String::from("B"))],
+            comment: None,
+        };
+
+        assert_eq!("TEST A,B", instruction.to_string());
+    }
+
+    #[test]
+    fn it_formats_comments_correctly() {
+        let command = String::from("TEST");
+        let lhs = Some(String::from("LEFT"));
+        let rhs = Some(String::from("RIGHT"));
+        let comment = Some(String::from("Distilled wisdom"));
+
+        let noop = AssemblyInstruction {
+            command: command.clone(),
+            args: [None, None],
+            comment: comment.clone(),
+        };
+
+        assert_eq!("TEST ; Distilled wisdom", noop.to_string());
+
+        let single_arg = AssemblyInstruction {
+            command: command.clone(),
+            args: [lhs.clone(), None],
+            comment: comment.clone(),
+        };
+
+        assert_eq!("TEST LEFT ; Distilled wisdom", single_arg.to_string());
+
+        let dual_arg = AssemblyInstruction {
+            command: command.clone(),
+            args: [lhs.clone(), rhs.clone()],
+            comment: comment.clone(),
+        };
+
+        assert_eq!("TEST LEFT,RIGHT ; Distilled wisdom", dual_arg.to_string());
     }
 }
 
 pub(crate) struct AssemblyInstructionBuilder {
     command: Option<String>,
     args: [Option<String>; 2],
+    comment: Option<String>,
 }
 
 impl AssemblyInstructionBuilder {
@@ -36,6 +108,7 @@ impl AssemblyInstructionBuilder {
         Self {
             command: None,
             args: [None, None],
+            comment: None,
         }
     }
 
@@ -54,6 +127,11 @@ impl AssemblyInstructionBuilder {
         self
     }
 
+    pub fn with_comment(mut self, arg: impl ToString) -> Self {
+        self.comment.replace(arg.to_string());
+        self
+    }
+
     pub fn build(self) -> crate::Result<AssemblyInstruction> {
         if self.command.is_none() {
             return Err("Command is not set!".to_string());
@@ -62,26 +140,13 @@ impl AssemblyInstructionBuilder {
         Ok(AssemblyInstruction {
             command: self.command.unwrap(),
             args: self.args,
+            comment: self.comment,
         })
     }
 }
 
-pub trait Disassemble {
-    fn disassemble(self, state: &State) -> crate::Result<AssemblyInstruction>;
-}
-
-impl<T> Disassemble for T
-where
-    T: TryInto<AssemblyInstruction>,
-    T::Error: ToString,
-{
-    fn disassemble(self, _: &State) -> crate::Result<AssemblyInstruction> {
-        self.try_into().map_err(|e| e.to_string())
-    }
-}
-
 #[cfg(test)]
-mod tests {
+mod assembly_instruction_builder_tests {
     use super::*;
 
     #[test]
@@ -142,32 +207,5 @@ mod tests {
         assert_eq!(instruction.command, String::from("ld"));
         assert_eq!(instruction.args[0], Some(String::from("A")));
         assert_eq!(instruction.args[1], Some(String::from("B")));
-    }
-
-    use crate::system::Register;
-    struct TestOperation(pub Register, pub Register);
-
-    impl core::convert::TryFrom<TestOperation> for AssemblyInstruction {
-        type Error = String;
-
-        fn try_from(
-            value: TestOperation,
-        ) -> core::result::Result<AssemblyInstruction, Self::Error> {
-            AssemblyInstructionBuilder::new()
-                .with_command("TEST")
-                .with_arg(value.0)
-                .with_arg(value.1)
-                .build()
-        }
-    }
-
-    #[test]
-    fn disassemble_is_implemented_for_try_from() {
-        use crate::State;
-
-        let res = TestOperation(Register::A, Register::D).disassemble(&State::default());
-
-        assert!(res.is_ok());
-        assert_eq!("TEST A,D", res.unwrap().to_string());
     }
 }

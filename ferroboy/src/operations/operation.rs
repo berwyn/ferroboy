@@ -1,3 +1,4 @@
+use crate::assembly::Disassemble;
 use crate::state::State;
 
 /// An action that can be taken on the system.
@@ -6,6 +7,6 @@ use crate::state::State;
 /// to the system that occur as the result of an instruction.
 /// This includes things like mutating registers, changing
 /// flags, writing to memory, etc.
-pub trait Operation: Sync + std::fmt::Debug {
+pub trait Operation: Sync + std::fmt::Debug + Disassemble {
     fn act(&self, state: &mut State) -> crate::Result<()>;
 }

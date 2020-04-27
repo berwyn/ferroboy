@@ -61,13 +61,9 @@ fn disassemble_rom<T: AsRef<Path>>(state: &mut State, output_path: &T) -> ferrob
             while !state.is_halted() {
                 match ferroboy::tick(state) {
                     Ok(operation) => {
-                        let result = writer
-                            .write(format!("Operation: {:?}\n", operation).as_bytes())
-                            .and_then(|_| writer.write(format!("State: {:?}\n", state).as_bytes()));
-
-                        if let Err(e) = result {
-                            return Err(e.to_string());
-                        }
+                        writer
+                            .write(format!("{}\n", operation.disassemble(state)?).as_bytes())
+                            .map_err(|e| e.to_string())?;
                     }
                     Err(message) => return Err(message),
                 }

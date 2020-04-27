@@ -1,3 +1,4 @@
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::helpers::u16_to_word;
 use crate::operations::Operation;
 use crate::state::State;
@@ -44,7 +45,7 @@ use crate::system::{Flags, Register, WideRegister};
 ///
 /// # Errors
 /// - The operation may fail if an 8-bit register is provided.
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Add16Operation(WideRegister);
 
 impl Operation for Add16Operation {
@@ -79,9 +80,27 @@ impl Operation for Add16Operation {
     }
 }
 
+impl Disassemble for Add16Operation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("ADD")
+            .with_arg("HL")
+            .with_arg(self.0)
+            .build()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn it_disassembles_properly() {
+        let op = Add16Operation(WideRegister::AF);
+        let instruction = op.disassemble(&mut State::default()).unwrap();
+
+        assert_eq!("ADD HL,AF", instruction.to_string());
+    }
 
     #[test]
     fn it_adds_the_lower_byte() -> crate::Result<()> {

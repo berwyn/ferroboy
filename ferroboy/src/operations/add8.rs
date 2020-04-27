@@ -1,4 +1,4 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
@@ -32,7 +32,7 @@ use crate::system::{Flags, Register};
 ///
 /// # Errors
 /// - The operation may fail if a 16-bit register is provided for either argument.
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
@@ -52,17 +52,13 @@ impl Operation for Add8Operation {
     }
 }
 
-impl core::convert::TryFrom<Add8Operation> for AssemblyInstruction {
-    type Error = String;
-
-    fn try_from(value: Add8Operation) -> Result<AssemblyInstruction, Self::Error> {
-        let instruction = AssemblyInstructionBuilder::new()
+impl Disassemble for Add8Operation {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
             .with_command("ADD")
-            .with_arg(value.0)
-            .with_arg(value.1)
-            .build()?;
-
-        Ok(instruction)
+            .with_arg(self.0)
+            .with_arg(self.1)
+            .build()
     }
 }
 
@@ -72,12 +68,10 @@ mod tests {
 
     #[test]
     fn it_disassembles_correctly() {
-        use core::convert::TryInto;
-
         let add = Add8Operation(Register::A, Register::B);
-        let add_instruction: AssemblyInstruction = add.try_into().unwrap();
+        let instruction = add.disassemble(&mut State::default()).unwrap();
 
-        assert_eq!("ADD A,B", add_instruction.to_string());
+        assert_eq!("ADD A,B", instruction.to_string());
     }
 
     #[test]

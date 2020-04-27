@@ -1,11 +1,11 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder};
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, WideRegister};
 
 /// Indicates what condition should trigger a relative jump command.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum JumpRelativeFlag {
     /// The jump should always occur.
     Nop,
@@ -151,23 +151,22 @@ impl Operation for JumpRelativeOperation {
     }
 }
 
-// FIXME: This might need to implement Disassemble directly, because it needs the immediate
-impl core::convert::TryFrom<JumpRelativeOperation> for AssemblyInstruction {
-    type Error = String;
+impl Disassemble for JumpRelativeOperation {
+    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
+        let immediate = word_to_u16(state.read_word()?);
 
-    fn try_from(value: JumpRelativeOperation) -> core::result::Result<Self, Self::Error> {
         let mut builder = AssemblyInstructionBuilder::new().with_command("JR");
 
-        if !value.0.eq(&JumpRelativeFlag::Nop) {
-            builder = builder.with_arg(value.0);
+        if !JumpRelativeFlag::Nop.eq(&self.0) {
+            builder = builder.with_arg(self.0.clone());
         }
 
-        builder.with_arg("#").build()
+        builder.with_arg(format!("${:X}", immediate)).build()
     }
 }
 
 /// Indicates what conditions should trigger a jump position command
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum JumpPositionFlags {
     /// The jump should always occur.
     Nop,
@@ -181,6 +180,23 @@ pub enum JumpPositionFlags {
     NotCarry,
     /// The jump should always occur, and read the address from HL.
     Register,
+}
+
+impl std::fmt::Display for JumpPositionFlags {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Nop => "<nop>",
+                Self::Zero => "Z",
+                Self::NotZero => "NZ",
+                Self::Carry => "C",
+                Self::NotCarry => "NC",
+                Self::Register => "<register>",
+            }
+        )
+    }
 }
 
 /// Reads a signed 8-bit integer and adds it to the program counter if
@@ -318,7 +334,29 @@ impl Operation for JumpPositionOperation {
     }
 }
 
-// TODO: Implement disassemble for JumpPositionOperation
+impl Disassemble for JumpPositionOperation {
+    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
+        let immediate = word_to_u16(state.read_word()?);
+
+        let mut builder = AssemblyInstructionBuilder::new().with_command("JP");
+
+        match self.0 {
+            JumpPositionFlags::Nop => {
+                builder = builder.with_arg(format!("${:X}", immediate));
+            }
+            JumpPositionFlags::Register => {
+                builder = builder.with_arg("(HL)");
+            }
+            _ => {
+                builder = builder
+                    .with_arg(self.0.clone())
+                    .with_arg(format!("${:X}", immediate))
+            }
+        }
+
+        builder.build()
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -326,14 +364,42 @@ mod tests {
 
     #[test]
     fn jump_relative_disassembles_correctly() {
-        use core::convert::TryInto;
+        let mut state = State::default();
+        state.mmu.mutate(|mmu| {
+            mmu[0x00] = 0xFF;
+            mmu[0x01] = 0xFF;
+            mmu[0x02] = 0xBE;
+            mmu[0x03] = 0xEF;
+        });
 
         let nop = JumpRelativeOperation(JumpRelativeFlag::Nop);
-        let nop_instruction: AssemblyInstruction = nop.try_into().unwrap();
-        assert_eq!("JR #", nop_instruction.to_string());
+        let nop_instruction: AssemblyInstruction = nop.disassemble(&mut state).unwrap();
+        assert_eq!("JR $FFFF", nop_instruction.to_string());
 
         let zero = JumpRelativeOperation(JumpRelativeFlag::Zero);
-        let zero_instruction: AssemblyInstruction = zero.try_into().unwrap();
-        assert_eq!("JR Z,#", zero_instruction.to_string());
+        let zero_instruction: AssemblyInstruction = zero.disassemble(&mut state).unwrap();
+        assert_eq!("JR Z,$BEEF", zero_instruction.to_string());
+    }
+
+    #[test]
+    fn jump_position_disassembles_correctly() -> crate::Result<()> {
+        let mut state = State::default();
+        state.mmu.mutate(|mmu| {
+            mmu[0x00] = 0xFF;
+            mmu[0x01] = 0xFF;
+            mmu[0x02] = 0xDE;
+            mmu[0x03] = 0xAD;
+        });
+
+        let nop = JumpPositionOperation(JumpPositionFlags::Nop);
+        assert_eq!("JP $FFFF", nop.disassemble(&mut state)?.to_string());
+
+        let zero = JumpPositionOperation(JumpPositionFlags::Zero);
+        assert_eq!("JP Z,$DEAD", zero.disassemble(&mut state)?.to_string());
+
+        let register = JumpPositionOperation(JumpPositionFlags::Register);
+        assert_eq!("JP (HL)", register.disassemble(&mut state)?.to_string());
+
+        Ok(())
     }
 }
