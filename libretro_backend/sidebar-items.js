@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JoypadButton",""],["LoadGameResult",""],["PixelFormat",""],["Region",""]],"macro":[["libretro_core",""]],"struct":[["AudioVideoInfo",""],["CoreInfo",""],["GameData",""],["RuntimeHandle",""]],"trait":[["Core",""]]});

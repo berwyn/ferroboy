@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["u16_to_word","Because the Gameboy stores 16-bit integers as (high, low) pairs, this function helps convert a u16 into such a pair to easily store it back into the registers."],["word_to_u16","Because the Gameboy stores 16-bit integers as (high, low) pairs, this function helps to convert those to u16 for easy use in Rust code."]]});

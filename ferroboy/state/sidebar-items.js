@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["State","The current state of the emulation."],["StateBuilder",""]]});

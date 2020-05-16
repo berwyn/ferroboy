@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["CARTRIDGE_HEADER",""]],"enum":[["CartridgeType","An enum to express what memory mapper a cartridge is using."]],"struct":[["Cartridge","A Gameboy cartridge."]]});
