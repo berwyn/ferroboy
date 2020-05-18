@@ -37,12 +37,12 @@ pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let value = state.cpu.get(self.1)?;
+        let value = state.cpu.get(self.1);
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
 
         // FIXME: This probably shouldn't ever fail, revisit this
-        state.cpu.set(self.0, state.cpu.get(self.0)? + value)?;
+        state.cpu.set(self.0, state.cpu.get(self.0) + value);
 
         // TODO: H + C
 
@@ -77,8 +77,8 @@ mod tests {
     #[test]
     fn it_adds_two_registers() -> crate::Result<()> {
         let mut state = State::default();
-        state.cpu.set(Register::A, 0x10)?;
-        state.cpu.set(Register::B, 0x06)?;
+        state.cpu.set(Register::A, 0x10);
+        state.cpu.set(Register::B, 0x06);
 
         Add8Operation(Register::A, Register::B).act(&mut state)
     }

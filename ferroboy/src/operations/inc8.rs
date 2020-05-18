@@ -38,11 +38,11 @@ pub struct Inc8Operation(pub Register);
 
 impl Operation for Inc8Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let mut temp = u16::from(state.cpu.get(self.0)?);
+        let mut temp = u16::from(state.cpu.get(self.0));
         temp += 1;
 
         // FIXME: Set flags as needed
-        state.cpu.set(self.0, temp as u8)?;
+        state.cpu.set(self.0, temp as u8);
         state.cpu.increment_clock(4);
 
         Ok(())
@@ -68,7 +68,7 @@ mod tests {
 
         Inc8Operation(Register::A).act(&mut state).unwrap();
 
-        assert_eq!(1, state.cpu.get(Register::A).unwrap());
+        assert_eq!(1, state.cpu.get(Register::A));
     }
 
     #[test]

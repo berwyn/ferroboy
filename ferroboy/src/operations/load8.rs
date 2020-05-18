@@ -43,7 +43,7 @@ pub struct Load8ImmediateOperation(pub Register);
 impl Operation for Load8ImmediateOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let value = state.read_byte()?;
-        state.cpu.set(self.0, value).map(|_| ())?;
+        state.cpu.set(self.0, value);
         state.cpu.increment_clock(8);
         Ok(())
     }
@@ -95,8 +95,8 @@ pub struct Load8RegisterCopyOperation(pub Register, pub Register);
 
 impl Operation for Load8RegisterCopyOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let value = state.cpu.get(self.1)?;
-        state.cpu.set(self.0, value).map(|_| ())?;
+        let value = state.cpu.get(self.1);
+        state.cpu.set(self.0, value);
         state.cpu.increment_clock(4);
         Ok(())
     }
@@ -152,12 +152,12 @@ impl Operation for Load8FromMemoryOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let (high, low) = self.1.try_into()?;
 
-        let address_high = state.cpu.get(high)?;
-        let address_low = state.cpu.get(low)?;
+        let address_high = state.cpu.get(high);
+        let address_low = state.cpu.get(low);
         let address = word_to_u16((address_high, address_low));
         let value = state.mmu[address];
 
-        state.cpu.set(self.0, value).map(|_| ())?;
+        state.cpu.set(self.0, value);
         state.cpu.increment_clock(8);
         Ok(())
     }
@@ -224,11 +224,11 @@ pub struct Load8RegisterToMemoryOperation(pub Load8RegisterToMemoryTarget, pub R
 impl Operation for Load8RegisterToMemoryOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let address = match self.0 {
-            Load8RegisterToMemoryTarget::WideRegister(r) => state.cpu.get16(r)?,
-            Load8RegisterToMemoryTarget::Register(r) => u16::from(state.cpu.get(r)?),
+            Load8RegisterToMemoryTarget::WideRegister(r) => state.cpu.get16(r),
+            Load8RegisterToMemoryTarget::Register(r) => u16::from(state.cpu.get(r)),
         };
 
-        let value = state.cpu.get(self.1)?;
+        let value = state.cpu.get(self.1);
         state.mmu[address] = value;
 
         state.cpu.increment_clock(8);
@@ -264,11 +264,11 @@ mod tests {
 
         let op = Load8ImmediateOperation(Register::B);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0xFE, state.cpu.get(Register::B).unwrap());
+        assert_eq!(0xFE, state.cpu.get(Register::B));
     }
 
     #[test]
@@ -276,15 +276,15 @@ mod tests {
         let mut state = State::default();
         let op = Load8RegisterCopyOperation(Register::B, Register::A);
 
-        state.cpu.set(Register::A, 0xFE).unwrap();
+        state.cpu.set(Register::A, 0xFE);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0xFE, state.cpu.get(Register::A).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0xFE, state.cpu.get(Register::A));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0xFE, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0xFE, state.cpu.get(Register::A).unwrap());
+        assert_eq!(0xFE, state.cpu.get(Register::B));
+        assert_eq!(0xFE, state.cpu.get(Register::A));
     }
 
     #[test]
@@ -293,14 +293,14 @@ mod tests {
         let op = Load8FromMemoryOperation(Register::B, WideRegister::HL);
 
         state.mmu.mutate(|mmu| mmu[0x5E50] = 0xFE);
-        state.cpu.set(Register::H, 0x5E).unwrap();
-        state.cpu.set(Register::L, 0x50).unwrap();
+        state.cpu.set(Register::H, 0x5E);
+        state.cpu.set(Register::L, 0x50);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0xFE, state.cpu.get(Register::B).unwrap());
+        assert_eq!(0xFE, state.cpu.get(Register::B));
     }
 
     #[test]
@@ -311,8 +311,8 @@ mod tests {
             Register::A,
         );
 
-        state.cpu.set16(WideRegister::PC, 0x5E50).unwrap();
-        state.cpu.set(Register::A, 0xBE).unwrap();
+        state.cpu.set16(WideRegister::PC, 0x5E50);
+        state.cpu.set(Register::A, 0xBE);
 
         assert_eq!(0x00, state.mmu[0x5E50]);
 

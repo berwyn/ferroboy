@@ -39,7 +39,7 @@ pub struct Load16ImmediateOperation(pub WideRegister);
 impl Operation for Load16ImmediateOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let word = word_to_u16(state.read_word()?);
-        state.cpu.set16(self.0, word)?;
+        state.cpu.set16(self.0, word);
         state.cpu.increment_clock(12);
 
         Ok(())
@@ -72,13 +72,13 @@ mod tests {
 
         let op = Load16ImmediateOperation(WideRegister::BC);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0x00, state.cpu.get(Register::C));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0xBE, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0xEF, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0xBE, state.cpu.get(Register::B));
+        assert_eq!(0xEF, state.cpu.get(Register::C));
     }
 
     #[test]

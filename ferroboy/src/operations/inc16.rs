@@ -42,25 +42,25 @@ impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
             WideRegister::PC | WideRegister::SP => {
-                state.cpu.set16(self.0, state.cpu.get16(self.0)? + 1)?;
+                state.cpu.set16(self.0, state.cpu.get16(self.0) + 1);
             }
             _ => {
                 let (high, low) = self.0.try_into()?;
 
-                let mut lower = u16::from(state.cpu.get(low)?);
+                let mut lower = u16::from(state.cpu.get(low));
                 lower += 1;
-                state.cpu.set(low, lower as u8)?;
+                state.cpu.set(low, lower as u8);
 
                 if lower / 0xFF > 0 {
                     state.cpu.set_flag(Flags::HALF_CARRY);
-                    let mut upper = u16::from(state.cpu.get(high)?);
+                    let mut upper = u16::from(state.cpu.get(high));
                     upper += 1;
 
                     if upper / 0xFF > 0 {
                         state.cpu.set_flag(Flags::CARRY);
                     }
 
-                    state.cpu.set(high, upper as u8)?;
+                    state.cpu.set(high, upper as u8);
                 }
             }
         };
@@ -98,13 +98,13 @@ mod tests {
         let mut state = State::default();
         let op = Inc16Operation(WideRegister::BC);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0x00, state.cpu.get(Register::C));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0x01, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0x01, state.cpu.get(Register::C));
     }
 
     #[test]
@@ -112,15 +112,15 @@ mod tests {
         let mut state = State::default();
         let op = Inc16Operation(WideRegister::BC);
 
-        state.cpu.set(Register::C, 0xFF).unwrap();
+        state.cpu.set(Register::C, 0xFF);
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0xFF, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0xFF, state.cpu.get(Register::C));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0x01, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x01, state.cpu.get(Register::B));
+        assert_eq!(0x00, state.cpu.get(Register::C));
         assert!(state.cpu.has_flag(Flags::HALF_CARRY));
     }
 
@@ -129,16 +129,16 @@ mod tests {
         let mut state = State::default();
         let op = Inc16Operation(WideRegister::BC);
 
-        state.cpu.set(Register::B, 0xFF).unwrap();
-        state.cpu.set(Register::C, 0xFF).unwrap();
+        state.cpu.set(Register::B, 0xFF);
+        state.cpu.set(Register::C, 0xFF);
 
-        assert_eq!(0xFF, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0xFF, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0xFF, state.cpu.get(Register::B));
+        assert_eq!(0xFF, state.cpu.get(Register::C));
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0x00, state.cpu.get(Register::B).unwrap());
-        assert_eq!(0x00, state.cpu.get(Register::C).unwrap());
+        assert_eq!(0x00, state.cpu.get(Register::B));
+        assert_eq!(0x00, state.cpu.get(Register::C));
         assert!(state.cpu.has_flag(Flags::HALF_CARRY));
         assert!(state.cpu.has_flag(Flags::CARRY));
     }
