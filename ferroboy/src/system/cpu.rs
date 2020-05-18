@@ -147,69 +147,62 @@ pub struct CPU {
 }
 
 impl CPU {
-    pub(crate) fn get(&self, register: Register) -> Result<u8, String> {
-        let selected = match register {
+    pub(crate) fn get(&self, register: Register) -> u8 {
+        match register {
             Register::A => self.a,
+            Register::F => self.f.bits,
             Register::B => self.b,
             Register::C => self.c,
             Register::D => self.d,
             Register::E => self.e,
             Register::H => self.h,
             Register::L => self.l,
-            _ => return Err("Invalid register".into()),
-        };
-
-        Ok(selected)
+        }
     }
 
-    pub(crate) fn get16(&self, register: WideRegister) -> crate::Result<u16> {
-        let selected = match register {
+    pub(crate) fn get16(&self, register: WideRegister) -> u16 {
+        match register {
             WideRegister::SP => self.sp,
             WideRegister::PC => self.pc,
             WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
-                let (high, low) = register.try_into()?;
-                let (high, low) = (self.get(high)?, self.get(low)?);
-
-                word_to_u16((high, low))
+                let (high, low) = register.try_into().unwrap();
+                word_to_u16((self.get(high), self.get(low)))
             }
-        };
-
-        Ok(selected)
+        }
     }
 
-    pub(crate) fn set(&mut self, register: Register, value: u8) -> Result<u8, String> {
+    pub(crate) fn set(&mut self, register: Register, value: u8) -> u8 {
         let selected = match register {
             Register::A => &mut self.a,
+            Register::F => &mut self.f.bits,
             Register::B => &mut self.b,
             Register::C => &mut self.c,
             Register::D => &mut self.d,
             Register::E => &mut self.e,
             Register::H => &mut self.h,
             Register::L => &mut self.l,
-            _ => return Err("Can't use 16bit registers".into()),
         };
 
         *selected = value;
-
-        Ok(*selected)
+        *selected
     }
 
-    pub(crate) fn set16(&mut self, register: WideRegister, value: u16) -> Result<u16, String> {
+    pub(crate) fn set16(&mut self, register: WideRegister, value: u16) -> u16 {
         match register {
             WideRegister::SP => {
                 self.sp = value;
-                Ok(self.sp)
+                self.sp
             }
             WideRegister::PC => {
                 self.pc = value;
-                Ok(self.pc)
+                self.pc
             }
             WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
                 let (high_byte, low_byte) = u16_to_word(value);
-                let (high, low) = register.try_into()?;
+                let (high, low) = register.try_into().unwrap();
 
-                self.set(high, high_byte)?;
-                self.set(low, low_byte)?;
+                self.set(high, high_byte);
+                self.set(low, low_byte);
 
                 self.get16(register)
             }

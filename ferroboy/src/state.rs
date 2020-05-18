@@ -14,7 +14,7 @@ pub struct State {
 
 impl State {
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
-        let pc = self.cpu.get16(WideRegister::PC)?;
+        let pc = self.cpu.get16(WideRegister::PC);
         let word = self.mmu[pc];
 
         self.increment_program_counter()?;
@@ -23,7 +23,7 @@ impl State {
     }
 
     pub(crate) fn read_word(&mut self) -> crate::Result<(u8, u8)> {
-        let mut pc = self.cpu.get16(WideRegister::PC)?;
+        let mut pc = self.cpu.get16(WideRegister::PC);
         let high = self.mmu[pc];
 
         pc = self.increment_program_counter()?;
@@ -37,13 +37,15 @@ impl State {
 
     // ? Should this be in state or somewhere else?
     pub(crate) fn increment_program_counter(&mut self) -> crate::Result<u16> {
-        self.cpu
-            .set16(WideRegister::PC, self.cpu.get16(WideRegister::PC)? + 1)
+        let new_pointer = self.cpu.get16(WideRegister::PC) + 1;
+        self.cpu.set16(WideRegister::PC, new_pointer);
+
+        Ok(new_pointer)
     }
 
     pub(crate) fn jump(&mut self, destination: u16) -> crate::Result<()> {
         // FIXME(berwyn): Validate jump target
-        self.cpu.set16(WideRegister::PC, destination)?;
+        self.cpu.set16(WideRegister::PC, destination);
 
         Ok(())
     }
@@ -111,26 +113,26 @@ mod tests {
     fn it_reads_a_byte() {
         let mut state = State::default();
 
-        state.cpu.set16(WideRegister::PC, 0x00).unwrap();
+        state.cpu.set16(WideRegister::PC, 0x00);
         state.mmu.mutate(|mmu| mmu[0x00] = 0xFE);
 
         let byte = state.read_byte().unwrap();
 
         assert_eq!(0xFE, byte);
-        assert_eq!(0x01, state.cpu.get16(WideRegister::PC).unwrap());
+        assert_eq!(0x01, state.cpu.get16(WideRegister::PC));
     }
 
     #[test]
     fn it_reads_a_word() {
         let mut state = State::default();
 
-        state.cpu.set16(WideRegister::PC, 0x00).unwrap();
+        state.cpu.set16(WideRegister::PC, 0x00);
         state.mmu.mutate(|mmu| mmu[0x00] = 0xBE);
         state.mmu.mutate(|mmu| mmu[0x01] = 0xEF);
 
         let word = state.read_word().unwrap();
 
         assert_eq!((0xBE, 0xEF), word);
-        assert_eq!(0x02, state.cpu.get16(WideRegister::PC).unwrap());
+        assert_eq!(0x02, state.cpu.get16(WideRegister::PC));
     }
 }
