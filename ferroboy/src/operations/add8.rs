@@ -13,16 +13,16 @@ use crate::system::{Flags, Register};
 /// ## Runtime
 /// | Metric | Size |
 /// |:-------|:-----|
-/// | Length | 1 |
-/// | Cycles | 4 |
+/// | Length | 1    |
+/// | Cycles | 4    |
 ///
 /// ## Flags
-/// | Flag | Value |
-/// |:-----|:------|
-/// | Zero | Set |
-/// | Subtraction | 0 |
-/// | Half-Carry | Set |
-/// | Carry | Set |
+/// | Flag        | Value |
+/// |:------------|:------|
+/// | Zero        | Set   |
+/// | Subtraction | 0     |
+/// | Half-Carry  | Set   |
+/// | Carry       | Set   |
 ///
 /// # Examples
 /// ```rs
@@ -37,14 +37,29 @@ pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let value = state.cpu.get(self.1);
+        let value = state.cpu.get(self.0);
+        let new_value = value.wrapping_add(state.cpu.get(self.1));
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
+        state.cpu.set(self.0, new_value);
 
-        // FIXME: This probably shouldn't ever fail, revisit this
-        state.cpu.set(self.0, state.cpu.get(self.0) + value);
+        if value > 0xF0 {
+            state.cpu.set_flag(Flags::HALF_CARRY);
+        } else {
+            state.cpu.clear_flag(Flags::HALF_CARRY);
+        }
 
-        // TODO: H + C
+        if new_value < value {
+            state.cpu.set_flag(Flags::CARRY);
+        } else {
+            state.cpu.clear_flag(Flags::CARRY);
+        }
+
+        if new_value == 0 {
+            state.cpu.set_flag(Flags::ZERO);
+        } else {
+            state.cpu.clear_flag(Flags::ZERO);
+        }
 
         state.cpu.increment_clock(4);
 
@@ -84,9 +99,7 @@ mod tests {
     }
 
     #[test]
-    fn it_clears_the_zero_flag() {
-        use crate::system::Flags;
-
+    fn it_clears_the_subtraction_flag() {
         let mut state = State::default();
         state.cpu.set_flag(Flags::SUBTRACTION);
 
@@ -100,18 +113,60 @@ mod tests {
     #[test]
     #[should_panic]
     fn it_sets_the_half_carry_flag() {
-        todo!();
+        let mut state = State::default();
+        state.cpu.set(Register::A, 0xA0);
+        state.cpu.set(Register::B, 0x51);
+
+        Add8Operation(Register::A, Register::B)
+            .act(&mut state)
+            .unwrap();
+
+        assert_eq!(0xF1, state.cpu.get(Register::A));
+        assert!(state.cpu.has_flag(Flags::HALF_CARRY));
+
+        state.cpu.set(Register::A, 0xA0);
+        state.cpu.set(Register::B, 0x10);
+        assert_eq!(0xB0, state.cpu.get(Register::A));
+        assert!(!state.cpu.has_flag(Flags::HALF_CARRY));
     }
 
     #[test]
     #[should_panic]
     fn it_sets_the_carry_flag() {
-        todo!();
+        let mut state = State::default();
+        state.cpu.set(Register::A, 0xA0);
+        state.cpu.set(Register::B, 0x60);
+
+        Add8Operation(Register::A, Register::B)
+            .act(&mut state)
+            .unwrap();
+
+        assert_eq!(0x10, state.cpu.get(Register::A));
+        assert!(state.cpu.has_flag(Flags::CARRY));
+
+        state.cpu.set(Register::A, 0xA0);
+        state.cpu.set(Register::B, 0x10);
+        assert_eq!(0xB0, state.cpu.get(Register::A));
+        assert!(!state.cpu.has_flag(Flags::CARRY));
     }
 
     #[test]
     #[should_panic]
     fn it_sets_the_zero_flag() {
-        todo!();
+        let mut state = State::default();
+        state.cpu.set(Register::A, 0xFF);
+        state.cpu.set(Register::B, 0x01);
+
+        Add8Operation(Register::A, Register::B)
+            .act(&mut state)
+            .unwrap();
+
+        assert_eq!(0x00, state.cpu.get(Register::A));
+        assert!(state.cpu.has_flag(Flags::ZERO));
+
+        state.cpu.set(Register::A, 0xA0);
+        state.cpu.set(Register::B, 0x10);
+        assert_eq!(0xB0, state.cpu.get(Register::A));
+        assert!(!state.cpu.has_flag(Flags::ZERO));
     }
 }
