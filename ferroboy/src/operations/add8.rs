@@ -1,4 +1,5 @@
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
+use crate::helpers::{check_carry, check_half_carry};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
@@ -37,29 +38,22 @@ pub struct Add8Operation(pub Register, pub Register);
 
 impl Operation for Add8Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let value = state.cpu.get(self.0);
-        let new_value = value.wrapping_add(state.cpu.get(self.1));
+        let left_hand = state.cpu.get(self.0);
+        let right_hand = state.cpu.get(self.1);
+        let new_value = left_hand.wrapping_add(right_hand);
 
-        state.cpu.clear_flag(Flags::SUBTRACTION);
         state.cpu.set(self.0, new_value);
 
-        if value > 0xF0 {
-            state.cpu.set_flag(Flags::HALF_CARRY);
-        } else {
-            state.cpu.clear_flag(Flags::HALF_CARRY);
-        }
+        state.cpu.set_flag_value(Flags::ZERO, new_value == 0);
+        state.cpu.clear_flag(Flags::SUBTRACTION);
 
-        if new_value < value {
-            state.cpu.set_flag(Flags::CARRY);
-        } else {
-            state.cpu.clear_flag(Flags::CARRY);
-        }
+        state
+            .cpu
+            .set_flag_value(Flags::HALF_CARRY, check_half_carry(left_hand, right_hand));
 
-        if new_value == 0 {
-            state.cpu.set_flag(Flags::ZERO);
-        } else {
-            state.cpu.clear_flag(Flags::ZERO);
-        }
+        state
+            .cpu
+            .set_flag_value(Flags::CARRY, check_carry(left_hand, right_hand));
 
         state.cpu.increment_clock(4);
 
