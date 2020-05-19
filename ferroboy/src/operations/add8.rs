@@ -1,5 +1,5 @@
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::helpers::{check_carry, check_half_carry};
+use crate::extensions::{Carry, HalfCarry};
 use crate::operations::Operation;
 use crate::state::State;
 use crate::system::{Flags, Register};
@@ -49,11 +49,11 @@ impl Operation for Add8Operation {
 
         state
             .cpu
-            .set_flag_value(Flags::HALF_CARRY, check_half_carry(left_hand, right_hand));
+            .set_flag_value(Flags::HALF_CARRY, left_hand.half_carry(right_hand));
 
         state
             .cpu
-            .set_flag_value(Flags::CARRY, check_carry(left_hand, right_hand));
+            .set_flag_value(Flags::CARRY, left_hand.carry(right_hand));
 
         state.cpu.increment_clock(4);
 
@@ -105,27 +105,20 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
     fn it_sets_the_half_carry_flag() {
         let mut state = State::default();
-        state.cpu.set(Register::A, 0xA0);
-        state.cpu.set(Register::B, 0x51);
+        state.cpu.set(Register::A, 0x18);
+        state.cpu.set(Register::B, 0x08);
 
         Add8Operation(Register::A, Register::B)
             .act(&mut state)
             .unwrap();
 
-        assert_eq!(0xF1, state.cpu.get(Register::A));
+        assert_eq!(0x20, state.cpu.get(Register::A));
         assert!(state.cpu.has_flag(Flags::HALF_CARRY));
-
-        state.cpu.set(Register::A, 0xA0);
-        state.cpu.set(Register::B, 0x10);
-        assert_eq!(0xB0, state.cpu.get(Register::A));
-        assert!(!state.cpu.has_flag(Flags::HALF_CARRY));
     }
 
     #[test]
-    #[should_panic]
     fn it_sets_the_carry_flag() {
         let mut state = State::default();
         state.cpu.set(Register::A, 0xA0);
@@ -135,17 +128,11 @@ mod tests {
             .act(&mut state)
             .unwrap();
 
-        assert_eq!(0x10, state.cpu.get(Register::A));
+        assert_eq!(0x00, state.cpu.get(Register::A));
         assert!(state.cpu.has_flag(Flags::CARRY));
-
-        state.cpu.set(Register::A, 0xA0);
-        state.cpu.set(Register::B, 0x10);
-        assert_eq!(0xB0, state.cpu.get(Register::A));
-        assert!(!state.cpu.has_flag(Flags::CARRY));
     }
 
     #[test]
-    #[should_panic]
     fn it_sets_the_zero_flag() {
         let mut state = State::default();
         state.cpu.set(Register::A, 0xFF);
@@ -157,10 +144,5 @@ mod tests {
 
         assert_eq!(0x00, state.cpu.get(Register::A));
         assert!(state.cpu.has_flag(Flags::ZERO));
-
-        state.cpu.set(Register::A, 0xA0);
-        state.cpu.set(Register::B, 0x10);
-        assert_eq!(0xB0, state.cpu.get(Register::A));
-        assert!(!state.cpu.has_flag(Flags::ZERO));
     }
 }
