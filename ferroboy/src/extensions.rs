@@ -10,13 +10,13 @@ pub trait HalfCarry {
 
 impl HalfCarry for u8 {
     fn half_carry(&self, other: Self) -> bool {
-        (self & 0xF) + (other & 0xF) & 0x10 == 0x10
+        ((self & 0xF) + (other & 0xF)) & 0x10 == 0x10
     }
 }
 
 impl HalfCarry for u16 {
     fn half_carry(&self, other: Self) -> bool {
-        (self & 0xFFF) + (other & 0xFFF) & 0x1000 == 0x1000
+        ((self & 0xFFF) + (other & 0xFFF)) & 0x1000 == 0x1000
     }
 }
 
