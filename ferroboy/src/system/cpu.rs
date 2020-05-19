@@ -221,6 +221,14 @@ impl CPU {
         self.f -= flag;
     }
 
+    pub(crate) fn set_flag_value(&mut self, flag: Flags, value: bool) {
+        if value {
+            self.f |= flag;
+        } else {
+            self.f -= flag;
+        }
+    }
+
     pub(crate) fn increment_clock(&mut self, amount: u64) {
         self.clock += amount;
     }
