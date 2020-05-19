@@ -9,6 +9,7 @@ pub use crate::system::WideRegister;
 pub use crate::system::OPCODES;
 
 mod assembly;
+mod extensions;
 mod helpers;
 mod operations;
 mod state;
