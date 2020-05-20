@@ -21,6 +21,7 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     load_rank_C_ops(&mut map);
     load_rank_D_ops(&mut map);
     load_rank_E_ops(&mut map);
+    load_rank_F_ops(&mut map);
 
     map
 });
@@ -292,4 +293,10 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
         0xE9,
         leak(JumpPositionOperation(JumpPositionFlags::Register)),
     );
+}
+
+#[allow(non_snake_case)] // 'F' is a hex number here, not a letter
+fn load_rank_F_ops(map: &mut OpCodeMap) {
+    map.insert(0xF3, leak(DisableInterruptsOperation));
+    map.insert(0xFB, leak(EnableInterruptsOperation));
 }
