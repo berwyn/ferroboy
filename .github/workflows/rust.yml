@@ -41,6 +41,18 @@ jobs:
         with:
           command: test
           args: --verbose
+        if: ${{ matrix.os != 'ubuntu-latest' }}
+      - name: Test
+        uses: actions-rs/tarpaulin@v0.1
+        with:
+          version: "0.12.4"
+          args: "-- --test-threads 1"
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-actions@v1.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
       - name: Build
         uses: actions-rs/cargo@v1
         with:
