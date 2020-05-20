@@ -124,10 +124,10 @@ impl Default for Flags {
 }
 
 /// An implementation of the Gameboy's LR35902 CPU.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct CPU {
-    halt: bool,
-    interrupt_mode_enabled: bool,
+    halted: bool,
+    interrupts_enabled: bool,
 
     clock: u64,
     f: Flags,
@@ -242,8 +242,43 @@ impl CPU {
         self.clock = f(&self.clock)
     }
 
+    pub(crate) fn interrupts_enabled(&self) -> bool {
+        self.interrupts_enabled
+    }
+
+    pub(crate) fn enable_interrupts(&mut self) {
+        self.interrupts_enabled = true;
+    }
+
+    pub(crate) fn disable_interrupts(&mut self) {
+        self.interrupts_enabled = false;
+    }
+
     pub(crate) fn is_halted(&self) -> bool {
-        self.halt
+        self.halted
+    }
+}
+
+impl Default for CPU {
+    fn default() -> Self {
+        Self {
+            halted: false,
+            interrupts_enabled: true,
+
+            clock: 0,
+            f: Flags::CLEAR,
+
+            a: 0,
+            b: 0,
+            c: 0,
+            d: 0,
+            e: 0,
+            h: 0,
+            l: 0,
+
+            sp: 0,
+            pc: 0,
+        }
     }
 }
 

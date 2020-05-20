@@ -10,6 +10,9 @@ pub use inc8::*;
 mod inc16;
 pub use inc16::*;
 
+mod interrupts;
+pub use interrupts::*;
+
 mod jump;
 pub use jump::*;
 

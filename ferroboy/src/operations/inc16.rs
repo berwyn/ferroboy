@@ -40,31 +40,8 @@ pub struct Inc16Operation(pub WideRegister);
 
 impl Operation for Inc16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        match self.0 {
-            WideRegister::PC | WideRegister::SP => {
-                state.cpu.set16(self.0, state.cpu.get16(self.0) + 1);
-            }
-            _ => {
-                let (high, low) = self.0.try_into()?;
-
-                let mut lower = u16::from(state.cpu.get(low));
-                lower += 1;
-                state.cpu.set(low, lower as u8);
-
-                if lower / 0xFF > 0 {
-                    state.cpu.set_flag(Flags::HALF_CARRY);
-                    let mut upper = u16::from(state.cpu.get(high));
-                    upper += 1;
-
-                    if upper / 0xFF > 0 {
-                        state.cpu.set_flag(Flags::CARRY);
-                    }
-
-                    state.cpu.set(high, upper as u8);
-                }
-            }
-        };
-
+        let value = state.cpu.get16(self.0);
+        state.cpu.set16(self.0, value.wrapping_add(1));
         state.cpu.increment_clock(8);
 
         Ok(())
@@ -121,7 +98,6 @@ mod tests {
 
         assert_eq!(0x01, state.cpu.get(Register::B));
         assert_eq!(0x00, state.cpu.get(Register::C));
-        assert!(state.cpu.has_flag(Flags::HALF_CARRY));
     }
 
     #[test]
@@ -139,7 +115,5 @@ mod tests {
 
         assert_eq!(0x00, state.cpu.get(Register::B));
         assert_eq!(0x00, state.cpu.get(Register::C));
-        assert!(state.cpu.has_flag(Flags::HALF_CARRY));
-        assert!(state.cpu.has_flag(Flags::CARRY));
     }
 }
