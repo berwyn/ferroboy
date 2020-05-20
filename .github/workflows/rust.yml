@@ -46,6 +46,7 @@ jobs:
         uses: actions-rs/tarpaulin@v0.1.0
         with:
           version: latest
+          out-type: Lcov
           args: "-- --test-threads 1"
         if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable'
       - name: Upload to Coveralls
