@@ -8,7 +8,6 @@ use crate::helpers::{u16_to_word, word_to_u16};
 /// an operation should apply to.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Register {
-    // 8bit
     /// The accumulator.
     A,
     /// General purpose register
@@ -213,6 +212,7 @@ impl CPU {
         self.f & flag == flag
     }
 
+    #[allow(unused)]
     pub(crate) fn set_flag(&mut self, flag: Flags) {
         self.f |= flag
     }
@@ -234,7 +234,7 @@ impl CPU {
     }
 
     // FIXME: Should this be test-only?
-    #[allow(dead_code)]
+    #[allow(unused)]
     pub(crate) fn set_clock<F>(&mut self, f: F)
     where
         F: FnOnce(&u64) -> u64,
@@ -242,6 +242,7 @@ impl CPU {
         self.clock = f(&self.clock)
     }
 
+    #[allow(unused)]
     pub(crate) fn interrupts_enabled(&self) -> bool {
         self.interrupts_enabled
     }

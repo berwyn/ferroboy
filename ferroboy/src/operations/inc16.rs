@@ -1,9 +1,7 @@
-use core::convert::TryInto;
-
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, WideRegister};
+use crate::system::WideRegister;
 
 /// Increments a singular register.
 ///
