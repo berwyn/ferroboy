@@ -481,6 +481,8 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
 
     map.insert(0xC3, leak(JumpPositionOperation(JumpPositionFlags::Nop)));
 
+    map.insert(0xC5, leak(PushOperation(WideRegister::BC)));
+
     map.insert(0xCA, leak(JumpPositionOperation(JumpPositionFlags::Zero)));
 }
 
@@ -490,6 +492,8 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
         0xD2,
         leak(JumpPositionOperation(JumpPositionFlags::NotCarry)),
     );
+
+    map.insert(0xD5, leak(PushOperation(WideRegister::DE)));
 
     map.insert(0xDA, leak(JumpPositionOperation(JumpPositionFlags::Carry)));
 }
@@ -504,6 +508,8 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
         )),
     );
 
+    map.insert(0xE5, leak(PushOperation(WideRegister::HL)));
+
     map.insert(
         0xE9,
         leak(JumpPositionOperation(JumpPositionFlags::Register)),
@@ -513,5 +519,8 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
 fn load_rank_F_ops(map: &mut OpCodeMap) {
     map.insert(0xF3, leak(DisableInterruptsOperation));
+
+    map.insert(0xF5, leak(PushOperation(WideRegister::AF)));
+
     map.insert(0xFB, leak(EnableInterruptsOperation));
 }
