@@ -30,3 +30,6 @@ pub use nop::*;
 
 mod operation;
 pub use operation::*;
+
+mod stop;
+pub use stop::*;
