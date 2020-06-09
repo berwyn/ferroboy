@@ -258,6 +258,11 @@ impl CPU {
     pub(crate) fn is_halted(&self) -> bool {
         self.halted
     }
+
+    pub(crate) fn halt(&mut self) -> bool {
+        self.halted = true;
+        self.halted
+    }
 }
 
 impl Default for CPU {
