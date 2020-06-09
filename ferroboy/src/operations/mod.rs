@@ -4,6 +4,9 @@ pub use add8::*;
 mod add16;
 pub use add16::*;
 
+mod halt;
+pub use halt::*;
+
 mod inc8;
 pub use inc8::*;
 
