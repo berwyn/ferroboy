@@ -32,7 +32,7 @@ use crate::state::State;
 /// # Errors
 /// This operation cannot fail
 #[derive(Copy, Clone, Debug)]
-struct HaltOperation;
+pub struct HaltOperation;
 
 impl Operation for HaltOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
