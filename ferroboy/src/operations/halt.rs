@@ -43,7 +43,7 @@ impl Operation for HaltOperation {
     }
 }
 impl Disassemble for HaltOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<crate::AssemblyInstruction> {
+    fn disassemble(&self, _: &mut State) -> crate::Result<crate::AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("HALT")
             .build()
