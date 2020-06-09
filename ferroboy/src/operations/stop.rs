@@ -45,7 +45,7 @@ impl Operation for StopOperation {
 }
 
 impl Disassemble for StopOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("STOP")
             .with_arg("0")

@@ -474,6 +474,8 @@ fn load_rank_8_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
 fn load_rank_C_ops(map: &mut OpCodeMap) {
+    map.insert(0xC1, leak(PopOperation(WideRegister::BC)));
+
     map.insert(
         0xC2,
         leak(JumpPositionOperation(JumpPositionFlags::NotZero)),
@@ -488,6 +490,8 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // `D` is a hex number here, not a letter
 fn load_rank_D_ops(map: &mut OpCodeMap) {
+    map.insert(0xD1, leak(PopOperation(WideRegister::DE)));
+
     map.insert(
         0xD2,
         leak(JumpPositionOperation(JumpPositionFlags::NotCarry)),
@@ -500,6 +504,8 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // `E` is a hex number here, not a letter
 fn load_rank_E_ops(map: &mut OpCodeMap) {
+    map.insert(0xE1, leak(PopOperation(WideRegister::DE)));
+
     map.insert(
         0xE2,
         leak(Load8RegisterToMemoryOperation(
@@ -518,6 +524,8 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
 fn load_rank_F_ops(map: &mut OpCodeMap) {
+    map.insert(0xF1, leak(PopOperation(WideRegister::HL)));
+
     map.insert(0xF3, leak(DisableInterruptsOperation));
 
     map.insert(0xF5, leak(PushOperation(WideRegister::AF)));

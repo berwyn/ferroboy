@@ -5,6 +5,35 @@ use crate::operations::Operation;
 use crate::state::State;
 use crate::system::WideRegister;
 
+/// Pushes a value from a wide register to the location of the stack pointer.
+///
+/// # Opcode Reference
+/// ## Assembly defintion
+/// ```a
+/// PUSH BC
+/// ```
+///
+/// ## Runtime
+/// | Metric | Size |
+/// |:-------|:-----|
+/// | Length | 1    |
+/// | Cycles | 16   |
+///
+/// ## Flags
+/// | Flag        | Value      |
+/// |:------------|:-----------|
+/// | Zero        | Unaffected |
+/// | Subtraction | Unaffected |
+/// | Half-Carry  | Unaffected |
+/// | Carry       | Unaffected |
+///
+/// # Examples
+/// ```rs
+/// PushOperation(WideRegister::BC).act(&mut state).unwrap();
+/// ```
+///
+/// # Errors
+/// - `PC` and `SP` are not valid register to PUSH from
 #[derive(Copy, Clone, Debug)]
 pub struct PushOperation(pub WideRegister);
 
@@ -30,7 +59,7 @@ impl Operation for PushOperation {
 }
 
 impl Disassemble for PushOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<crate::AssemblyInstruction> {
+    fn disassemble(&self, _: &mut State) -> crate::Result<crate::AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("PUSH")
             .with_arg(self.0)

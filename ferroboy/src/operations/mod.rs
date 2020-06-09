@@ -31,6 +31,9 @@ pub use nop::*;
 mod operation;
 pub use operation::*;
 
+mod pop;
+pub use pop::*;
+
 mod push;
 pub use push::*;
 
