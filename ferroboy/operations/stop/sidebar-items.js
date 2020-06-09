@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["StopOperation","Causes the processor and screen to stop until a button is pressed."]]});
