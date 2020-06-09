@@ -20,10 +20,7 @@ pub type Result<T> = core::result::Result<T, String>;
 /// Prepare the system and start the emulation.
 pub fn start(state: &mut State) -> Result<()> {
     if let Some(_cart) = &state.cartridge {
-        return state
-            .map_cartridge()
-            .and(state.jump(0x0100))
-            .and_then(|_| Ok(()));
+        return state.map_cartridge().and(state.jump(0x0100)).map(|_| ());
     }
 
     Err("Cartridge not loaded!".into())
@@ -49,7 +46,7 @@ pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operati
             println!("\t{:?}", operation);
         }
 
-        operation.act(state).and_then(|_| Ok(*operation))
+        operation.act(state).map(|_| *operation)
     } else {
         Err(format!("Invalid opcode! PC: {}", opcode))
     }
