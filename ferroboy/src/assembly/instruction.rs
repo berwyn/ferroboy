@@ -127,6 +127,7 @@ impl AssemblyInstructionBuilder {
         self
     }
 
+    #[allow(unused)]
     pub fn with_comment(mut self, arg: impl ToString) -> Self {
         self.comment.replace(arg.to_string());
         self
