@@ -209,6 +209,7 @@
 <span id="209">209</span>
 <span id="210">210</span>
 <span id="211">211</span>
+<span id="212">212</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// A raw 6502 assembly instruction.</span>
 <span class="doccomment">///</span>
@@ -339,6 +340,7 @@
         <span class="self">self</span>
     }
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_comment</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">arg</span>: <span class="kw">impl</span> <span class="ident">ToString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">comment</span>.<span class="ident">replace</span>(<span class="ident">arg</span>.<span class="ident">to_string</span>());
         <span class="self">self</span>

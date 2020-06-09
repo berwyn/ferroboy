@@ -293,6 +293,13 @@
 <span id="293">293</span>
 <span id="294">294</span>
 <span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -317,6 +324,7 @@
     <span class="ident">load_rank_C_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_D_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_E_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
+    <span class="ident">load_rank_F_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
 
     <span class="ident">map</span>
 });
@@ -588,6 +596,12 @@
         <span class="number">0xE9</span>,
         <span class="ident">leak</span>(<span class="ident">JumpPositionOperation</span>(<span class="ident">JumpPositionFlags</span>::<span class="ident">Register</span>)),
     );
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// &#39;F&#39; is a hex number here, not a letter</span>
+<span class="kw">fn</span> <span class="ident">load_rank_F_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xF3</span>, <span class="ident">leak</span>(<span class="ident">DisableInterruptsOperation</span>));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xFB</span>, <span class="ident">leak</span>(<span class="ident">EnableInterruptsOperation</span>));
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "ferroboy";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

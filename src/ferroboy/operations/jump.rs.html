@@ -505,7 +505,7 @@
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">JumpRelativeOperation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">read_byte</span>()<span class="question-mark">?</span> <span class="kw">as</span> <span class="ident">u16</span>;
-        <span class="kw">let</span> <span class="ident">program_counter</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">program_counter</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>);
 
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">JumpRelativeFlag</span>::<span class="ident">Nop</span> <span class="op">=</span><span class="op">&gt;</span> {
@@ -680,7 +680,7 @@
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">JumpPositionOperation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">JumpPositionFlags</span>::<span class="ident">Register</span>.<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>) {
-            <span class="kw">let</span> <span class="ident">address</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">address</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>);
             <span class="ident">state</span>.<span class="ident">jump</span>(<span class="ident">address</span>)<span class="question-mark">?</span>;
             <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">increment_clock</span>(<span class="number">4</span>);
 

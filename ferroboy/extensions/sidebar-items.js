@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["Carry","Used to check if an ALU operation would trigger a carry."],["HalfCarry","Used to check if an ALU operation would trigger a half-carry."]]});

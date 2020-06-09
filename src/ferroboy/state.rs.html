@@ -134,6 +134,8 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">system</span>::{<span class="ident">Cartridge</span>, <span class="ident">Config</span>, <span class="ident">WideRegister</span>, <span class="ident">CPU</span>, <span class="ident">MMU</span>};
 
@@ -151,7 +153,7 @@
 
 <span class="kw">impl</span> <span class="ident">State</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_byte</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">pc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">pc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>);
         <span class="kw">let</span> <span class="ident">word</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mmu</span>[<span class="ident">pc</span>];
 
         <span class="self">self</span>.<span class="ident">increment_program_counter</span>()<span class="question-mark">?</span>;
@@ -160,7 +162,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_word</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">u8</span>, <span class="ident">u8</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>);
         <span class="kw">let</span> <span class="ident">high</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mmu</span>[<span class="ident">pc</span>];
 
         <span class="ident">pc</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">increment_program_counter</span>()<span class="question-mark">?</span>;
@@ -174,13 +176,15 @@
 
     <span class="comment">// ? Should this be in state or somewhere else?</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">increment_program_counter</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">cpu</span>
-            .<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>)<span class="question-mark">?</span> <span class="op">+</span> <span class="number">1</span>)
+        <span class="kw">let</span> <span class="ident">new_pointer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>) <span class="op">+</span> <span class="number">1</span>;
+        <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="ident">new_pointer</span>);
+
+        <span class="prelude-val">Ok</span>(<span class="ident">new_pointer</span>)
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">jump</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">destination</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="comment">// FIXME(berwyn): Validate jump target</span>
-        <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="ident">destination</span>)<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="ident">destination</span>);
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -248,27 +252,27 @@
     <span class="kw">fn</span> <span class="ident">it_reads_a_byte</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">default</span>();
 
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x00</span>).<span class="ident">unwrap</span>();
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x00</span>);
         <span class="ident">state</span>.<span class="ident">mmu</span>.<span class="ident">mutate</span>(<span class="op">|</span><span class="ident">mmu</span><span class="op">|</span> <span class="ident">mmu</span>[<span class="number">0x00</span>] <span class="op">=</span> <span class="number">0xFE</span>);
 
         <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">read_byte</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">byte</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x01</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x01</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">it_reads_a_word</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">default</span>();
 
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x00</span>).<span class="ident">unwrap</span>();
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x00</span>);
         <span class="ident">state</span>.<span class="ident">mmu</span>.<span class="ident">mutate</span>(<span class="op">|</span><span class="ident">mmu</span><span class="op">|</span> <span class="ident">mmu</span>[<span class="number">0x00</span>] <span class="op">=</span> <span class="number">0xBE</span>);
         <span class="ident">state</span>.<span class="ident">mmu</span>.<span class="ident">mutate</span>(<span class="op">|</span><span class="ident">mmu</span><span class="op">|</span> <span class="ident">mmu</span>[<span class="number">0x01</span>] <span class="op">=</span> <span class="number">0xEF</span>);
 
         <span class="kw">let</span> <span class="ident">word</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">read_word</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>((<span class="number">0xBE</span>, <span class="number">0xEF</span>), <span class="ident">word</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x02</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x02</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>));
     }
 }
 </pre></div>

@@ -410,7 +410,7 @@
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">Load8ImmediateOperation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">read_byte</span>()<span class="question-mark">?</span>;
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>;
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>);
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">increment_clock</span>(<span class="number">8</span>);
         <span class="prelude-val">Ok</span>(())
     }
@@ -462,8 +462,8 @@
 
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">Load8RegisterCopyOperation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="number">1</span>)<span class="question-mark">?</span>;
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="number">1</span>);
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>);
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">increment_clock</span>(<span class="number">4</span>);
         <span class="prelude-val">Ok</span>(())
     }
@@ -519,12 +519,12 @@
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">high</span>, <span class="ident">low</span>) <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">try_into</span>()<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">address_high</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">high</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">address_low</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">low</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">address_high</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">high</span>);
+        <span class="kw">let</span> <span class="ident">address_low</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">low</span>);
         <span class="kw">let</span> <span class="ident">address</span> <span class="op">=</span> <span class="ident">word_to_u16</span>((<span class="ident">address_high</span>, <span class="ident">address_low</span>));
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">mmu</span>[<span class="ident">address</span>];
 
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())<span class="question-mark">?</span>;
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="ident">value</span>);
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">increment_clock</span>(<span class="number">8</span>);
         <span class="prelude-val">Ok</span>(())
     }
@@ -591,11 +591,11 @@
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">Load8RegisterToMemoryOperation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">address</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
-            <span class="ident">Load8RegisterToMemoryTarget</span>::<span class="ident">WideRegister</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">r</span>)<span class="question-mark">?</span>,
-            <span class="ident">Load8RegisterToMemoryTarget</span>::<span class="ident">Register</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">r</span>)<span class="question-mark">?</span>),
+            <span class="ident">Load8RegisterToMemoryTarget</span>::<span class="ident">WideRegister</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">r</span>),
+            <span class="ident">Load8RegisterToMemoryTarget</span>::<span class="ident">Register</span>(<span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">r</span>)),
         };
 
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="number">1</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="self">self</span>.<span class="number">1</span>);
         <span class="ident">state</span>.<span class="ident">mmu</span>[<span class="ident">address</span>] <span class="op">=</span> <span class="ident">value</span>;
 
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">increment_clock</span>(<span class="number">8</span>);
@@ -631,11 +631,11 @@
 
         <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">Load8ImmediateOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
 
         <span class="ident">op</span>.<span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>).<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -643,15 +643,15 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">State</span>::<span class="ident">default</span>();
         <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">A</span>);
 
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="number">0xFE</span>).<span class="ident">unwrap</span>();
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="number">0xFE</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">A</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">A</span>));
 
         <span class="ident">op</span>.<span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>).<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">A</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">A</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -660,14 +660,14 @@
         <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>);
 
         <span class="ident">state</span>.<span class="ident">mmu</span>.<span class="ident">mutate</span>(<span class="op">|</span><span class="ident">mmu</span><span class="op">|</span> <span class="ident">mmu</span>[<span class="number">0x5E50</span>] <span class="op">=</span> <span class="number">0xFE</span>);
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="number">0x5E</span>).<span class="ident">unwrap</span>();
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="number">0x50</span>).<span class="ident">unwrap</span>();
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="number">0x5E</span>);
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="number">0x50</span>);
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
 
         <span class="ident">op</span>.<span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>).<span class="ident">unwrap</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0xFE</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">B</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -678,8 +678,8 @@
             <span class="ident">Register</span>::<span class="ident">A</span>,
         );
 
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x5E50</span>).<span class="ident">unwrap</span>();
-        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="number">0xBE</span>).<span class="ident">unwrap</span>();
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set16</span>(<span class="ident">WideRegister</span>::<span class="ident">PC</span>, <span class="number">0x5E50</span>);
+        <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="number">0xBE</span>);
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x00</span>, <span class="ident">state</span>.<span class="ident">mmu</span>[<span class="number">0x5E50</span>]);
 
