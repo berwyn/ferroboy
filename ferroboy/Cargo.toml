@@ -8,4 +8,4 @@ edition = "2018"
 arrayvec = { version = "0.5.1", features = ["std", "array-sizes-33-128", "array-sizes-129-255"] }
 bitflags = "1.2.1"
 once_cell = "1.4.0"
-pico-args = "0.3.1"
+pico-args = "0.3.2"
