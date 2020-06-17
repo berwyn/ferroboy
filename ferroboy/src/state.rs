@@ -23,24 +23,23 @@ impl State {
     }
 
     pub(crate) fn read_word(&mut self) -> crate::Result<(u8, u8)> {
-        let mut pc = self.cpu.get16(WideRegister::PC);
-        let high = self.mmu[pc];
-
-        pc = self.increment_program_counter()?;
-
-        let low = self.mmu[pc];
-
-        self.increment_program_counter()?;
+        let high = self.read_byte()?;
+        let low = self.read_byte()?;
 
         Ok((high, low))
     }
 
-    // ? Should this be in state or somewhere else?
     pub(crate) fn increment_program_counter(&mut self) -> crate::Result<u16> {
-        let new_pointer = self.cpu.get16(WideRegister::PC) + 1;
-        self.cpu.set16(WideRegister::PC, new_pointer);
-
-        Ok(new_pointer)
+        let pointer = self.cpu.get16(WideRegister::PC);
+        match pointer.checked_add(1) {
+            Some(new_pointer) => {
+                self.cpu.set16(WideRegister::PC, new_pointer);
+                Ok(new_pointer)
+            }
+            None => Err(String::from(
+                "New pointer exceeds the limits of a 16-bit integer",
+            )),
+        }
     }
 
     pub(crate) fn jump(&mut self, destination: u16) -> crate::Result<()> {
@@ -58,6 +57,7 @@ impl State {
         Ok(())
     }
 
+    #[deprecated = "Moving to a Cartridge builder"]
     pub fn load_cartridge_from_file(&mut self, path: &str) -> crate::Result<()> {
         let file = std::fs::File::open(path).map_err(|_| "Couldn't open file".to_string())?;
         let cartridge = Cartridge::from_file(file, &self.config)?;
@@ -67,6 +67,7 @@ impl State {
         Ok(())
     }
 
+    #[deprecated = "Moving to a Cartridge builder"]
     pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> crate::Result<()> {
         let cartridge = Cartridge::from_buffer(buffer, &self.config)?;
 
@@ -83,6 +84,7 @@ impl State {
 #[derive(Default)]
 pub struct StateBuilder {
     config: Config,
+    cartridge: Option<Cartridge>,
 }
 
 impl StateBuilder {
@@ -90,17 +92,22 @@ impl StateBuilder {
         Self::default()
     }
 
-    pub fn with_config(&mut self, config: Config) -> &mut Self {
+    pub fn with_config(mut self, config: Config) -> Self {
         self.config = config;
         self
     }
 
-    pub fn build(&self) -> State {
+    pub fn with_cartridge(mut self, cartridge: Cartridge) -> Self {
+        self.cartridge.replace(cartridge);
+        self
+    }
+
+    pub fn build(mut self) -> State {
         State {
             config: self.config.clone(),
             cpu: Default::default(),
             mmu: Default::default(),
-            cartridge: None,
+            cartridge: self.cartridge.take(),
         }
     }
 }
