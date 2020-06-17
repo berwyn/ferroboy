@@ -3,7 +3,7 @@ use core::convert::TryInto;
 use crate::assembly::{AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::WideRegister;
+use crate::system::{Cartridge, WideRegister};
 
 /// Pushes a value from a wide register to the location of the stack pointer.
 ///
@@ -59,7 +59,7 @@ impl Operation for PushOperation {
 }
 
 impl Disassemble for PushOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<crate::AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<crate::AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("PUSH")
             .with_arg(self.0)
@@ -112,7 +112,7 @@ mod tests {
             assert_eq!(
                 "PUSH HL",
                 PushOperation(WideRegister::HL)
-                    .disassemble(&mut State::default())
+                    .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()
             )

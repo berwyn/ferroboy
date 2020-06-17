@@ -227,6 +227,20 @@ impl std::fmt::Debug for Cartridge {
     }
 }
 
+#[cfg(test)]
+impl Default for Cartridge {
+    fn default() -> Self {
+        Self {
+            title: String::from("TEST         "),
+            bank_count: 0,
+            cartridge_type: CartridgeType::RomOnly,
+            is_japanese: false,
+            ram_size: 0,
+            data: vec![],
+        }
+    }
+}
+
 /// An enum indicating where this cartridge should be loaded from.
 enum CartridgeSource<'a> {
     /// No source is specified, meaning a cartridge can't be built.

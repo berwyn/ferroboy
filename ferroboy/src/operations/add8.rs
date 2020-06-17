@@ -2,7 +2,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemb
 use crate::extensions::{Carry, HalfCarry};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, Register};
+use crate::system::{Cartridge, Flags, Register};
 
 /// Add the contents of one register to another
 ///
@@ -62,7 +62,7 @@ impl Operation for Add8Operation {
 }
 
 impl Disassemble for Add8Operation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("ADD")
             .with_arg(self.0)
@@ -78,7 +78,7 @@ mod tests {
     #[test]
     fn it_disassembles_correctly() {
         let add = Add8Operation(Register::A, Register::B);
-        let instruction = add.disassemble(&mut State::default()).unwrap();
+        let instruction = add.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("ADD A,B", instruction.to_string());
     }

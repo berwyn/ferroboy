@@ -1,5 +1,6 @@
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
+use crate::system::Cartridge;
 use crate::State;
 
 /// A non-operation.
@@ -34,7 +35,7 @@ impl Operation for NopOperation {
 }
 
 impl Disassemble for NopOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("NOP")
             .build()
@@ -48,7 +49,7 @@ mod tests {
     #[test]
     fn it_disassembles_correctly() {
         let op = NopOperation;
-        let instruction = op.disassemble(&mut State::default()).unwrap();
+        let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("NOP", instruction.to_string());
     }

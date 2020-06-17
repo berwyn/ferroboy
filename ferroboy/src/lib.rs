@@ -4,6 +4,7 @@
 pub use crate::assembly::*;
 pub use crate::state::State;
 pub use crate::state::StateBuilder;
+pub use crate::system::Cartridge;
 pub use crate::system::CartridgeBuilder;
 pub use crate::system::ConfigBuilder;
 pub use crate::system::WideRegister;

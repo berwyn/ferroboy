@@ -1,6 +1,10 @@
 use crate::assembly::AssemblyInstruction;
-use crate::State;
+use crate::system::Cartridge;
 
 pub trait Disassemble {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction>;
+    fn disassemble(
+        &self,
+        cartridge: &Cartridge,
+        offset: usize,
+    ) -> crate::Result<AssemblyInstruction>;
 }

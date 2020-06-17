@@ -1,6 +1,6 @@
-use crate::{
-    operations::Operation, AssemblyInstruction, AssemblyInstructionBuilder, Disassemble, State,
-};
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
+use crate::operations::Operation;
+use crate::{Cartridge, State};
 
 #[derive(Clone, Copy, Debug)]
 pub struct DisableInterruptsOperation;
@@ -15,7 +15,7 @@ impl Operation for DisableInterruptsOperation {
 }
 
 impl Disassemble for DisableInterruptsOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new().with_command("DI").build()
     }
 }
@@ -33,7 +33,7 @@ impl Operation for EnableInterruptsOperation {
 }
 
 impl Disassemble for EnableInterruptsOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new().with_command("EI").build()
     }
 }
@@ -58,7 +58,7 @@ mod tests {
         #[test]
         fn it_disassembles_correctly() {
             let instruction = DisableInterruptsOperation
-                .disassemble(&mut State::default())
+                .disassemble(&Cartridge::default(), 0)
                 .unwrap();
 
             assert_eq!("DI", instruction.to_string());
@@ -83,7 +83,7 @@ mod tests {
         #[test]
         fn it_disassembles_correctly() {
             let instruction = EnableInterruptsOperation
-                .disassemble(&mut State::default())
+                .disassemble(&Cartridge::default(), 0)
                 .unwrap();
 
             assert_eq!("EI", instruction.to_string());

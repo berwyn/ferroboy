@@ -2,7 +2,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemb
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::WideRegister;
+use crate::system::{Cartridge, WideRegister};
 
 /// Loads an immediate 16-bit value into a register.
 ///
@@ -47,12 +47,18 @@ impl Operation for Load16ImmediateOperation {
 }
 
 impl Disassemble for Load16ImmediateOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
-        let immediate = word_to_u16(state.read_word()?);
+    fn disassemble(
+        &self,
+        cartridge: &Cartridge,
+        offset: usize,
+    ) -> crate::Result<AssemblyInstruction> {
+        let word = (cartridge.data[offset + 1], cartridge.data[offset + 2]);
+        let immediate = word_to_u16(word);
 
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(format!("${:X}", immediate))
+            .with_size(3)
             .build()
     }
 }
@@ -83,15 +89,12 @@ mod tests {
 
     #[test]
     fn it_disassembles_correctly() -> crate::Result<()> {
-        let mut state = State::default();
-        state.mmu.mutate(|mmu| {
-            mmu[0x00] = 0xBE;
-            mmu[0x01] = 0xEF;
-        });
+        let mut cartridge = Cartridge::default();
+        cartridge.data = vec![0x00, 0xBE, 0xEF];
 
         let op = Load16ImmediateOperation(WideRegister::BC);
 
-        assert_eq!("LD $BEEF", op.disassemble(&mut state)?.to_string());
+        assert_eq!("LD $BEEF", op.disassemble(&cartridge, 0)?.to_string());
 
         Ok(())
     }

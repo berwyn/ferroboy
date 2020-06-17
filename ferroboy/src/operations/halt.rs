@@ -1,6 +1,7 @@
 use crate::assembly::{AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
+use crate::system::Cartridge;
 
 /// Causes the processor and screen to stop until an interrupt occurs.
 ///
@@ -43,7 +44,7 @@ impl Operation for HaltOperation {
     }
 }
 impl Disassemble for HaltOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<crate::AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<crate::AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("HALT")
             .build()
@@ -76,7 +77,7 @@ mod tests {
             assert_eq!(
                 "HALT",
                 HaltOperation
-                    .disassemble(&mut State::default())
+                    .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()
             );

@@ -4,7 +4,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemb
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Register, WideRegister};
+use crate::system::{Cartridge, Register, WideRegister};
 
 // ? Should this be split up into separate files?
 
@@ -50,13 +50,18 @@ impl Operation for Load8ImmediateOperation {
 }
 
 impl Disassemble for Load8ImmediateOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
-        let immediate = word_to_u16(state.read_word()?);
+    fn disassemble(
+        &self,
+        cartridge: &Cartridge,
+        offset: usize,
+    ) -> crate::Result<AssemblyInstruction> {
+        let immediate = cartridge.data[offset + 1];
 
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(self.0)
             .with_arg(format!("${:X}", immediate))
+            .with_size(2)
             .build()
     }
 }
@@ -103,7 +108,7 @@ impl Operation for Load8RegisterCopyOperation {
 }
 
 impl Disassemble for Load8RegisterCopyOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(self.0)
@@ -164,7 +169,7 @@ impl Operation for Load8FromMemoryOperation {
 }
 
 impl Disassemble for Load8FromMemoryOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(self.0)
@@ -238,7 +243,7 @@ impl Operation for Load8RegisterToMemoryOperation {
 }
 
 impl Disassemble for Load8RegisterToMemoryOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(format!(
@@ -249,6 +254,10 @@ impl Disassemble for Load8RegisterToMemoryOperation {
                 }
             ))
             .with_arg(self.1)
+            .with_size(match self.0 {
+                Load8RegisterToMemoryTarget::Register(Register::C) => 2,
+                _ => 1,
+            })
             .build()
     }
 }
@@ -323,24 +332,21 @@ mod tests {
 
     #[test]
     fn it_disassembles_immediate_to_register() {
-        let mut state = State::default();
-        state.mmu.mutate(|mmu| {
-            mmu[0x00] = 0xBE;
-            mmu[0x01] = 0xEF;
-        });
+        let mut cartridge = Cartridge::default();
+        cartridge.data = vec![0x00, 0xBE, 0xEF];
 
         let op = Load8ImmediateOperation(Register::A);
 
         assert_eq!(
-            "LD A,$BEEF",
-            op.disassemble(&mut state).unwrap().to_string()
+            "LD A,$BE",
+            op.disassemble(&cartridge, 0).unwrap().to_string()
         );
     }
 
     #[test]
     fn it_dissassembles_register_to_register() {
         let op = Load8RegisterCopyOperation(Register::A, Register::B);
-        let instruction = op.disassemble(&mut State::default()).unwrap();
+        let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("LD A,B", instruction.to_string());
     }
@@ -348,7 +354,7 @@ mod tests {
     #[test]
     fn it_disassembles_memory_to_register() {
         let op = Load8FromMemoryOperation(Register::A, WideRegister::BC);
-        let instruction = op.disassemble(&mut State::default()).unwrap();
+        let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("LD A,(BC)", instruction.to_string());
     }
@@ -359,7 +365,7 @@ mod tests {
             Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
             Register::A,
         );
-        let instruction: AssemblyInstruction = op.disassemble(&mut State::default()).unwrap();
+        let instruction: AssemblyInstruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("LD (HL),A", instruction.to_string());
     }

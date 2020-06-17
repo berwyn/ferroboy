@@ -15,3 +15,5 @@ pub use cpu::WideRegister;
 pub use cpu::CPU;
 pub use mmu::MMU;
 pub use opcodes::OPCODES;
+
+pub(crate) use opcodes::OpCodeMap;
