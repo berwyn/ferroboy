@@ -28,12 +28,6 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     map
 });
 
-pub static CB_OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
-    let mut map = BTreeMap::new();
-
-    map
-});
-
 /// Leak an object reference so that it lives on for the life of the program.
 fn leak<T>(value: T) -> &'static T {
     Box::leak(Box::new(value))
