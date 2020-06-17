@@ -49,6 +49,7 @@ impl Disassemble for StopOperation {
         AssemblyInstructionBuilder::new()
             .with_command("STOP")
             .with_arg("0")
+            .with_size(2)
             .build()
     }
 }
