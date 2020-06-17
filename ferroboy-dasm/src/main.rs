@@ -1,3 +1,4 @@
+use std::io::Write;
 use std::path::Path;
 
 use ferroboy::{Cartridge, CartridgeBuilder};
@@ -58,26 +59,21 @@ fn bail<T: Into<String>>(code: ErrorCode, message: T) -> ! {
     std::process::exit(code as i32);
 }
 
-fn disassemble_rom<T: AsRef<Path>>(state: &Cartridge, output_path: &T) -> ferroboy::Result<()> {
+fn disassemble_rom<T: AsRef<Path>>(cartridge: &Cartridge, output_path: &T) -> ferroboy::Result<()> {
     let mut options = std::fs::OpenOptions::new();
     match options.write(true).create(true).open(output_path) {
         Ok(file) => {
             let mut writer = std::io::BufWriter::new(file);
 
-            if let Err(e) = write_header(state, &mut writer) {
+            if let Err(e) = write_header(cartridge, &mut writer) {
                 return Err(format!("Unable to write header:\n\t{}", e.to_string()));
             }
 
-            // while !state.is_halted() {
-            //     match ferroboy::tick(state) {
-            //         Ok(operation) => {
-            //             writer
-            //                 .write(format!("{}\n", operation.disassemble(state)?).as_bytes())
-            //                 .map_err(|e| e.to_string())?;
-            //         }
-            //         Err(message) => return Err(message),
-            //     }
-            // }
+            for instruction in cartridge.into_iter() {
+                writer
+                    .write(format!("{}\n", instruction).as_bytes())
+                    .map_err(|e| e.to_string())?;
+            }
 
             Ok(())
         }

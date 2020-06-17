@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
+use crate::assembly::{AssemblyInstruction, AssemblyInstructionStream};
 use crate::system::Config;
 use crate::system::MMU;
 
@@ -224,6 +225,15 @@ impl std::fmt::Debug for Cartridge {
             .field("is_japanese", &self.is_japanese)
             .field("self.data", &format!("Vec<u8> {}B", self.data.len()))
             .finish()
+    }
+}
+
+impl<'cart> IntoIterator for &'cart Cartridge {
+    type Item = AssemblyInstruction;
+    type IntoIter = AssemblyInstructionStream<'cart>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        AssemblyInstructionStream::new(self)
     }
 }
 

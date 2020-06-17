@@ -21,7 +21,10 @@ impl Iterator for AssemblyInstructionStream<'_> {
         let opcode = self.cartridge.data[self.pointer];
         if let Some(operation) = crate::OPCODES.get(&opcode) {
             match operation.disassemble(self.cartridge, self.pointer) {
-                Ok(instruction) => todo!(),
+                Ok(instruction) => {
+                    self.pointer += instruction.size as usize;
+                    Some(instruction)
+                }
                 Err(_) => None,
             }
         } else {
