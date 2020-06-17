@@ -1,5 +1,6 @@
 mod disassemble;
 mod instruction;
+mod instruction_stream;
 
 pub use disassemble::Disassemble;
 pub use instruction::AssemblyInstruction;

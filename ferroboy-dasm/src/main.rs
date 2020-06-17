@@ -1,14 +1,12 @@
-use std::io::Write;
 use std::path::Path;
 
-use ferroboy::{CartridgeBuilder, State, StateBuilder};
+use ferroboy::{Cartridge, CartridgeBuilder};
 
 #[repr(i32)]
 enum ErrorCode {
     BadRom = 1,
-    StartupFailure = 2,
+    InvalidArguments = 2,
     DisassemblyError = 3,
-    InvalidArguments = 4,
 }
 
 fn main() {
@@ -40,16 +38,7 @@ fn main() {
         Ok(c) => c,
     };
 
-    let mut state = StateBuilder::new().with_cartridge(cartridge).build();
-
-    if let Err(e) = ferroboy::start(&mut state) {
-        bail(
-            ErrorCode::StartupFailure,
-            format!("Cartridge failed startup: \n\t{}", e),
-        );
-    }
-
-    match disassemble_rom(&mut state, &output_path) {
+    match disassemble_rom(&cartridge, &output_path) {
         Ok(()) => {
             if !quiet {
                 println!("Disassembly written to {}", output_path)
@@ -69,7 +58,7 @@ fn bail<T: Into<String>>(code: ErrorCode, message: T) -> ! {
     std::process::exit(code as i32);
 }
 
-fn disassemble_rom<T: AsRef<Path>>(state: &mut State, output_path: &T) -> ferroboy::Result<()> {
+fn disassemble_rom<T: AsRef<Path>>(state: &Cartridge, output_path: &T) -> ferroboy::Result<()> {
     let mut options = std::fs::OpenOptions::new();
     match options.write(true).create(true).open(output_path) {
         Ok(file) => {
@@ -79,18 +68,16 @@ fn disassemble_rom<T: AsRef<Path>>(state: &mut State, output_path: &T) -> ferrob
                 return Err(format!("Unable to write header:\n\t{}", e.to_string()));
             }
 
-            ferroboy::start(state)?;
-
-            while !state.is_halted() {
-                match ferroboy::tick(state) {
-                    Ok(operation) => {
-                        writer
-                            .write(format!("{}\n", operation.disassemble(state)?).as_bytes())
-                            .map_err(|e| e.to_string())?;
-                    }
-                    Err(message) => return Err(message),
-                }
-            }
+            // while !state.is_halted() {
+            //     match ferroboy::tick(state) {
+            //         Ok(operation) => {
+            //             writer
+            //                 .write(format!("{}\n", operation.disassemble(state)?).as_bytes())
+            //                 .map_err(|e| e.to_string())?;
+            //         }
+            //         Err(message) => return Err(message),
+            //     }
+            // }
 
             Ok(())
         }
@@ -98,9 +85,7 @@ fn disassemble_rom<T: AsRef<Path>>(state: &mut State, output_path: &T) -> ferrob
     }
 }
 
-fn write_header<T: std::io::Write>(state: &State, writer: &mut T) -> std::io::Result<()> {
-    let cartridge = state.cartridge.as_ref().unwrap();
-
+fn write_header<T: std::io::Write>(cartridge: &Cartridge, writer: &mut T) -> std::io::Result<()> {
     writer
         .write(format!("; {}\n", cartridge.title).as_bytes())
         .and_then(|_| writer.write(format!("; Type: {:?}\n", cartridge.cartridge_type).as_bytes()))

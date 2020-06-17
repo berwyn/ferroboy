@@ -3,7 +3,7 @@ use core::convert::TryInto;
 use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::WideRegister;
+use crate::system::{Cartridge, WideRegister};
 
 /// Pops the value at the Stack Pointer into a wide register.
 ///
@@ -59,7 +59,7 @@ impl Operation for PopOperation {
 }
 
 impl Disassemble for PopOperation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("POP")
             .with_arg(self.0)
@@ -111,7 +111,7 @@ mod tests {
             assert_eq!(
                 "POP HL",
                 PopOperation(WideRegister::HL)
-                    .disassemble(&mut State::default())
+                    .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()
             )

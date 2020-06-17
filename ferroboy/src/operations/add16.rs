@@ -2,7 +2,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemb
 use crate::extensions::{Carry, HalfCarry};
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, WideRegister};
+use crate::system::{Cartridge, Flags, WideRegister};
 
 /*
  * 0x09 is ADD HL,BC
@@ -71,7 +71,7 @@ impl Operation for Add16Operation {
 }
 
 impl Disassemble for Add16Operation {
-    fn disassemble(&self, _: &mut State) -> crate::Result<AssemblyInstruction> {
+    fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("ADD")
             .with_arg("HL")
@@ -88,7 +88,7 @@ mod tests {
     #[test]
     fn it_disassembles_properly() {
         let op = Add16Operation(WideRegister::AF);
-        let instruction = op.disassemble(&mut State::default()).unwrap();
+        let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("ADD HL,AF", instruction.to_string());
     }

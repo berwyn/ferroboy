@@ -5,7 +5,7 @@ use once_cell::sync::Lazy;
 use crate::operations::*;
 use crate::system::{Register, WideRegister};
 
-type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
+pub(crate) type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
 
 /// A compile-time map of opcodes to their Operations.
 pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
@@ -24,6 +24,12 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     load_rank_D_ops(&mut map);
     load_rank_E_ops(&mut map);
     load_rank_F_ops(&mut map);
+
+    map
+});
+
+pub static CB_OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
+    let mut map = BTreeMap::new();
 
     map
 });

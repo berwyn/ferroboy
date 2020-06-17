@@ -2,7 +2,7 @@ use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemb
 use crate::helpers::word_to_u16;
 use crate::operations::Operation;
 use crate::state::State;
-use crate::system::{Flags, WideRegister};
+use crate::system::{Cartridge, Flags, WideRegister};
 
 /// Indicates what condition should trigger a relative jump command.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -152,8 +152,12 @@ impl Operation for JumpRelativeOperation {
 }
 
 impl Disassemble for JumpRelativeOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
-        let immediate = word_to_u16(state.read_word()?);
+    fn disassemble(
+        &self,
+        cartridge: &Cartridge,
+        offset: usize,
+    ) -> crate::Result<AssemblyInstruction> {
+        let immediate = cartridge.data[offset + 1] as i8;
 
         let mut builder = AssemblyInstructionBuilder::new().with_command("JR");
 
@@ -161,7 +165,10 @@ impl Disassemble for JumpRelativeOperation {
             builder = builder.with_arg(self.0.clone());
         }
 
-        builder.with_arg(format!("${:X}", immediate)).build()
+        builder
+            .with_arg(format!("${:X}", immediate))
+            .with_size(2)
+            .build()
     }
 }
 
@@ -335,14 +342,19 @@ impl Operation for JumpPositionOperation {
 }
 
 impl Disassemble for JumpPositionOperation {
-    fn disassemble(&self, state: &mut State) -> crate::Result<AssemblyInstruction> {
-        let immediate = word_to_u16(state.read_word()?);
+    fn disassemble(
+        &self,
+        cartridge: &Cartridge,
+        offset: usize,
+    ) -> crate::Result<AssemblyInstruction> {
+        let word = (cartridge.data[offset + 1], cartridge.data[offset + 2]);
+        let immediate = word_to_u16(word);
 
         let mut builder = AssemblyInstructionBuilder::new().with_command("JP");
 
         match self.0 {
             JumpPositionFlags::Nop => {
-                builder = builder.with_arg(format!("${:X}", immediate));
+                builder = builder.with_arg(format!("${:X}", immediate)).with_size(3);
             }
             JumpPositionFlags::Register => {
                 builder = builder.with_arg("(HL)");
@@ -351,6 +363,7 @@ impl Disassemble for JumpPositionOperation {
                 builder = builder
                     .with_arg(self.0.clone())
                     .with_arg(format!("${:X}", immediate))
+                    .with_size(3)
             }
         }
 
@@ -364,41 +377,31 @@ mod tests {
 
     #[test]
     fn jump_relative_disassembles_correctly() {
-        let mut state = State::default();
-        state.mmu.mutate(|mmu| {
-            mmu[0x00] = 0xFF;
-            mmu[0x01] = 0xFF;
-            mmu[0x02] = 0xBE;
-            mmu[0x03] = 0xEF;
-        });
+        let mut cartridge = Cartridge::default();
+        cartridge.data = vec![0x00, 0xFF, 0xBE];
 
         let nop = JumpRelativeOperation(JumpRelativeFlag::Nop);
-        let nop_instruction: AssemblyInstruction = nop.disassemble(&mut state).unwrap();
-        assert_eq!("JR $FFFF", nop_instruction.to_string());
+        let nop_instruction: AssemblyInstruction = nop.disassemble(&cartridge, 0).unwrap();
+        assert_eq!("JR $FF", nop_instruction.to_string());
 
         let zero = JumpRelativeOperation(JumpRelativeFlag::Zero);
-        let zero_instruction: AssemblyInstruction = zero.disassemble(&mut state).unwrap();
-        assert_eq!("JR Z,$BEEF", zero_instruction.to_string());
+        let zero_instruction: AssemblyInstruction = zero.disassemble(&cartridge, 1).unwrap();
+        assert_eq!("JR Z,$BE", zero_instruction.to_string());
     }
 
     #[test]
     fn jump_position_disassembles_correctly() -> crate::Result<()> {
-        let mut state = State::default();
-        state.mmu.mutate(|mmu| {
-            mmu[0x00] = 0xFF;
-            mmu[0x01] = 0xFF;
-            mmu[0x02] = 0xDE;
-            mmu[0x03] = 0xAD;
-        });
+        let mut cartridge = Cartridge::default();
+        cartridge.data = vec![0x00, 0xFF, 0xFF, 0xDE, 0xAD];
 
         let nop = JumpPositionOperation(JumpPositionFlags::Nop);
-        assert_eq!("JP $FFFF", nop.disassemble(&mut state)?.to_string());
+        assert_eq!("JP $FFFF", nop.disassemble(&cartridge, 0)?.to_string());
 
         let zero = JumpPositionOperation(JumpPositionFlags::Zero);
-        assert_eq!("JP Z,$DEAD", zero.disassemble(&mut state)?.to_string());
+        assert_eq!("JP Z,$DEAD", zero.disassemble(&cartridge, 2)?.to_string());
 
         let register = JumpPositionOperation(JumpPositionFlags::Register);
-        assert_eq!("JP (HL)", register.disassemble(&mut state)?.to_string());
+        assert_eq!("JP (HL)", register.disassemble(&cartridge, 0)?.to_string());
 
         Ok(())
     }
