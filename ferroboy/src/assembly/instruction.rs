@@ -2,10 +2,10 @@
 ///
 /// This is mostly available for introspection and disassembly.
 pub struct AssemblyInstruction {
+    pub(crate) size: u8,
     command: String,
     args: [Option<String>; 2],
     comment: Option<String>,
-    size: u8,
 }
 
 impl std::fmt::Display for AssemblyInstruction {
