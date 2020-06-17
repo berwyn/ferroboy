@@ -5,6 +5,7 @@ mod mmu;
 mod opcodes;
 
 pub use cartridge::Cartridge;
+pub use cartridge::CartridgeBuilder;
 pub use cartridge::CartridgeType;
 pub use config::Config;
 pub use config::ConfigBuilder;
