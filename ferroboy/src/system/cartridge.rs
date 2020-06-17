@@ -126,6 +126,7 @@ impl Cartridge {
         }
     }
 
+    #[deprecated = "Moved to builder"]
     pub(crate) fn from_buffer(buffer: &[u8], config: &Config) -> crate::Result<Self> {
         let title = if config.enable_boot_check {
             Self::parse_cartridge_header(&buffer)?;
@@ -150,6 +151,7 @@ impl Cartridge {
         })
     }
 
+    #[deprecated = "Moved to builder"]
     pub(crate) fn from_file(file: File, config: &Config) -> crate::Result<Self> {
         let mut buf_reader = BufReader::new(file);
         let mut buffer = Vec::<u8>::new();
@@ -225,38 +227,172 @@ impl std::fmt::Debug for Cartridge {
     }
 }
 
+/// An enum indicating where this cartridge should be loaded from.
+enum CartridgeSource<'a> {
+    /// No source is specified, meaning a cartridge can't be built.
+    Empty,
+    /// Load the cartridge from a file.
+    File(File),
+    /// Load the cartridge from a buffer.
+    Buffer(&'a [u8]),
+}
+
+pub struct CartridgeBuilder<'a> {
+    config: Config,
+    source: CartridgeSource<'a>,
+}
+
+impl<'a> CartridgeBuilder<'a> {
+    pub fn new() -> Self {
+        Self {
+            config: Config::default(),
+            source: CartridgeSource::Empty,
+        }
+    }
+
+    pub fn with_config(mut self, config: &Config) -> Self {
+        self.config = *config;
+        self
+    }
+
+    pub fn from_file(mut self, file: File) -> Self {
+        self.source = CartridgeSource::File(file);
+        self
+    }
+
+    pub fn from_buffer(mut self, buffer: &'a [u8]) -> Self {
+        self.source = CartridgeSource::Buffer(buffer);
+        self
+    }
+
+    pub fn build(mut self) -> crate::Result<Cartridge> {
+        let buffer: Vec<u8> = match self.source {
+            CartridgeSource::Empty => {
+                return Err(String::from("No cartridge source set"));
+            }
+            CartridgeSource::Buffer(buf) => buf.into(),
+            CartridgeSource::File(file) => {
+                let mut buf_reader = BufReader::new(file);
+                let mut buffer = Vec::<u8>::new();
+
+                buf_reader
+                    .read_to_end(&mut buffer)
+                    .map_err(|e| e.to_string())?;
+
+                buffer
+            }
+        };
+
+        if self.config.enable_boot_check {
+            Self::validate_cartridge_header(&buffer)?;
+        }
+
+        let title = Self::parse_cartridge_title(&buffer)?;
+        let bank_count = Self::parse_bank_count(&buffer)?;
+        let ram_size = Self::parse_ram_size(&buffer)?;
+        let is_japanese = Self::is_japanese(&buffer)?;
+        let cartridge_type = Self::parse_cartridge_type(&buffer)?;
+
+        Ok(Cartridge {
+            title,
+            bank_count,
+            ram_size,
+            is_japanese,
+            cartridge_type,
+            data: buffer,
+        })
+    }
+
+    fn validate_cartridge_header(buffer: &[u8]) -> crate::Result<()> {
+        if buffer.len() < 0x134 {
+            return Err("Invalid cartridge header!".into());
+        }
+
+        for (index, byte) in buffer[0x0104..=0x0133].iter().enumerate() {
+            if *byte != CARTRIDGE_HEADER[index] {
+                return Err("Invalid cartridge header!".into());
+            }
+        }
+
+        Ok(())
+    }
+
+    fn parse_cartridge_title(buffer: &[u8]) -> crate::Result<String> {
+        String::from_utf8(buffer[0x134..=0x143].into())
+            .map(|s| s.trim_end_matches('\u{0}').to_string())
+            .map_err(|_| "Invalid cartridge title".to_string())
+    }
+
+    fn parse_bank_count(buffer: &[u8]) -> crate::Result<u8> {
+        let value = match buffer[0x148] {
+            0 => 0,
+            v @ 1..=7 => 2u8.pow((v + 1).into()),
+            52 => 72,
+            53 => 80,
+            54 => 96,
+            _ => return Err("Invalid cartridge ROM bank count!".to_string()),
+        };
+
+        Ok(value)
+    }
+
+    fn parse_ram_size(buffer: &[u8]) -> crate::Result<u8> {
+        let value = match buffer[0x149] {
+            0 => 0,
+            1 => 2,
+            2 => 8,
+            3 => 32,
+            _ => return Err("Invalid cartridge RAM size!".to_string()),
+        };
+
+        Ok(value)
+    }
+
+    fn is_japanese(buffer: &[u8]) -> crate::Result<bool> {
+        Ok(buffer[0x14A] == 0)
+    }
+
+    fn parse_cartridge_type(buffer: &[u8]) -> crate::Result<CartridgeType> {
+        CartridgeType::from_byte(buffer[0x147])
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn it_validates_the_cartridge_header() {
-        let mut buffer = vec![0; 0x200];
+    mod cartridge {
+        use super::*;
 
-        assert!(Cartridge::parse_cartridge_header(&buffer).is_err());
+        #[test]
+        fn it_validates_the_cartridge_header() {
+            let mut buffer = vec![0; 0x200];
 
-        buffer = vec![0; 0x104]
-            .iter()
-            .chain(CARTRIDGE_HEADER.iter())
-            .cloned()
-            .collect();
+            assert!(Cartridge::parse_cartridge_header(&buffer).is_err());
 
-        assert!(Cartridge::parse_cartridge_header(&buffer).is_ok());
-    }
+            buffer = vec![0; 0x104]
+                .iter()
+                .chain(CARTRIDGE_HEADER.iter())
+                .cloned()
+                .collect();
 
-    #[test]
-    fn it_parses_the_cartridge_title() {
-        let title = [
-            0x54, 0x45, 0x54, 0x52, 0x49, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00,
-        ];
+            assert!(Cartridge::parse_cartridge_header(&buffer).is_ok());
+        }
 
-        let buffer = vec![0; 0x134]
-            .iter()
-            .chain(title.iter())
-            .cloned()
-            .collect::<Vec<u8>>();
+        #[test]
+        fn it_parses_the_cartridge_title() {
+            let title = [
+                0x54, 0x45, 0x54, 0x52, 0x49, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00,
+            ];
 
-        assert_eq!("TETRIS", Cartridge::parse_cartridge_title(&buffer).unwrap());
+            let buffer = vec![0; 0x134]
+                .iter()
+                .chain(title.iter())
+                .cloned()
+                .collect::<Vec<u8>>();
+
+            assert_eq!("TETRIS", Cartridge::parse_cartridge_title(&buffer).unwrap());
+        }
     }
 }

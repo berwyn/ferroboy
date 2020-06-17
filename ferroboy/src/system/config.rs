@@ -5,7 +5,7 @@
 /// This should be used to configure how emulation is handled for a
 /// given context, e.g. in the case of libretro doing a full bootcheck
 /// is probably desireable, but a test harness might not care.
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Config {
     /// Whether or not to ensure that the ROM boots correctly like a
     /// real cartridge would, e.g. with the appropriate logo bitmap
