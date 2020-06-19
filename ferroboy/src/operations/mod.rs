@@ -4,6 +4,12 @@ pub use add8::*;
 mod add16;
 pub use add16::*;
 
+mod dec8;
+pub use dec8::*;
+
+mod dec16;
+pub use dec16::*;
+
 mod halt;
 pub use halt::*;
 
