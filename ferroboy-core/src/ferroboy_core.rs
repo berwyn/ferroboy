@@ -3,7 +3,7 @@
 
 use std::env;
 
-use ferroboy::State;
+use ferroboy::{CartridgeBuilder, State};
 use libretro_backend::{
     AudioVideoInfo, Core, CoreInfo, GameData, LoadGameResult, PixelFormat, Region, RuntimeHandle,
 };
@@ -38,18 +38,26 @@ impl Core for FerroboyCore {
             return LoadGameResult::Failed(game_data);
         }
 
-        let result: Result<(), String> = if let Some(data) = game_data.data() {
-            self.state.load_cartridge_from_buffer(data)
-        } else if let Some(path) = game_data.path() {
-            self.state.load_cartridge_from_file(path)
-        } else {
-            // Since the game data isn't empty, we must have a path or a buffer
-            unreachable!();
-        };
+        let mut cartridge_builder = CartridgeBuilder::new();
 
-        match result {
-            Ok(_) => {
+        if let Some(data) = game_data.data() {
+            cartridge_builder = cartridge_builder.with_buffer(data);
+        } else if let Some(path) = game_data.path() {
+            match std::fs::File::open(path) {
+                Ok(file) => {
+                    cartridge_builder = cartridge_builder.with_file(file);
+                }
+                _ => return LoadGameResult::Failed(game_data),
+            }
+        } else {
+            unreachable!();
+        }
+
+        match cartridge_builder.build() {
+            Ok(cart) => {
+                self.state.cartridge.replace(cart);
                 self.game_data = Some(game_data);
+
                 let av_info = AudioVideoInfo::new()
                     .video(160, 144, 60.0, PixelFormat::ARGB8888)
                     .audio(44100.0)

@@ -57,25 +57,6 @@ impl State {
         Ok(())
     }
 
-    #[deprecated = "Moving to a Cartridge builder"]
-    pub fn load_cartridge_from_file(&mut self, path: &str) -> crate::Result<()> {
-        let file = std::fs::File::open(path).map_err(|_| "Couldn't open file".to_string())?;
-        let cartridge = Cartridge::from_file(file, &self.config)?;
-
-        self.cartridge = Some(cartridge);
-
-        Ok(())
-    }
-
-    #[deprecated = "Moving to a Cartridge builder"]
-    pub fn load_cartridge_from_buffer(&mut self, buffer: &[u8]) -> crate::Result<()> {
-        let cartridge = Cartridge::from_buffer(buffer, &self.config)?;
-
-        self.cartridge = Some(cartridge);
-
-        Ok(())
-    }
-
     pub fn is_halted(&self) -> bool {
         self.cpu.is_halted()
     }
@@ -104,7 +85,7 @@ impl StateBuilder {
 
     pub fn build(mut self) -> State {
         State {
-            config: self.config.clone(),
+            config: self.config,
             cpu: Default::default(),
             mmu: Default::default(),
             cartridge: self.cartridge.take(),
