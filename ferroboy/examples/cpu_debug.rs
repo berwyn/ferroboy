@@ -1,16 +1,21 @@
-use ferroboy::start;
-use ferroboy::tick;
-use ferroboy::ConfigBuilder;
-use ferroboy::StateBuilder;
+use ferroboy::{start, tick, CartridgeBuilder, ConfigBuilder, StateBuilder};
 
 pub fn main() {
     println!("ferroboy v{}", env!("CARGO_PKG_VERSION"));
 
     let buf = include_bytes!("../assets/gb-test-roms/cpu_instrs/cpu_instrs.gb");
     let config = ConfigBuilder::new().without_boot_check().build();
-    let mut state = StateBuilder::new().with_config(config).build();
+    let cartridge = CartridgeBuilder::new()
+        .with_config(&config)
+        .with_buffer(buf)
+        .build()
+        .unwrap();
 
-    state.load_cartridge_from_buffer(buf).unwrap();
+    let mut state = StateBuilder::new()
+        .with_config(config)
+        .with_cartridge(cartridge)
+        .build();
+
     start(&mut state).unwrap();
 
     if cfg!(debug_assertions) {

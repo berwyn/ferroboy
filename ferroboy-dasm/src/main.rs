@@ -33,7 +33,7 @@ fn main() {
         Ok(f) => f,
     };
 
-    let builder = CartridgeBuilder::new().from_file(rom_file);
+    let builder = CartridgeBuilder::new().with_file(rom_file);
     let cartridge = match builder.build() {
         Err(e) => bail(ErrorCode::BadRom, e),
         Ok(c) => c,
