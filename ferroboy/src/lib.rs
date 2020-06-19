@@ -1,14 +1,15 @@
 #![deny(nonstandard_style, rust_2018_idioms, future_incompatible)]
 #![deny(clippy::all)]
 
-pub use crate::assembly::*;
-pub use crate::state::State;
-pub use crate::state::StateBuilder;
-pub use crate::system::Cartridge;
-pub use crate::system::CartridgeBuilder;
-pub use crate::system::ConfigBuilder;
-pub use crate::system::WideRegister;
-pub use crate::system::OPCODES;
+pub use crate::{
+    state::{State, StateBuilder},
+    system::{Cartridge, CartridgeBuilder, Config, ConfigBuilder},
+};
+
+use crate::{
+    assembly::*,
+    system::{WideRegister, OPCODES},
+};
 
 mod assembly;
 mod extensions;

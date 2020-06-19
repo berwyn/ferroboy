@@ -307,11 +307,7 @@ impl Default for CartridgeBuilder<'_> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     mod cartridge_builder {
-        use super::*;
-
         #[test]
         #[should_panic]
         fn it_validates_the_cartridge_header() {
