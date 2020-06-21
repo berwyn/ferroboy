@@ -1,8 +1,9 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::extensions::{Carry, HalfCarry};
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, Flags, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    state::State,
+    system::{Cartridge, Flags, WideRegister, ALU},
+};
 
 /*
  * 0x09 is ADD HL,BC
@@ -56,15 +57,14 @@ impl Operation for Add16Operation {
 
         let target = state.cpu.get16(WideRegister::HL);
         let source = state.cpu.get16(self.0);
-        let calculated = target.wrapping_add(source);
+        let (new_value, carry, half_carry) = target.alu_add(source);
 
-        state.cpu.set16(WideRegister::HL, calculated);
+        state.cpu.set16(WideRegister::HL, new_value);
+        state.cpu.increment_clock(8);
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
-        state
-            .cpu
-            .set_flag_value(Flags::HALF_CARRY, target.half_carry(source));
-        state.cpu.set_flag_value(Flags::CARRY, target.carry(source));
+        state.cpu.set_flag_value(Flags::HALF_CARRY, half_carry);
+        state.cpu.set_flag_value(Flags::CARRY, carry);
 
         Ok(())
     }

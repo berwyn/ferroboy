@@ -12,7 +12,6 @@ use crate::{
 };
 
 mod assembly;
-mod extensions;
 mod helpers;
 mod operations;
 mod state;
