@@ -1,8 +1,9 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::extensions::{Carry, HalfCarry};
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, Flags, Register};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    state::State,
+    system::{Cartridge, Flags, Register, ALU},
+};
 
 /// Add the contents of one register to another
 ///
@@ -40,22 +41,15 @@ impl Operation for Add8Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let left_hand = state.cpu.get(self.0);
         let right_hand = state.cpu.get(self.1);
-        let new_value = left_hand.wrapping_add(right_hand);
+        let (new_value, carry, half_carry) = left_hand.alu_add(right_hand);
 
         state.cpu.set(self.0, new_value);
+        state.cpu.increment_clock(4);
 
         state.cpu.set_flag_value(Flags::ZERO, new_value == 0);
         state.cpu.clear_flag(Flags::SUBTRACTION);
-
-        state
-            .cpu
-            .set_flag_value(Flags::HALF_CARRY, left_hand.half_carry(right_hand));
-
-        state
-            .cpu
-            .set_flag_value(Flags::CARRY, left_hand.carry(right_hand));
-
-        state.cpu.increment_clock(4);
+        state.cpu.set_flag_value(Flags::HALF_CARRY, half_carry);
+        state.cpu.set_flag_value(Flags::CARRY, carry);
 
         Ok(())
     }
