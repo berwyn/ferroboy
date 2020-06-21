@@ -1,9 +1,11 @@
+mod alu;
 mod cartridge;
 mod config;
 mod cpu;
 mod mmu;
 mod opcodes;
 
+pub use alu::ALU;
 pub use cartridge::Cartridge;
 pub use cartridge::CartridgeBuilder;
 pub use cartridge::CartridgeType;

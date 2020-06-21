@@ -2,8 +2,10 @@ use std::collections::BTreeMap;
 
 use once_cell::sync::Lazy;
 
-use crate::operations::*;
-use crate::system::{Register, WideRegister};
+use crate::{
+    operations::*,
+    system::{Register, WideRegister},
+};
 
 pub(crate) type OpCodeMap = BTreeMap<u8, &'static dyn Operation>;
 
@@ -50,15 +52,21 @@ fn load_rank_0_ops(map: &mut OpCodeMap) {
 
     map.insert(0x04, leak(Inc8Operation(Register::B)));
 
+    map.insert(0x05, leak(Dec8Operation(Register::B)));
+
     map.insert(0x06, leak(Load8ImmediateOperation(Register::B)));
 
+    map.insert(0x0B, leak(Dec16Operation(WideRegister::BC)));
+
     map.insert(0x0C, leak(Inc8Operation(Register::C)));
+
+    map.insert(0x0D, leak(Dec8Operation(Register::C)));
 
     map.insert(0x0E, leak(Load8ImmediateOperation(Register::C)));
 }
 
 fn load_rank_1_ops(map: &mut OpCodeMap) {
-    map.insert(0x00, leak(StopOperation));
+    map.insert(0x10, leak(StopOperation));
 
     map.insert(0x11, leak(Load16ImmediateOperation(WideRegister::DE)));
 
@@ -74,11 +82,17 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
 
     map.insert(0x14, leak(Inc8Operation(Register::D)));
 
+    map.insert(0x15, leak(Dec8Operation(Register::D)));
+
     map.insert(0x16, leak(Load8ImmediateOperation(Register::D)));
 
     map.insert(0x18, leak(JumpRelativeOperation(JumpRelativeFlag::Nop)));
 
+    map.insert(0x1B, leak(Dec16Operation(WideRegister::DE)));
+
     map.insert(0x1C, leak(Inc8Operation(Register::E)));
+
+    map.insert(0x1D, leak(Dec8Operation(Register::E)));
 
     map.insert(0x1E, leak(Load8ImmediateOperation(Register::E)));
 }
@@ -94,11 +108,17 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
 
     map.insert(0x24, leak(Inc8Operation(Register::H)));
 
+    map.insert(0x25, leak(Dec8Operation(Register::H)));
+
     map.insert(0x26, leak(Load8ImmediateOperation(Register::H)));
 
     map.insert(0x28, leak(JumpRelativeOperation(JumpRelativeFlag::Zero)));
 
+    map.insert(0x2B, leak(Dec16Operation(WideRegister::HL)));
+
     map.insert(0x2C, leak(Inc8Operation(Register::L)));
+
+    map.insert(0x2D, leak(Dec8Operation(Register::L)));
 
     map.insert(0x2E, leak(Load8ImmediateOperation(Register::L)));
 }
@@ -117,7 +137,11 @@ fn load_rank_3_ops(map: &mut OpCodeMap) {
 
     map.insert(0x38, leak(JumpRelativeOperation(JumpRelativeFlag::Carry)));
 
+    map.insert(0x3B, leak(Dec16Operation(WideRegister::SP)));
+
     map.insert(0x3C, leak(Inc8Operation(Register::A)));
+
+    map.insert(0x3D, leak(Dec8Operation(Register::A)));
 
     map.insert(0x3E, leak(Load8ImmediateOperation(Register::A)));
 }
