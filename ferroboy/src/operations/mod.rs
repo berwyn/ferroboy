@@ -43,5 +43,8 @@ pub use pop::*;
 mod push;
 pub use push::*;
 
+mod rotate;
+pub use rotate::*;
+
 mod stop;
 pub use stop::*;

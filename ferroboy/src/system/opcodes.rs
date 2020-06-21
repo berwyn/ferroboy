@@ -56,6 +56,8 @@ fn load_rank_0_ops(map: &mut OpCodeMap) {
 
     map.insert(0x06, leak(Load8ImmediateOperation(Register::B)));
 
+    map.insert(0x07, leak(RLCAOperation));
+
     map.insert(0x0B, leak(Dec16Operation(WideRegister::BC)));
 
     map.insert(0x0C, leak(Inc8Operation(Register::C)));
