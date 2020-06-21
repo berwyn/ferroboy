@@ -1,7 +1,7 @@
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
-    system::{Flags, Register},
+    system::{Flags, Register, ALU},
 };
 
 /// Decrements a register.
@@ -31,19 +31,19 @@ use crate::{
 /// Dec8Operation(Register::B).act(&mut state).unwrap();
 /// ```
 #[derive(Copy, Clone, Debug)]
-pub struct Dec8Operation(Register);
+pub struct Dec8Operation(pub Register);
 
 impl Operation for Dec8Operation {
     fn act(&self, state: &mut crate::State) -> crate::Result<()> {
         let current_value = state.cpu.get(self.0);
-        let new_value = current_value.wrapping_sub(1);
+        let (new_value, _, half_carry) = current_value.alu_sub(1);
 
         state.cpu.set(self.0, new_value);
         state.cpu.increment_clock(4);
 
         state.cpu.set_flag_value(Flags::ZERO, new_value == 0);
         state.cpu.set_flag(Flags::SUBTRACTION);
-        // TODO(berwyn): How does half-carry work with DEC?
+        state.cpu.set_flag_value(Flags::HALF_CARRY, half_carry);
 
         Ok(())
     }
@@ -99,9 +99,13 @@ mod tests {
         }
 
         #[test]
-        #[should_panic]
         fn it_should_set_the_half_carry_flag() {
-            todo!()
+            let mut state = State::default();
+            state.cpu.set(Register::B, 0x10);
+
+            Dec8Operation(Register::B).act(&mut state).unwrap();
+
+            assert!(state.cpu.has_flag(Flags::HALF_CARRY));
         }
 
         #[test]

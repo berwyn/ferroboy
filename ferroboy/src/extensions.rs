@@ -4,6 +4,7 @@
 /// done nybble-by-nybble, leading to a carry flag for each nybble.
 /// Because Ferroboy needs to check this on multiple types, helper
 /// functions become bulky, so we've wrapped this up into a trait.
+#[deprecated = "Replaced with ALU trait"]
 pub trait HalfCarry {
     fn half_carry(&self, other: Self) -> bool;
 }
@@ -26,6 +27,7 @@ impl HalfCarry for u16 {
 /// done nybble-by-nybble, leading to a carry flag for each nybble.
 /// Because Ferroboy needs to check this on multiple types, helper
 /// functions became bulky, so we've wrapped this up into a trait.
+#[deprecated = "Replaced with ALU trait"]
 pub trait Carry {
     fn carry(&self, other: Self) -> bool;
 }
