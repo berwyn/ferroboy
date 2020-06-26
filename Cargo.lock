@@ -17,7 +17,7 @@ dependencies = [
  "arrayvec 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "bitflags 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "once_cell 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pico-args 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pico-args 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -34,7 +34,7 @@ name = "ferroboy-dasm"
 version = "0.1.0"
 dependencies = [
  "ferroboy 0.1.0",
- "pico-args 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pico-args 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -71,7 +71,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "pico-args"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
@@ -82,4 +82,4 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum libretro-backend 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "667a71a6fdeec429bd88023eb7cc7b51264881b0cf9835431482a7c2f6e85d6e"
 "checksum libretro-sys 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "207b060b02cecbcee6df3d0f5ed38691d5c4df1379dd1acd5c49c9b25d20b439"
 "checksum once_cell 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0b631f7e854af39a1739f401cf34a8a013dfe09eac4fa4dba91e9768bd28168d"
-"checksum pico-args 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a71836ceac43f0349e3bd964f5bb902f7b003916f32a4ad00354dafc447fa8f"
+"checksum pico-args 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "1b1eee8b1f4966c8343d7ca0f5a8452cd35d5610a2e0efbe2a68cae44bef2046"
