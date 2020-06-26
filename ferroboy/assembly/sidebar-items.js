@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["disassemble",""],["instruction",""]]});
+initSidebarItems({"mod":[["disassemble",""],["instruction",""],["instruction_stream",""]]});

@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["cartridge",""],["config",""],["cpu",""],["mmu",""],["opcodes",""]]});
+initSidebarItems({"mod":[["alu",""],["cartridge",""],["config",""],["cpu",""],["mmu",""],["opcodes",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Dec16Operation","Decrements a wide register."]]});
