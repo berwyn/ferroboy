@@ -180,7 +180,7 @@ impl Disassemble for JumpRelativeOperation {
             builder = builder.with_arg(self.0.clone());
         }
 
-        builder.with_arg("aa").with_size(2).build()
+        builder.with_arg("r").with_size(2).build()
     }
 }
 

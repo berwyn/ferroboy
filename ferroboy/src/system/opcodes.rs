@@ -58,6 +58,13 @@ fn load_rank_0_ops(map: &mut OpCodeMap) {
 
     map.insert(0x07, leak(RLCAOperation));
 
+    map.insert(0x09, leak(Add16Operation(WideRegister::BC)));
+
+    map.insert(
+        0x0A,
+        leak(Load8FromMemoryOperation(Register::A, WideRegister::BC)),
+    );
+
     map.insert(0x0B, leak(Dec16Operation(WideRegister::BC)));
 
     map.insert(0x0C, leak(Inc8Operation(Register::C)));
@@ -92,6 +99,13 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
 
     map.insert(0x18, leak(JumpRelativeOperation(JumpRelativeFlag::Nop)));
 
+    map.insert(0x19, leak(Add16Operation(WideRegister::DE)));
+
+    map.insert(
+        0x1A,
+        leak(Load8FromMemoryOperation(Register::A, WideRegister::DE)),
+    );
+
     map.insert(0x1B, leak(Dec16Operation(WideRegister::DE)));
 
     map.insert(0x1C, leak(Inc8Operation(Register::E)));
@@ -118,6 +132,8 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
 
     map.insert(0x28, leak(JumpRelativeOperation(JumpRelativeFlag::Zero)));
 
+    map.insert(0x29, leak(Add16Operation(WideRegister::HL)));
+
     map.insert(0x2B, leak(Dec16Operation(WideRegister::HL)));
 
     map.insert(0x2C, leak(Inc8Operation(Register::L)));
@@ -140,6 +156,8 @@ fn load_rank_3_ops(map: &mut OpCodeMap) {
     map.insert(0x33, leak(Inc16Operation(WideRegister::SP)));
 
     map.insert(0x38, leak(JumpRelativeOperation(JumpRelativeFlag::Carry)));
+
+    map.insert(0x39, leak(Add16Operation(WideRegister::SP)));
 
     map.insert(0x3B, leak(Dec16Operation(WideRegister::SP)));
 
@@ -235,164 +253,164 @@ fn load_rank_4_ops(map: &mut OpCodeMap) {
 fn load_rank_5_ops(map: &mut OpCodeMap) {
     map.insert(
         0x50,
-        leak(Load8RegisterCopyOperation(Register::B, Register::B)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::B)),
     );
 
     map.insert(
         0x51,
-        leak(Load8RegisterCopyOperation(Register::B, Register::C)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::C)),
     );
 
     map.insert(
         0x52,
-        leak(Load8RegisterCopyOperation(Register::B, Register::D)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::D)),
     );
 
     map.insert(
         0x53,
-        leak(Load8RegisterCopyOperation(Register::B, Register::E)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::E)),
     );
 
     map.insert(
         0x54,
-        leak(Load8RegisterCopyOperation(Register::B, Register::H)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::H)),
     );
 
     map.insert(
         0x55,
-        leak(Load8RegisterCopyOperation(Register::B, Register::L)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::L)),
     );
 
     map.insert(
         0x56,
-        leak(Load8FromMemoryOperation(Register::B, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::D, WideRegister::HL)),
     );
 
     map.insert(
         0x57,
-        leak(Load8RegisterCopyOperation(Register::B, Register::A)),
+        leak(Load8RegisterCopyOperation(Register::D, Register::A)),
     );
 
     map.insert(
         0x58,
-        leak(Load8RegisterCopyOperation(Register::C, Register::B)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::B)),
     );
 
     map.insert(
         0x59,
-        leak(Load8RegisterCopyOperation(Register::C, Register::C)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::C)),
     );
 
     map.insert(
         0x5A,
-        leak(Load8RegisterCopyOperation(Register::C, Register::D)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::D)),
     );
 
     map.insert(
         0x5B,
-        leak(Load8RegisterCopyOperation(Register::C, Register::E)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::E)),
     );
 
     map.insert(
         0x5C,
-        leak(Load8RegisterCopyOperation(Register::C, Register::H)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::H)),
     );
 
     map.insert(
         0x5D,
-        leak(Load8RegisterCopyOperation(Register::C, Register::L)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::L)),
     );
 
     map.insert(
         0x5E,
-        leak(Load8FromMemoryOperation(Register::C, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::E, WideRegister::HL)),
     );
 
     map.insert(
         0x5F,
-        leak(Load8RegisterCopyOperation(Register::C, Register::A)),
+        leak(Load8RegisterCopyOperation(Register::E, Register::A)),
     );
 }
 
 fn load_rank_6_ops(map: &mut OpCodeMap) {
     map.insert(
         0x60,
-        leak(Load8RegisterCopyOperation(Register::D, Register::B)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::B)),
     );
 
     map.insert(
         0x61,
-        leak(Load8RegisterCopyOperation(Register::D, Register::C)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::C)),
     );
 
     map.insert(
         0x62,
-        leak(Load8RegisterCopyOperation(Register::D, Register::D)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::D)),
     );
 
     map.insert(
         0x63,
-        leak(Load8RegisterCopyOperation(Register::D, Register::E)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::E)),
     );
 
     map.insert(
         0x64,
-        leak(Load8RegisterCopyOperation(Register::D, Register::H)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::H)),
     );
 
     map.insert(
         0x65,
-        leak(Load8RegisterCopyOperation(Register::D, Register::L)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::L)),
     );
 
     map.insert(
         0x66,
-        leak(Load8FromMemoryOperation(Register::D, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::H, WideRegister::HL)),
     );
 
     map.insert(
         0x67,
-        leak(Load8RegisterCopyOperation(Register::D, Register::A)),
+        leak(Load8RegisterCopyOperation(Register::H, Register::A)),
     );
 
     map.insert(
         0x68,
-        leak(Load8RegisterCopyOperation(Register::E, Register::B)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::B)),
     );
 
     map.insert(
         0x69,
-        leak(Load8RegisterCopyOperation(Register::E, Register::C)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::C)),
     );
 
     map.insert(
         0x6A,
-        leak(Load8RegisterCopyOperation(Register::E, Register::D)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::D)),
     );
 
     map.insert(
         0x6B,
-        leak(Load8RegisterCopyOperation(Register::E, Register::E)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::E)),
     );
 
     map.insert(
         0x6C,
-        leak(Load8RegisterCopyOperation(Register::E, Register::H)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::H)),
     );
 
     map.insert(
         0x6D,
-        leak(Load8RegisterCopyOperation(Register::E, Register::L)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::L)),
     );
 
     map.insert(
         0x6E,
-        leak(Load8FromMemoryOperation(Register::E, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::L, WideRegister::HL)),
     );
 
     map.insert(
         0x6F,
-        leak(Load8RegisterCopyOperation(Register::E, Register::A)),
+        leak(Load8RegisterCopyOperation(Register::L, Register::A)),
     );
 }
 
@@ -498,6 +516,12 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
 
 fn load_rank_8_ops(map: &mut OpCodeMap) {
     map.insert(0x80, leak(Add8Operation(Register::A, Register::B)));
+    map.insert(0x81, leak(Add8Operation(Register::A, Register::C)));
+    map.insert(0x82, leak(Add8Operation(Register::A, Register::D)));
+    map.insert(0x83, leak(Add8Operation(Register::A, Register::E)));
+    map.insert(0x85, leak(Add8Operation(Register::A, Register::H)));
+    map.insert(0x86, leak(Add8Operation(Register::A, Register::L)));
+    map.insert(0x88, leak(Add8Operation(Register::A, Register::A)));
 }
 
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
