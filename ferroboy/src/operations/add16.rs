@@ -47,7 +47,7 @@ use crate::{
 /// # Errors
 /// - The operation may fail if an 8-bit register is provided.
 #[derive(Clone, Copy, Debug)]
-pub struct Add16Operation(WideRegister);
+pub struct Add16Operation(pub WideRegister);
 
 impl Operation for Add16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
