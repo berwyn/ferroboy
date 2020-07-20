@@ -24,10 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Automerge
-        uses: pascalgn/automerge-action@v0.8.0
+        uses: pascalgn/automerge-action@v0.8.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_LABELS: automerge,!work-in-progress
           MERGE_METHOD: rebase
           MERGE_FORKS: "false"
+          MERGE_RETRY_SLEEP: 10000
           UPDATE_METHOD: rebase
