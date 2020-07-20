@@ -1,5 +1,4 @@
 var N = null;var sourcesIndex = {};
-sourcesIndex["arrayvec"] = {"name":"","files":["array.rs","array_string.rs","char.rs","errors.rs","lib.rs","maybe_uninit.rs"]};
 sourcesIndex["bitflags"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["ferroboy"] = {"name":"","dirs":[{"name":"assembly","files":["disassemble.rs","instruction.rs","instruction_stream.rs","mod.rs"]},{"name":"operations","files":["add16.rs","add8.rs","dec16.rs","dec8.rs","halt.rs","inc16.rs","inc8.rs","interrupts.rs","jump.rs","load16.rs","load8.rs","mod.rs","nop.rs","operation.rs","pop.rs","push.rs","rotate.rs","stop.rs"]},{"name":"system","files":["alu.rs","cartridge.rs","config.rs","cpu.rs","mmu.rs","mod.rs","opcodes.rs"]}],"files":["helpers.rs","lib.rs","state.rs"]};
 sourcesIndex["ferroboy_core"] = {"name":"","files":["ferroboy_core.rs","lib.rs"]};
