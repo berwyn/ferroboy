@@ -560,6 +560,30 @@
 <span id="560">560</span>
 <span id="561">561</span>
 <span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -621,6 +645,13 @@
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x07</span>, <span class="ident">leak</span>(<span class="ident">RLCAOperation</span>));
 
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x09</span>, <span class="ident">leak</span>(<span class="ident">Add16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(
+        <span class="number">0x0A</span>,
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">WideRegister</span>::<span class="ident">BC</span>)),
+    );
+
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x0B</span>, <span class="ident">leak</span>(<span class="ident">Dec16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x0C</span>, <span class="ident">leak</span>(<span class="ident">Inc8Operation</span>(<span class="ident">Register</span>::<span class="ident">C</span>)));
@@ -655,6 +686,13 @@
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x18</span>, <span class="ident">leak</span>(<span class="ident">JumpRelativeOperation</span>(<span class="ident">JumpRelativeFlag</span>::<span class="ident">Nop</span>)));
 
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x19</span>, <span class="ident">leak</span>(<span class="ident">Add16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">DE</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(
+        <span class="number">0x1A</span>,
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">WideRegister</span>::<span class="ident">DE</span>)),
+    );
+
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x1B</span>, <span class="ident">leak</span>(<span class="ident">Dec16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">DE</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x1C</span>, <span class="ident">leak</span>(<span class="ident">Inc8Operation</span>(<span class="ident">Register</span>::<span class="ident">E</span>)));
@@ -681,6 +719,8 @@
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x28</span>, <span class="ident">leak</span>(<span class="ident">JumpRelativeOperation</span>(<span class="ident">JumpRelativeFlag</span>::<span class="ident">Zero</span>)));
 
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x29</span>, <span class="ident">leak</span>(<span class="ident">Add16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>)));
+
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x2B</span>, <span class="ident">leak</span>(<span class="ident">Dec16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x2C</span>, <span class="ident">leak</span>(<span class="ident">Inc8Operation</span>(<span class="ident">Register</span>::<span class="ident">L</span>)));
@@ -703,6 +743,8 @@
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x33</span>, <span class="ident">leak</span>(<span class="ident">Inc16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">SP</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x38</span>, <span class="ident">leak</span>(<span class="ident">JumpRelativeOperation</span>(<span class="ident">JumpRelativeFlag</span>::<span class="ident">Carry</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x39</span>, <span class="ident">leak</span>(<span class="ident">Add16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">SP</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x3B</span>, <span class="ident">leak</span>(<span class="ident">Dec16Operation</span>(<span class="ident">WideRegister</span>::<span class="ident">SP</span>)));
 
@@ -798,164 +840,164 @@
 <span class="kw">fn</span> <span class="ident">load_rank_5_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x50</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x51</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x52</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x53</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x54</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x55</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x56</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x57</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x58</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x59</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5A</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5B</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5C</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5D</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5E</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x5F</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
     );
 }
 
 <span class="kw">fn</span> <span class="ident">load_rank_6_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x60</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x61</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x62</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x63</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x64</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x65</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x66</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x67</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x68</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">B</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x69</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">C</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6A</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">D</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6B</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">E</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6C</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">H</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6D</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">L</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6E</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8FromMemoryOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">WideRegister</span>::<span class="ident">HL</span>)),
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0x6F</span>,
-        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
+        <span class="ident">leak</span>(<span class="ident">Load8RegisterCopyOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>, <span class="ident">Register</span>::<span class="ident">A</span>)),
     );
 }
 
@@ -1061,6 +1103,12 @@
 
 <span class="kw">fn</span> <span class="ident">load_rank_8_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x80</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">B</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x81</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">C</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x82</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">D</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x83</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">E</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x85</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">H</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x86</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">L</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x88</span>, <span class="ident">leak</span>(<span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">A</span>)));
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `C` is a hex number here, not a letter</span>
