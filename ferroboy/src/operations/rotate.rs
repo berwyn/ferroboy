@@ -29,6 +29,10 @@ impl Operation for RLCAOperation {
 
 impl Disassemble for RLCAOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("RLCA")
             .build()
@@ -59,6 +63,10 @@ impl Operation for RRCAOperation {
 
 impl Disassemble for RRCAOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("RRCA")
             .build()

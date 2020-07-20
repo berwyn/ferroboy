@@ -1,10 +1,12 @@
 use core::convert::TryInto;
 
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::helpers::word_to_u16;
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, Register, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    helpers::word_to_u16,
+    operations::Operation,
+    state::State,
+    system::{Cartridge, Register, WideRegister},
+};
 
 // ? Should this be split up into separate files?
 
@@ -64,6 +66,15 @@ impl Disassemble for Load8ImmediateOperation {
             .with_size(2)
             .build()
     }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(self.0)
+            .with_arg("d")
+            .with_size(2)
+            .build()
+    }
 }
 
 /// Copy the value of one register to another.
@@ -109,6 +120,10 @@ impl Operation for Load8RegisterCopyOperation {
 
 impl Disassemble for Load8RegisterCopyOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(self.0)
@@ -170,6 +185,10 @@ impl Operation for Load8FromMemoryOperation {
 
 impl Disassemble for Load8FromMemoryOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(self.0)
@@ -244,6 +263,10 @@ impl Operation for Load8RegisterToMemoryOperation {
 
 impl Disassemble for Load8RegisterToMemoryOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("LD")
             .with_arg(format!(

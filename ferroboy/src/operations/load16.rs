@@ -1,8 +1,10 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::helpers::word_to_u16;
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    helpers::word_to_u16,
+    operations::Operation,
+    state::State,
+    system::{Cartridge, WideRegister},
+};
 
 /// Loads an immediate 16-bit value into a register.
 ///
@@ -57,7 +59,17 @@ impl Disassemble for Load16ImmediateOperation {
 
         AssemblyInstructionBuilder::new()
             .with_command("LD")
+            .with_arg(self.0)
             .with_arg(format!("${:X}", immediate))
+            .with_size(3)
+            .build()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg(self.0)
+            .with_arg("dd")
             .with_size(3)
             .build()
     }
@@ -94,7 +106,7 @@ mod tests {
 
         let op = Load16ImmediateOperation(WideRegister::BC);
 
-        assert_eq!("LD $BEEF", op.disassemble(&cartridge, 0)?.to_string());
+        assert_eq!("LD BC,$BEEF", op.disassemble(&cartridge, 0)?.to_string());
 
         Ok(())
     }

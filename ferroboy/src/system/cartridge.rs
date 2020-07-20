@@ -99,6 +99,7 @@ impl CartridgeType {
             0xFD => Ok(Self::BandaiTama5),
             0xFE => Ok(Self::HuC3),
             0xFF => Ok(Self::HuC1WithRAMAndBattery),
+
             _ => Err("Invalid cartridge type!".into()),
         }
     }

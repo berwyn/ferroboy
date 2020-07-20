@@ -1,9 +1,11 @@
 use core::convert::TryInto;
 
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    state::State,
+    system::{Cartridge, WideRegister},
+};
 
 /// Pops the value at the Stack Pointer into a wide register.
 ///
@@ -60,6 +62,10 @@ impl Operation for PopOperation {
 
 impl Disassemble for PopOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("POP")
             .with_arg(self.0)

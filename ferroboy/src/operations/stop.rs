@@ -1,7 +1,9 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::Cartridge;
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    state::State,
+    system::Cartridge,
+};
 
 /// Causes the processor and screen to stop until a button is pressed.
 ///
@@ -47,6 +49,10 @@ impl Operation for StopOperation {
 
 impl Disassemble for StopOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("STOP")
             .with_arg("0")

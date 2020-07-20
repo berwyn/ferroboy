@@ -1,6 +1,8 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::operations::Operation;
-use crate::{Cartridge, State};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    Cartridge, State,
+};
 
 #[derive(Clone, Copy, Debug)]
 pub struct DisableInterruptsOperation;
@@ -16,6 +18,10 @@ impl Operation for DisableInterruptsOperation {
 
 impl Disassemble for DisableInterruptsOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new().with_command("DI").build()
     }
 }
@@ -34,6 +40,10 @@ impl Operation for EnableInterruptsOperation {
 
 impl Disassemble for EnableInterruptsOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new().with_command("EI").build()
     }
 }

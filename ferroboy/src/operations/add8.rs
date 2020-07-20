@@ -57,6 +57,10 @@ impl Operation for Add8Operation {
 
 impl Disassemble for Add8Operation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("ADD")
             .with_arg(self.0)
