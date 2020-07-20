@@ -1,8 +1,10 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::helpers::word_to_u16;
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, Flags, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    helpers::word_to_u16,
+    operations::Operation,
+    state::State,
+    system::{Cartridge, Flags, WideRegister},
+};
 
 /// Indicates what condition should trigger a relative jump command.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -169,6 +171,16 @@ impl Disassemble for JumpRelativeOperation {
             .with_arg(format!("${:X}", immediate))
             .with_size(2)
             .build()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
+        let mut builder = AssemblyInstructionBuilder::new().with_command("JR");
+
+        if !JumpRelativeFlag::Nop.eq(&self.0) {
+            builder = builder.with_arg(self.0.clone());
+        }
+
+        builder.with_arg("aa").with_size(2).build()
     }
 }
 
@@ -365,6 +377,18 @@ impl Disassemble for JumpPositionOperation {
                     .with_arg(format!("${:X}", immediate))
                     .with_size(3)
             }
+        }
+
+        builder.build()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
+        let mut builder = AssemblyInstructionBuilder::new().with_command("JP");
+
+        match self.0 {
+            JumpPositionFlags::Nop => builder = builder.with_arg("aa").with_size(3),
+            JumpPositionFlags::Register => builder = builder.with_arg("(HL)"),
+            _ => builder = builder.with_arg(self.0.clone()).with_arg("aa").with_size(3),
         }
 
         builder.build()

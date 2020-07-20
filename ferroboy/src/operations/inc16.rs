@@ -1,7 +1,9 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::operations::Operation;
-use crate::state::State;
-use crate::system::{Cartridge, WideRegister};
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    state::State,
+    system::{Cartridge, WideRegister},
+};
 
 /// Increments a singular register.
 ///
@@ -48,6 +50,10 @@ impl Operation for Inc16Operation {
 
 impl Disassemble for Inc16Operation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("INC")
             .with_arg(self.0)

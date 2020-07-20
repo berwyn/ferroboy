@@ -72,6 +72,10 @@ impl Operation for Add16Operation {
 
 impl Disassemble for Add16Operation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("ADD")
             .with_arg("HL")

@@ -1,7 +1,9 @@
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble};
-use crate::operations::Operation;
-use crate::system::Cartridge;
-use crate::State;
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    operations::Operation,
+    system::Cartridge,
+    State,
+};
 
 /// A non-operation.
 ///
@@ -36,6 +38,10 @@ impl Operation for NopOperation {
 
 impl Disassemble for NopOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("NOP")
             .build()

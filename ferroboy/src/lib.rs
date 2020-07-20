@@ -6,10 +6,16 @@ pub use crate::{
     system::{Cartridge, CartridgeBuilder, Config, ConfigBuilder},
 };
 
-use crate::{
-    assembly::*,
-    system::{WideRegister, OPCODES},
-};
+#[cfg(feature = "introspection")]
+pub use crate::{operations::Operation, system::OPCODES};
+
+#[cfg(feature = "disassembly")]
+pub use crate::assembly::*;
+
+use crate::system::WideRegister;
+
+#[cfg(not(feature = "introspection"))]
+use crate::system::OPCODES;
 
 mod assembly;
 mod helpers;

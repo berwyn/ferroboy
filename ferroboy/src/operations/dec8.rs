@@ -50,6 +50,10 @@ impl Operation for Dec8Operation {
 }
 impl Disassemble for Dec8Operation {
     fn disassemble(&self, _: &crate::Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
         AssemblyInstructionBuilder::new()
             .with_command("DEC")
             .with_arg(self.0)
