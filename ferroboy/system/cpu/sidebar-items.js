@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Register","`Register` is an enum to help indicate which registers an operation should apply to."],["WideRegister","16-bit registers."]],"struct":[["CPU","An implementation of the Gameboy's LR35902 CPU."],["Flags","Bitflags for the CPU state. The Gameboy's Z80 doesn't use the lower four flags, so they should always be `0`."]]});
+initSidebarItems({"struct":[["CPU","An implementation of the Gameboy's LR35902 CPU."],["Flags","Bitflags for the CPU state. The Gameboy's Z80 doesn't use the lower four flags, so they should always be `0`."]]});

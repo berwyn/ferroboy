@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JumpRelativeFlag","Indicates what condition should trigger a relative jump command."]],"struct":[["JumpRelativeOperation","Reads a signed 8-bit integer and adds it to the program counter if the conditions of the flag are met."]]});

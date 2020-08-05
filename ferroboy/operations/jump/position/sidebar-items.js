@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["JumpPositionFlags","Indicates what conditions should trigger a jump position command"]],"struct":[["JumpPositionOperation","Reads a signed 8-bit integer and adds it to the program counter if the conditions of the flag are met."]]});

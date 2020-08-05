@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Register","`Register` is an enum to help indicate which registers an operation should apply to."]]});

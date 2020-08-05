@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["JumpPositionFlags","Indicates what conditions should trigger a jump position command"],["JumpRelativeFlag","Indicates what condition should trigger a relative jump command."]],"struct":[["JumpPositionOperation","Reads a signed 8-bit integer and adds it to the program counter if the conditions of the flag are met."],["JumpRelativeOperation","Reads a signed 8-bit integer and adds it to the program counter if the conditions of the flag are met."]]});
+initSidebarItems({"mod":[["position",""],["relative",""]]});

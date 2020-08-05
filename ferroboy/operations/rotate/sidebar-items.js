@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["RLCAOperation",""],["RRCAOperation",""]]});
+initSidebarItems({"mod":[["left_carry",""],["right_carry",""]]});
