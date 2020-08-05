@@ -87,7 +87,11 @@ mod tests {
         state.cpu.set(Register::A, 0x10);
         state.cpu.set(Register::B, 0x06);
 
-        Add8Operation(Register::A, Register::B).act(&mut state)
+        Add8Operation(Register::A, Register::B).act(&mut state)?;
+
+        assert_eq!(0x16, state.cpu.get(Register::A));
+
+        Ok(())
     }
 
     #[test]
