@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["SubOperation","Subtracts the given register from the A register."]]});

@@ -144,6 +144,10 @@
 <span id="144">144</span>
 <span id="145">145</span>
 <span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">assembly</span>::{<span class="ident">AssemblyInstruction</span>, <span class="ident">AssemblyInstructionBuilder</span>, <span class="ident">Disassemble</span>},
@@ -234,7 +238,11 @@
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="number">0x10</span>);
         <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">set</span>(<span class="ident">Register</span>::<span class="ident">B</span>, <span class="number">0x06</span>);
 
-        <span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>)
+        <span class="ident">Add8Operation</span>(<span class="ident">Register</span>::<span class="ident">A</span>, <span class="ident">Register</span>::<span class="ident">B</span>).<span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">state</span>)<span class="question-mark">?</span>;
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">0x16</span>, <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get</span>(<span class="ident">Register</span>::<span class="ident">A</span>));
+
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
