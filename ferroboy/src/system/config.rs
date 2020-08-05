@@ -33,7 +33,7 @@ impl ConfigBuilder {
         }
     }
 
-    pub fn without_boot_check(&mut self) -> &mut Self {
+    pub fn without_boot_check(mut self) -> Self {
         self.enable_boot_check = false;
         self
     }

@@ -1,23 +1,14 @@
-mod add8;
-pub use add8::*;
+mod add;
+pub use add::*;
 
-mod add16;
-pub use add16::*;
-
-mod dec8;
-pub use dec8::*;
-
-mod dec16;
-pub use dec16::*;
+mod dec;
+pub use dec::*;
 
 mod halt;
 pub use halt::*;
 
-mod inc8;
-pub use inc8::*;
-
-mod inc16;
-pub use inc16::*;
+mod inc;
+pub use inc::*;
 
 mod interrupts;
 pub use interrupts::*;
@@ -25,11 +16,8 @@ pub use interrupts::*;
 mod jump;
 pub use jump::*;
 
-mod load8;
-pub use load8::*;
-
-mod load16;
-pub use load16::*;
+mod load;
+pub use load::*;
 
 mod nop;
 pub use nop::*;
