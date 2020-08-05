@@ -22,6 +22,7 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     load_rank_6_ops(&mut map);
     load_rank_7_ops(&mut map);
     load_rank_8_ops(&mut map);
+    load_rank_9_ops(&mut map);
     load_rank_C_ops(&mut map);
     load_rank_D_ops(&mut map);
     load_rank_E_ops(&mut map);
@@ -522,6 +523,16 @@ fn load_rank_8_ops(map: &mut OpCodeMap) {
     map.insert(0x85, leak(Add8Operation(Register::A, Register::H)));
     map.insert(0x86, leak(Add8Operation(Register::A, Register::L)));
     map.insert(0x88, leak(Add8Operation(Register::A, Register::A)));
+}
+
+fn load_rank_9_ops(map: &mut OpCodeMap) {
+    map.insert(0x90, leak(SubOperation(Register::B)));
+    map.insert(0x91, leak(SubOperation(Register::C)));
+    map.insert(0x92, leak(SubOperation(Register::D)));
+    map.insert(0x93, leak(SubOperation(Register::E)));
+    map.insert(0x94, leak(SubOperation(Register::H)));
+    map.insert(0x95, leak(SubOperation(Register::L)));
+    map.insert(0x97, leak(SubOperation(Register::A)));
 }
 
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
