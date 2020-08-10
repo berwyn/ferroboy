@@ -24,6 +24,7 @@ pub static OPCODES: Lazy<OpCodeMap> = Lazy::new(|| {
     load_rank_8_ops(&mut map);
     load_rank_9_ops(&mut map);
     load_rank_A_ops(&mut map);
+    load_rank_B_ops(&mut map);
     load_rank_C_ops(&mut map);
     load_rank_D_ops(&mut map);
     load_rank_E_ops(&mut map);
@@ -549,6 +550,18 @@ fn load_rank_A_ops(map: &mut OpCodeMap) {
     map.insert(0xA7, leak(AndOperation(AndTarget::Register(Register::A))));
 }
 
+#[allow(non_snake_case)] // `B` is a hex number here, not a letter
+fn load_rank_B_ops(map: &mut OpCodeMap) {
+    map.insert(0xB0, leak(OrOperation(OrTarget::Register(Register::B))));
+    map.insert(0xB1, leak(OrOperation(OrTarget::Register(Register::C))));
+    map.insert(0xB2, leak(OrOperation(OrTarget::Register(Register::D))));
+    map.insert(0xB3, leak(OrOperation(OrTarget::Register(Register::E))));
+    map.insert(0xB4, leak(OrOperation(OrTarget::Register(Register::H))));
+    map.insert(0xB5, leak(OrOperation(OrTarget::Register(Register::L))));
+    map.insert(0xB6, leak(OrOperation(OrTarget::Address)));
+    map.insert(0xB7, leak(OrOperation(OrTarget::Register(Register::A))));
+}
+
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
 fn load_rank_C_ops(map: &mut OpCodeMap) {
     map.insert(0xC1, leak(PopOperation(WideRegister::BC)));
@@ -610,6 +623,8 @@ fn load_rank_F_ops(map: &mut OpCodeMap) {
     map.insert(0xF3, leak(DisableInterruptsOperation));
 
     map.insert(0xF5, leak(PushOperation(WideRegister::AF)));
+
+    map.insert(0xF6, leak(OrOperation(OrTarget::Immediate)));
 
     map.insert(0xFB, leak(EnableInterruptsOperation));
 }
