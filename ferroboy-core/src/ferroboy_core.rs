@@ -1,4 +1,4 @@
-#![deny(nonstandard_style, rust_2018_idioms, future_incompatible)]
+#![deny(nonstandard_style)]
 #![deny(clippy::all)]
 
 use std::env;
