@@ -45,3 +45,6 @@ pub use stop::*;
 
 mod sub;
 pub use sub::*;
+
+mod xor;
+pub use xor::*;

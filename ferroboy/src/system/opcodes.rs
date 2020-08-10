@@ -548,6 +548,14 @@ fn load_rank_A_ops(map: &mut OpCodeMap) {
     map.insert(0xA5, leak(AndOperation(AndTarget::Register(Register::L))));
     map.insert(0xA6, leak(AndOperation(AndTarget::Address)));
     map.insert(0xA7, leak(AndOperation(AndTarget::Register(Register::A))));
+    map.insert(0xA8, leak(XorOperation(XorTarget::Register(Register::B))));
+    map.insert(0xA9, leak(XorOperation(XorTarget::Register(Register::C))));
+    map.insert(0xAA, leak(XorOperation(XorTarget::Register(Register::D))));
+    map.insert(0xAB, leak(XorOperation(XorTarget::Register(Register::E))));
+    map.insert(0xAC, leak(XorOperation(XorTarget::Register(Register::H))));
+    map.insert(0xAD, leak(XorOperation(XorTarget::Register(Register::L))));
+    map.insert(0xAE, leak(XorOperation(XorTarget::Address)));
+    map.insert(0xAF, leak(XorOperation(XorTarget::Register(Register::A))));
 }
 
 #[allow(non_snake_case)] // `B` is a hex number here, not a letter
@@ -614,6 +622,8 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
         0xE9,
         leak(JumpPositionOperation(JumpPositionFlags::Register)),
     );
+
+    map.insert(0xEE, leak(XorOperation(XorTarget::Immediate)));
 }
 
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
