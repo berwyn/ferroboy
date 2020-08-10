@@ -36,6 +36,7 @@ impl std::fmt::Display for AndTarget {
 ///
 /// ## Runtime
 /// | Metric | Size |
+/// |:-------|:-----|
 /// | Length | 1*   |
 /// | Cycles | 4**  |
 /// \* `SUB d8` is two bytes long.
@@ -68,7 +69,7 @@ impl Operation for AndOperation {
             AndTarget::Immediate => state.read_byte()?,
         };
 
-        let result = left | right;
+        let result = left & right;
 
         state.cpu.set(Register::A, result);
 
@@ -126,14 +127,14 @@ mod tests {
         #[test]
         fn it_correct_sets_the_accumulator() {
             let mut state = State::default();
-            state.cpu.set(Register::A, 0b0000_0010);
+            state.cpu.set(Register::A, 0b0000_0011);
             state.cpu.set(Register::B, 0b0000_0001);
 
             AndOperation(AndTarget::Register(Register::B))
                 .act(&mut state)
                 .expect("Couldn't complete the AND");
 
-            assert_eq!(0b0000_0011, state.cpu.get(Register::A));
+            assert_eq!(0b0000_0001, state.cpu.get(Register::A));
         }
 
         #[test]

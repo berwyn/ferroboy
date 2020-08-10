@@ -28,6 +28,9 @@ pub use nop::*;
 mod operation;
 pub use operation::*;
 
+mod or;
+pub use or::*;
+
 mod pop;
 pub use pop::*;
 
