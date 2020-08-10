@@ -598,6 +598,21 @@
 <span id="598">598</span>
 <span id="599">599</span>
 <span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -624,6 +639,7 @@
     <span class="ident">load_rank_7_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_8_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_9_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
+    <span class="ident">load_rank_A_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_C_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_D_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
     <span class="ident">load_rank_E_ops</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>);
@@ -1137,6 +1153,18 @@
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x97</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">A</span>))));
 }
 
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `A` is a hex number here, not a letter</span>
+<span class="kw">fn</span> <span class="ident">load_rank_A_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA0</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">B</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA1</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">C</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA2</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">D</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA3</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">E</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA4</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">H</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA5</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">L</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA6</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Address</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xA7</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">A</span>))));
+}
+
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `C` is a hex number here, not a letter</span>
 <span class="kw">fn</span> <span class="ident">load_rank_C_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC1</span>, <span class="ident">leak</span>(<span class="ident">PopOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
@@ -1182,6 +1210,8 @@
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xE5</span>, <span class="ident">leak</span>(<span class="ident">PushOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xE6</span>, <span class="ident">leak</span>(<span class="ident">AndOperation</span>(<span class="ident">AndTarget</span>::<span class="ident">Immediate</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
         <span class="number">0xE9</span>,
