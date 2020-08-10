@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["SubOperation","Subtracts the given register from the A register."]]});
+initSidebarItems({"enum":[["SubTarget","The target of the SUB operation."]],"struct":[["SubOperation","Subtracts the given register from the A register."]]});

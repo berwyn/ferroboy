@@ -595,6 +595,9 @@
 <span id="595">595</span>
 <span id="596">596</span>
 <span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -1124,13 +1127,14 @@
 }
 
 <span class="kw">fn</span> <span class="ident">load_rank_9_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x90</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">B</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x91</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">C</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x92</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">D</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x93</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">E</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x94</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">H</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x95</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">L</span>)));
-    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x97</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">Register</span>::<span class="ident">A</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x90</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">B</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x91</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">C</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x92</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">D</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x93</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">E</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x94</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">H</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x95</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">L</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x96</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Address</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0x97</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Register</span>(<span class="ident">Register</span>::<span class="ident">A</span>))));
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `C` is a hex number here, not a letter</span>
@@ -1159,6 +1163,8 @@
     );
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD5</span>, <span class="ident">leak</span>(<span class="ident">PushOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">DE</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD6</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Immediate</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xDA</span>, <span class="ident">leak</span>(<span class="ident">JumpPositionOperation</span>(<span class="ident">JumpPositionFlags</span>::<span class="ident">Carry</span>)));
 }
