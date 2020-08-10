@@ -41,7 +41,7 @@ fn main() {
 
         for second_half in 0x0..=0xF {
             let opcode = leader + second_half;
-            let operation = ferroboy::OPCODES.get(&opcode).map(|o| *o);
+            let operation = ferroboy::OPCODES.get(&opcode).copied();
             ops.push(operation);
         }
 

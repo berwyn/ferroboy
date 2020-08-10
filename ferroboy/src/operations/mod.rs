@@ -1,6 +1,9 @@
 mod add;
 pub use add::*;
 
+mod and;
+pub use and::*;
+
 mod dec;
 pub use dec::*;
 
