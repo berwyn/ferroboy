@@ -1,5 +1,6 @@
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    error::OperationError,
     operations::Operation,
     state::State,
     system::{Cartridge, Flags, WideRegister, ALU},
@@ -52,7 +53,7 @@ pub struct Add16Operation(pub WideRegister);
 impl Operation for Add16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         if WideRegister::PC.eq(&self.0) {
-            return Err("Cannot use PC in ADD".into());
+            return Err(OperationError::InvalidWideRegister(self.0).into());
         }
 
         let target = state.cpu.get16(WideRegister::HL);

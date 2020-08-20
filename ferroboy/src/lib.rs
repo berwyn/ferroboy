@@ -12,10 +12,12 @@ pub use crate::{operations::Operation, system::OPCODES};
 #[cfg(feature = "disassembly")]
 pub use crate::assembly::*;
 
-use crate::system::WideRegister;
+use crate::{error::Error, system::WideRegister};
 
 #[cfg(not(feature = "introspection"))]
 use crate::system::OPCODES;
+
+pub mod error;
 
 mod assembly;
 mod helpers;
@@ -23,15 +25,16 @@ mod operations;
 mod state;
 mod system;
 
-pub type Result<T> = core::result::Result<T, String>;
+pub type Result<T> = core::result::Result<T, crate::error::Error>;
 
 /// Prepare the system and start the emulation.
 pub fn start(state: &mut State) -> Result<()> {
-    if let Some(_cart) = &state.cartridge {
+    // TODO(berwyn): This should probably be encapsulated on the struct itself
+    if let Some(_) = &state.cartridge {
         return state.map_cartridge().and(state.jump(0x0100)).map(|_| ());
     }
 
-    Err("Cartridge not loaded!".into())
+    Err(Error::StateNotReady)
 }
 
 /// Step the emulation.
@@ -56,6 +59,6 @@ pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operati
 
         operation.act(state).map(|_| *operation)
     } else {
-        Err(format!("Invalid opcode! PC: {}", opcode))
+        Err(Error::InvalidOperation(opcode))
     }
 }

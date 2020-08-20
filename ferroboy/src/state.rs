@@ -36,9 +36,7 @@ impl State {
                 self.cpu.set16(WideRegister::PC, new_pointer);
                 Ok(new_pointer)
             }
-            None => Err(String::from(
-                "New pointer exceeds the limits of a 16-bit integer",
-            )),
+            None => Err(crate::error::Error::AddressOutOfRange((pointer as u32) + 1)),
         }
     }
 

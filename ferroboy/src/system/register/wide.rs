@@ -1,4 +1,4 @@
-use crate::system::Register;
+use crate::{error::OperationError, system::Register};
 
 /// 16-bit registers.
 ///
@@ -27,7 +27,7 @@ pub enum WideRegister {
 }
 
 impl core::convert::TryFrom<WideRegister> for (Register, Register) {
-    type Error = String;
+    type Error = crate::Error;
 
     fn try_from(value: WideRegister) -> core::result::Result<Self, Self::Error> {
         let pair = match value {
@@ -35,7 +35,7 @@ impl core::convert::TryFrom<WideRegister> for (Register, Register) {
             WideRegister::BC => (Register::B, Register::C),
             WideRegister::DE => (Register::D, Register::E),
             WideRegister::HL => (Register::H, Register::L),
-            _ => return Err("SP and PC cannot be represented as 8-bit registers".into()),
+            _ => return Err(OperationError::InvalidWideRegister(value).into()),
         };
 
         Ok(pair)
