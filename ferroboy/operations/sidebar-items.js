@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["add",""],["and",""],["dec",""],["halt",""],["inc",""],["interrupts",""],["jump",""],["load",""],["nop",""],["operation",""],["pop",""],["push",""],["rotate",""],["stop",""],["sub",""]]});
+initSidebarItems({"mod":[["add",""],["and",""],["cp",""],["dec",""],["halt",""],["inc",""],["interrupts",""],["jump",""],["load",""],["nop",""],["operation",""],["or",""],["pop",""],["push",""],["rotate",""],["stop",""],["sub",""],["xor",""]]});

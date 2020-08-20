@@ -77,6 +77,23 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">nonstandard_style</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">clippy</span>::<span class="ident">all</span>)]</span>
@@ -110,7 +127,9 @@
 
 <span class="kw">impl</span> <span class="ident">Core</span> <span class="kw">for</span> <span class="ident">FerroboyCore</span> {
     <span class="kw">fn</span> <span class="ident">info</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CoreInfo</span> {
-        <span class="ident">CoreInfo</span>::<span class="ident">new</span>(<span class="string">&quot;Ferroboy&quot;</span>, <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>)).<span class="ident">supports_roms_with_extension</span>(<span class="string">&quot;gb&quot;</span>)
+        <span class="ident">CoreInfo</span>::<span class="ident">new</span>(<span class="string">&quot;Ferroboy&quot;</span>, <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>))
+            .<span class="ident">supports_roms_with_extension</span>(<span class="string">&quot;gb&quot;</span>)
+            .<span class="ident">requires_path_when_loading_roms</span>()
     }
 
     <span class="kw">fn</span> <span class="ident">on_load_game</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">game_data</span>: <span class="ident">GameData</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">LoadGameResult</span> {
@@ -153,7 +172,22 @@
         <span class="self">self</span>.<span class="ident">game_data</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">on_run</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RuntimeHandle</span>) {}
+    <span class="kw">fn</span> <span class="ident">on_run</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RuntimeHandle</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">video_buffer</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>::<span class="ident">with_capacity</span>(<span class="number">160</span> <span class="op">*</span> <span class="number">144</span> <span class="op">*</span> <span class="number">4</span>);
+
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">160</span> <span class="op">*</span> <span class="number">144</span> {
+            <span class="ident">video_buffer</span>.<span class="ident">push</span>(<span class="number">0x00</span>);
+            <span class="ident">video_buffer</span>.<span class="ident">push</span>(<span class="number">0x00</span>);
+            <span class="ident">video_buffer</span>.<span class="ident">push</span>(<span class="number">0x00</span>);
+            <span class="ident">video_buffer</span>.<span class="ident">push</span>(<span class="number">0xFF</span>);
+        }
+
+        <span class="ident">handle</span>.<span class="ident">upload_video_frame</span>(<span class="kw-2">&amp;</span><span class="ident">video_buffer</span>);
+
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">1470</span> {
+            <span class="ident">handle</span>.<span class="ident">upload_audio_frame</span>(<span class="kw-2">&amp;</span>[<span class="number">0</span>, <span class="number">0</span>]);
+        }
+    }
 
     <span class="kw">fn</span> <span class="ident">on_reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {}
 }

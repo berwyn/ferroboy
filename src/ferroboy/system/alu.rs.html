@@ -107,7 +107,7 @@
     <span class="kw">fn</span> <span class="ident">alu_sub</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="self">Self</span>, <span class="ident">bool</span>, <span class="ident">bool</span>) {
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">wrapping_sub</span>(<span class="ident">other</span>);
         <span class="kw">let</span> <span class="ident">carry</span> <span class="op">=</span> <span class="ident">result</span> <span class="op">&gt;</span> <span class="self">self</span>;
-        <span class="kw">let</span> <span class="ident">half_carry</span> <span class="op">=</span> (<span class="ident">other</span> <span class="op">*</span> <span class="number">0x0F</span>) <span class="op">&gt;</span> (<span class="self">self</span> <span class="op">&amp;</span> <span class="number">0x0F</span>);
+        <span class="kw">let</span> <span class="ident">half_carry</span> <span class="op">=</span> (<span class="ident">other</span> <span class="op">&amp;</span> <span class="number">0x0F</span>) <span class="op">&gt;</span> (<span class="self">self</span> <span class="op">&amp;</span> <span class="number">0x0F</span>);
 
         (<span class="ident">result</span>, <span class="ident">carry</span>, <span class="ident">half_carry</span>)
     }

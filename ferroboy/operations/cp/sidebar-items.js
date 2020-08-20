@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CpTarget","The target of the CP operation."]],"struct":[["CpOperation","Compares a given target to the accumulator and sets flags accordingly."]]});

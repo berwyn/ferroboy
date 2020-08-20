@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["XorTarget","The target of the OR operation."]],"struct":[["XorOperation","Compares the given target with the contents of the A register."]]});
