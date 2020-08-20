@@ -42,7 +42,7 @@ fn disassemble_rom<T: AsRef<Path>>(cartridge: &Cartridge, output_path: &T) -> ey
     write_header(cartridge, &mut writer)?;
 
     for instruction in cartridge.into_iter() {
-        writer.write(format!("{}\n", instruction).as_bytes())?;
+        writer.write_all(format!("{}\n", instruction).as_bytes())?;
     }
 
     Ok(())
