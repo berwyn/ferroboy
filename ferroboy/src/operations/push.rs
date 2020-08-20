@@ -82,6 +82,7 @@ mod tests {
 
     mod operation {
         use super::*;
+        use pretty_assertions::assert_eq;
 
         #[test]
         fn it_pushes_a_register_to_the_stack_pointer() {
@@ -97,7 +98,7 @@ mod tests {
         }
 
         #[test]
-        #[should_panic(expected = "Cannot PUSH with PC or SP")]
+        #[should_panic]
         fn it_disallows_sp() {
             PushOperation(WideRegister::SP)
                 .act(&mut State::default())
@@ -105,7 +106,7 @@ mod tests {
         }
 
         #[test]
-        #[should_panic(expected = "Cannot PUSH with PC or SP")]
+        #[should_panic]
         fn it_disallows_pc() {
             PushOperation(WideRegister::PC)
                 .act(&mut State::default())
