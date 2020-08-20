@@ -568,6 +568,14 @@ fn load_rank_B_ops(map: &mut OpCodeMap) {
     map.insert(0xB5, leak(OrOperation(OrTarget::Register(Register::L))));
     map.insert(0xB6, leak(OrOperation(OrTarget::Address)));
     map.insert(0xB7, leak(OrOperation(OrTarget::Register(Register::A))));
+    map.insert(0xB8, leak(CpOperation(CpTarget::Register(Register::B))));
+    map.insert(0xB9, leak(CpOperation(CpTarget::Register(Register::C))));
+    map.insert(0xBA, leak(CpOperation(CpTarget::Register(Register::D))));
+    map.insert(0xBB, leak(CpOperation(CpTarget::Register(Register::E))));
+    map.insert(0xBC, leak(CpOperation(CpTarget::Register(Register::H))));
+    map.insert(0xBD, leak(CpOperation(CpTarget::Register(Register::L))));
+    map.insert(0xBE, leak(CpOperation(CpTarget::Address)));
+    map.insert(0xBF, leak(CpOperation(CpTarget::Register(Register::A))));
 }
 
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
@@ -629,12 +637,9 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
 fn load_rank_F_ops(map: &mut OpCodeMap) {
     map.insert(0xF1, leak(PopOperation(WideRegister::HL)));
-
     map.insert(0xF3, leak(DisableInterruptsOperation));
-
     map.insert(0xF5, leak(PushOperation(WideRegister::AF)));
-
     map.insert(0xF6, leak(OrOperation(OrTarget::Immediate)));
-
     map.insert(0xFB, leak(EnableInterruptsOperation));
+    map.insert(0xFE, leak(CpOperation(CpTarget::Immediate)));
 }

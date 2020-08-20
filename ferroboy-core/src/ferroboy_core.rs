@@ -30,7 +30,9 @@ impl Default for FerroboyCore {
 
 impl Core for FerroboyCore {
     fn info() -> CoreInfo {
-        CoreInfo::new("Ferroboy", env!("CARGO_PKG_VERSION")).supports_roms_with_extension("gb")
+        CoreInfo::new("Ferroboy", env!("CARGO_PKG_VERSION"))
+            .supports_roms_with_extension("gb")
+            .requires_path_when_loading_roms()
     }
 
     fn on_load_game(&mut self, game_data: GameData) -> LoadGameResult {
@@ -73,7 +75,22 @@ impl Core for FerroboyCore {
         self.game_data.take().unwrap()
     }
 
-    fn on_run(&mut self, _handle: &mut RuntimeHandle) {}
+    fn on_run(&mut self, handle: &mut RuntimeHandle) {
+        let mut video_buffer: Vec<u8> = Vec::<u8>::with_capacity(160 * 144 * 4);
+
+        for _ in 0..160 * 144 {
+            video_buffer.push(0x00);
+            video_buffer.push(0x00);
+            video_buffer.push(0x00);
+            video_buffer.push(0xFF);
+        }
+
+        handle.upload_video_frame(&video_buffer);
+
+        for _ in 0..1470 {
+            handle.upload_audio_frame(&[0, 0]);
+        }
+    }
 
     fn on_reset(&mut self) {}
 }
