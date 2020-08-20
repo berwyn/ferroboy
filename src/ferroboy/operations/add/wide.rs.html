@@ -173,9 +173,11 @@
 <span id="173">173</span>
 <span id="174">174</span>
 <span id="175">175</span>
+<span id="176">176</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">assembly</span>::{<span class="ident">AssemblyInstruction</span>, <span class="ident">AssemblyInstructionBuilder</span>, <span class="ident">Disassemble</span>},
+    <span class="ident">error</span>::<span class="ident">OperationError</span>,
     <span class="ident">operations</span>::<span class="ident">Operation</span>,
     <span class="ident">state</span>::<span class="ident">State</span>,
     <span class="ident">system</span>::{<span class="ident">Cartridge</span>, <span class="ident">Flags</span>, <span class="ident">WideRegister</span>, <span class="ident">ALU</span>},
@@ -228,7 +230,7 @@
 <span class="kw">impl</span> <span class="ident">Operation</span> <span class="kw">for</span> <span class="ident">Add16Operation</span> {
     <span class="kw">fn</span> <span class="ident">act</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">State</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">WideRegister</span>::<span class="ident">PC</span>.<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Cannot use PC in ADD&quot;</span>.<span class="ident">into</span>());
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">OperationError</span>::<span class="ident">InvalidWideRegister</span>(<span class="self">self</span>.<span class="number">0</span>).<span class="ident">into</span>());
         }
 
         <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">cpu</span>.<span class="ident">get16</span>(<span class="ident">WideRegister</span>::<span class="ident">HL</span>);

@@ -226,7 +226,11 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="ident">DisassemblyError</span>;
+
 <span class="doccomment">/// A raw 6502 assembly instruction.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is mostly available for introspection and disassembly.</span>
@@ -296,7 +300,7 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AssemblyInstruction</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">command</span>.<span class="ident">is_none</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Command is not set!&quot;</span>.<span class="ident">to_string</span>());
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">DisassemblyError</span>::<span class="ident">EmptyCommand</span>.<span class="ident">into</span>());
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">AssemblyInstruction</span> {

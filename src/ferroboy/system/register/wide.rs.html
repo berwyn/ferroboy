@@ -59,7 +59,7 @@
 <span id="59">59</span>
 <span id="60">60</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">system</span>::<span class="ident">Register</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">error</span>::<span class="ident">OperationError</span>, <span class="ident">system</span>::<span class="ident">Register</span>};
 
 <span class="doccomment">/// 16-bit registers.</span>
 <span class="doccomment">///</span>
@@ -88,7 +88,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">core</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">WideRegister</span><span class="op">&gt;</span> <span class="kw">for</span> (<span class="ident">Register</span>, <span class="ident">Register</span>) {
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">String</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="kw">crate</span>::<span class="ident">Error</span>;
 
     <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">WideRegister</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">core</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">pair</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">value</span> {
@@ -96,7 +96,7 @@
             <span class="ident">WideRegister</span>::<span class="ident">BC</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Register</span>::<span class="ident">B</span>, <span class="ident">Register</span>::<span class="ident">C</span>),
             <span class="ident">WideRegister</span>::<span class="ident">DE</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Register</span>::<span class="ident">D</span>, <span class="ident">Register</span>::<span class="ident">E</span>),
             <span class="ident">WideRegister</span>::<span class="ident">HL</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">Register</span>::<span class="ident">H</span>, <span class="ident">Register</span>::<span class="ident">L</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;SP and PC cannot be represented as 8-bit registers&quot;</span>.<span class="ident">into</span>()),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">OperationError</span>::<span class="ident">InvalidWideRegister</span>(<span class="ident">value</span>).<span class="ident">into</span>()),
         };
 
         <span class="prelude-val">Ok</span>(<span class="ident">pair</span>)

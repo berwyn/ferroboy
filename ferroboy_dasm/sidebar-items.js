@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ErrorCode",""]],"fn":[["bail",""],["disassemble_rom",""],["main",""],["write_header",""]]});
+initSidebarItems({"fn":[["disassemble_rom",""],["main",""],["write_header",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["IndentedSection","An indenteted section with a header for an error report"]],"trait":[["Section","A helper trait for attaching informational sections to error reports to be displayed after the chain of errors"],["SectionExt","Extension trait for constructing sections with commonly used formats"]]});

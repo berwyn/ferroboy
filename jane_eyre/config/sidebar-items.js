@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Frame","A representation of a Frame from a Backtrace or a SpanTrace"],["HookBuilder","Builder for customizing the behavior of the global panic and error report hooks"]],"type":[["FilterCallback","Callback for filtering a vector of `Frame`s"]]});
