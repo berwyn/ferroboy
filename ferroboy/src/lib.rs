@@ -29,8 +29,7 @@ pub type Result<T> = core::result::Result<T, crate::error::Error>;
 
 /// Prepare the system and start the emulation.
 pub fn start(state: &mut State) -> Result<()> {
-    // TODO(berwyn): This should probably be encapsulated on the struct itself
-    if let Some(_) = &state.cartridge {
+    if state.cartridge.is_some() {
         return state.map_cartridge().and(state.jump(0x0100)).map(|_| ());
     }
 

@@ -219,7 +219,7 @@ impl<'a> CartridgeBuilder<'a> {
 
                 buf_reader
                     .read_to_end(&mut buffer)
-                    .map_err(|e| CartridgeLoadError::FileSystemError(e))?;
+                    .map_err(CartridgeLoadError::FileSystemError)?;
 
                 buffer
             }
