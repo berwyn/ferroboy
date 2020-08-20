@@ -22,7 +22,7 @@ impl ALU for u8 {
     fn alu_sub(self, other: Self) -> (Self, bool, bool) {
         let result = self.wrapping_sub(other);
         let carry = result > self;
-        let half_carry = (other * 0x0F) > (self & 0x0F);
+        let half_carry = (other & 0x0F) > (self & 0x0F);
 
         (result, carry, half_carry)
     }
