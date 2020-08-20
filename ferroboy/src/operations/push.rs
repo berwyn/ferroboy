@@ -2,6 +2,7 @@ use core::convert::TryInto;
 
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    error::OperationError,
     operations::Operation,
     state::State,
     system::{Cartridge, WideRegister},
@@ -42,7 +43,9 @@ pub struct PushOperation(pub WideRegister);
 impl Operation for PushOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
-            WideRegister::SP | WideRegister::PC => Err(String::from("Cannot PUSH with PC or SP")),
+            WideRegister::SP | WideRegister::PC => {
+                Err(OperationError::InvalidWideRegister(self.0).into())
+            }
             _ => {
                 let (high, low) = self.0.try_into().unwrap();
                 let (high, low) = (state.cpu.get(high), state.cpu.get(low));

@@ -2,6 +2,7 @@ use core::convert::TryInto;
 
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
+    error::OperationError,
     operations::Operation,
     state::State,
     system::{Cartridge, WideRegister},
@@ -44,7 +45,9 @@ pub struct PopOperation(pub WideRegister);
 impl Operation for PopOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
-            WideRegister::PC | WideRegister::SP => Err(String::from("Cannot POP with PC or SP")),
+            WideRegister::PC | WideRegister::SP => {
+                Err(OperationError::InvalidWideRegister(self.0).into())
+            }
             _ => {
                 let (high, low) = self.0.try_into().unwrap();
                 let address = state.cpu.get16(WideRegister::SP);

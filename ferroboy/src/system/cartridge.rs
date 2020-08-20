@@ -2,9 +2,11 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
-use crate::assembly::{AssemblyInstruction, AssemblyInstructionStream};
-use crate::system::Config;
-use crate::system::MMU;
+use crate::{
+    assembly::{AssemblyInstruction, AssemblyInstructionStream},
+    error::CartridgeLoadError,
+    system::{Config, MMU},
+};
 
 const CARTRIDGE_HEADER: [u8; 48] = [
     0xCE, 0xED, 0x66, 0x66, 0xCC, 0x0D, 0x00, 0x0B, 0x03, 0x73, 0x00, 0x83, 0x00, 0x0C, 0x00, 0x0D,
@@ -60,7 +62,7 @@ pub enum CartridgeType {
 }
 
 impl CartridgeType {
-    fn from_byte(byte: u8) -> Result<Self, String> {
+    fn from_byte(byte: u8) -> crate::Result<Self> {
         match byte {
             0x00 => Ok(Self::RomOnly),
 
@@ -100,7 +102,7 @@ impl CartridgeType {
             0xFE => Ok(Self::HuC3),
             0xFF => Ok(Self::HuC1WithRAMAndBattery),
 
-            _ => Err("Invalid cartridge type!".into()),
+            _ => Err(CartridgeLoadError::InvalidMapper.into()),
         }
     }
 }
@@ -208,7 +210,7 @@ impl<'a> CartridgeBuilder<'a> {
     pub fn build(self) -> crate::Result<Cartridge> {
         let buffer: Vec<u8> = match self.source {
             CartridgeSource::Empty => {
-                return Err(String::from("No cartridge source set"));
+                return Err(CartridgeLoadError::NoSourceSet.into());
             }
             CartridgeSource::Buffer(buf) => buf.into(),
             CartridgeSource::File(file) => {
@@ -217,7 +219,7 @@ impl<'a> CartridgeBuilder<'a> {
 
                 buf_reader
                     .read_to_end(&mut buffer)
-                    .map_err(|e| e.to_string())?;
+                    .map_err(|e| CartridgeLoadError::FileSystemError(e))?;
 
                 buffer
             }
@@ -245,12 +247,12 @@ impl<'a> CartridgeBuilder<'a> {
 
     fn validate_cartridge_header(buffer: &[u8]) -> crate::Result<()> {
         if buffer.len() < 0x134 {
-            return Err("Invalid cartridge header!".into());
+            return Err(CartridgeLoadError::ChecksumFail.into());
         }
 
         for (index, byte) in buffer[0x0104..=0x0133].iter().enumerate() {
             if *byte != CARTRIDGE_HEADER[index] {
-                return Err("Invalid cartridge header!".into());
+                return Err(CartridgeLoadError::ChecksumFail.into());
             }
         }
 
@@ -260,7 +262,7 @@ impl<'a> CartridgeBuilder<'a> {
     fn parse_cartridge_title(buffer: &[u8]) -> crate::Result<String> {
         String::from_utf8(buffer[0x134..=0x143].into())
             .map(|s| s.trim_end_matches('\u{0}').to_string())
-            .map_err(|_| "Invalid cartridge title".to_string())
+            .map_err(|e| CartridgeLoadError::InvalidTitle(e).into())
     }
 
     fn parse_bank_count(buffer: &[u8]) -> crate::Result<u8> {
@@ -270,7 +272,7 @@ impl<'a> CartridgeBuilder<'a> {
             52 => 72,
             53 => 80,
             54 => 96,
-            _ => return Err("Invalid cartridge ROM bank count!".to_string()),
+            c => return Err(CartridgeLoadError::InvalidBankCount(c).into()),
         };
 
         Ok(value)
@@ -282,7 +284,7 @@ impl<'a> CartridgeBuilder<'a> {
             1 => 2,
             2 => 8,
             3 => 32,
-            _ => return Err("Invalid cartridge RAM size!".to_string()),
+            c => return Err(CartridgeLoadError::InvalidRamSize(c).into()),
         };
 
         Ok(value)

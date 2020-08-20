@@ -1,3 +1,5 @@
+use crate::error::DisassemblyError;
+
 /// A raw 6502 assembly instruction.
 ///
 /// This is mostly available for introspection and disassembly.
@@ -67,7 +69,7 @@ impl AssemblyInstructionBuilder {
 
     pub fn build(self) -> crate::Result<AssemblyInstruction> {
         if self.command.is_none() {
-            return Err("Command is not set!".to_string());
+            return Err(DisassemblyError::EmptyCommand.into());
         }
 
         Ok(AssemblyInstruction {
