@@ -7,7 +7,7 @@ and to define the format of how to display the chain of errors and this
 stored context. Once this type has been defined you must also define a global
 hook used to construct these handlers whenever <code>Report</code>s are constructed.</p>
 <h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
-<div class="example-wrap"><pre class="rust rust-example-rendered">
+<div class='information'><div class='tooltip should_panic'>ⓘ<span class='tooltiptext'>This example panics</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered should_panic">
 <span class="kw">use</span> <span class="ident">backtrace</span>::<span class="ident">Backtrace</span>;
 <span class="kw">use</span> <span class="ident">eyre</span>::<span class="ident">EyreHandler</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;

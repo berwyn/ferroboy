@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../eyre/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.1/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../eyre/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1092,6 +1092,38 @@
 <span id="1092">1092</span>
 <span id="1093">1093</span>
 <span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! This library provides [`eyre::Report`][Report], a trait object based</span>
 <span class="doccomment">//! error handling type for easy idiomatic error handling and reporting in Rust</span>
@@ -1378,7 +1410,7 @@
 <span class="doccomment">//! [`simple-eyre`]: https://github.com/yaahc/simple-eyre</span>
 <span class="doccomment">//! [`color-spantrace`]: https://github.com/yaahc/color-spantrace</span>
 <span class="doccomment">//! [`color-backtrace`]: https://github.com/athre0z/color-backtrace</span>
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/eyre/0.6.0&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/eyre/0.6.1&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(
     <span class="ident">missing_debug_implementations</span>,
     <span class="ident">missing_docs</span>,
@@ -1636,12 +1668,21 @@
     <span class="ident">HOOK</span>.<span class="ident">set</span>(<span class="ident">hook</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">InstallError</span>)
 }
 
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">track_caller</span>, <span class="ident">track_caller</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">track_caller</span>), <span class="ident">allow</span>(<span class="ident">unused_mut</span>))]</span>
 <span class="kw">fn</span> <span class="ident">capture_handler</span>(<span class="ident">error</span>: <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">StdError</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">EyreHandler</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">hook</span> <span class="op">=</span> <span class="ident">HOOK</span>
         .<span class="ident">get_or_init</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">DefaultHandler</span>::<span class="ident">default_with</span>))
         .<span class="ident">as_ref</span>();
 
-    <span class="ident">hook</span>(<span class="ident">error</span>)
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handler</span> <span class="op">=</span> <span class="ident">hook</span>(<span class="ident">error</span>);
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">track_caller</span>)]</span>
+    {
+        <span class="ident">handler</span>.<span class="ident">track_caller</span>(<span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">Location</span>::<span class="ident">caller</span>())
+    }
+
+    <span class="ident">handler</span>
 }
 
 <span class="kw">impl</span> <span class="kw">dyn</span> <span class="ident">EyreHandler</span> {
@@ -1752,6 +1793,10 @@
 
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="doccomment">/// Store the location of the caller who constructed this error report</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">track_caller</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>) {}
 }
 
 <span class="doccomment">/// The default provided error report handler for `eyre::Report`.</span>
@@ -1761,6 +1806,8 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DefaultHandler</span> {
     <span class="ident">backtrace</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Backtrace</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">track_caller</span>)]</span>
+    <span class="ident">location</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">DefaultHandler</span> {
@@ -1768,7 +1815,11 @@
     <span class="kw">fn</span> <span class="ident">default_with</span>(<span class="ident">error</span>: <span class="kw-2">&amp;</span>(<span class="kw">dyn</span> <span class="ident">StdError</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">EyreHandler</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">backtrace</span> <span class="op">=</span> <span class="macro">backtrace_if_absent</span><span class="macro">!</span>(<span class="ident">error</span>);
 
-        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="self">Self</span> { <span class="ident">backtrace</span> })
+        <span class="ident">Box</span>::<span class="ident">new</span>(<span class="self">Self</span> {
+            <span class="ident">backtrace</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">track_caller</span>)]</span>
+            <span class="ident">location</span>: <span class="prelude-val">None</span>,
+        })
     }
 }
 
@@ -1813,6 +1864,14 @@
             }
         }
 
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">track_caller</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;track-caller&quot;</span>))]</span>
+        {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">location</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;\n\nLocation:\n&quot;</span>)<span class="question-mark">?</span>;
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">indenter</span>::<span class="ident">indented</span>(<span class="ident">f</span>), <span class="string">&quot;{}&quot;</span>, <span class="ident">location</span>)<span class="question-mark">?</span>;
+            }
+        }
+
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">backtrace</span>)]</span>
         {
             <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">backtrace</span>::<span class="ident">BacktraceStatus</span>;
@@ -1828,6 +1887,11 @@
         }
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">track_caller</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">track_caller</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">Location</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>) {
+        <span class="self">self</span>.<span class="ident">location</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">location</span>);
     }
 }
 
