@@ -191,11 +191,24 @@ mod tests {
 
         use super::*;
 
-        #[test]
-        fn it_updates_the_stack_pointer() {
+        fn setup() -> State {
+            let mut cartridge = Cartridge::default();
+            cartridge.data = Vec::with_capacity(0x7FFF);
+
+            for _ in 0..0xFFFF {
+                cartridge.data.push(0);
+            }
+
             let mut state = State::default();
             state.cpu.set16(WideRegister::SP, 0xBEEF);
             state.cpu.set16(WideRegister::PC, 0xDEAD);
+            state.cartridge = Some(cartridge);
+            state
+        }
+
+        #[test]
+        fn it_updates_the_stack_pointer() {
+            let mut state = setup();
 
             CallOperation(None).act(&mut state).unwrap();
 
@@ -204,9 +217,7 @@ mod tests {
 
         #[test]
         fn it_writes_the_program_counter_to_memory() {
-            let mut state = State::default();
-            state.cpu.set16(WideRegister::SP, 0xBEEF);
-            state.cpu.set16(WideRegister::PC, 0xDEAD);
+            let mut state = setup();
 
             CallOperation(None).act(&mut state).unwrap();
 
@@ -216,14 +227,12 @@ mod tests {
 
         #[test]
         fn it_writes_the_new_program_counter() {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0x20, 0x20];
-
-            let mut state = State::default();
-            state.cartridge = Some(cartridge);
-
-            state.cpu.set16(WideRegister::SP, 0xBEEF);
-            state.cpu.set16(WideRegister::PC, 0x0000);
+            let mut state = setup();
+            state.cartridge = state.cartridge.map(|mut cart| {
+                cart.data[0xDEAD] = 0x20;
+                cart.data[0xDEAE] = 0x20;
+                cart
+            });
 
             CallOperation(None).act(&mut state).unwrap();
 
@@ -233,31 +242,34 @@ mod tests {
         #[test]
         fn it_correctly_checks_the_conditional() {
             let conditions = [
-                (CallCondition::Zero, Flags::ZERO, false),
-                (CallCondition::NotZero, Flags::ZERO, true),
-                (CallCondition::Carry, Flags::CARRY, false),
-                (CallCondition::NotCarry, Flags::CARRY, true),
+                (CallCondition::Zero, Flags::ZERO, true),
+                (CallCondition::NotZero, Flags::ZERO, false),
+                (CallCondition::Carry, Flags::CARRY, true),
+                (CallCondition::NotCarry, Flags::CARRY, false),
             ];
 
-            for (condition, flag, inversed) in conditions.iter() {
-                let mut cartridge = Cartridge::default();
-                cartridge.data = vec![0x20, 0x20];
-
-                let mut state = State::default();
-                state.cartridge = Some(cartridge);
-
-                state.cpu.set16(WideRegister::SP, 0xBEEF);
-                state.cpu.set16(WideRegister::PC, 0x0000);
-                state.cpu.set_flag_value(*flag, !inversed);
+            for (condition, flag, is_set) in conditions.iter() {
+                // Check that the call succeeds when the flag is in the correct state
+                let mut state = setup();
+                state.cpu.set_flag_value(*flag, *is_set);
+                state.cartridge = state.cartridge.map(|mut cart| {
+                    cart.data[0xDEAD] = 0x20;
+                    cart.data[0xDEAE] = 0x20;
+                    cart
+                });
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 
                 assert_eq!(0x2020, state.cpu.get16(WideRegister::PC));
 
-                state = State::default();
-                state.cpu.set16(WideRegister::SP, 0xBEEF);
-                state.cpu.set16(WideRegister::PC, 0x0000);
-                state.cpu.set_flag_value(*flag, *inversed);
+                // Check that the call noops when the flag is in the incorrect state
+                state = setup();
+                state.cpu.set_flag_value(*flag, !is_set);
+                state.cartridge = state.cartridge.map(|mut cart| {
+                    cart.data[0xDEAD] = 0x20;
+                    cart.data[0xDEAE] = 0x20;
+                    cart
+                });
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 

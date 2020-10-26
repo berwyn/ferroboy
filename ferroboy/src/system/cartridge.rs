@@ -20,7 +20,7 @@ const CARTRIDGE_HEADER: [u8; 48] = [
 /// these memory mappers will be fully supported. They are included the sake of
 /// completeness.
 #[repr(u8)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CartridgeType {
     RomOnly = 0x00,
 
@@ -112,6 +112,7 @@ impl CartridgeType {
 // ? Should this use a builder instead of `from_buffer`/`from_file`?
 // ? Should there be flags for colour/SGB compatibility?
 /// A Gameboy cartridge.
+#[derive(Clone)]
 pub struct Cartridge {
     pub title: String,
     pub cartridge_type: CartridgeType,
