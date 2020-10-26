@@ -4,6 +4,9 @@ pub use add::*;
 mod and;
 pub use and::*;
 
+mod call;
+pub use call::*;
+
 mod cp;
 pub use cp::*;
 
