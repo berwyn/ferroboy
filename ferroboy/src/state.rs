@@ -22,7 +22,7 @@ impl State {
     pub fn load_cartridge(&mut self, cartridge: Cartridge) {
         let rc = Rc::new(Some(cartridge));
         self.mmu = MMU::new(rc.clone());
-        self.cartridge = rc.clone();
+        self.cartridge = rc;
     }
 
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
@@ -76,7 +76,7 @@ impl Default for State {
             config: Config::default(),
             cpu: CPU::default(),
             mmu: MMU::new(cartridge.clone()),
-            cartridge: cartridge.clone(),
+            cartridge,
         }
     }
 }
@@ -109,7 +109,7 @@ impl StateBuilder {
             config: self.config,
             cpu: Default::default(),
             mmu: MMU::new(rc.clone()),
-            cartridge: rc.clone(),
+            cartridge: rc,
         }
     }
 }
