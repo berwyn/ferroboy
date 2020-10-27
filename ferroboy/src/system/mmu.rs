@@ -1,4 +1,9 @@
-use std::ops::{Index, IndexMut};
+use std::{
+    ops::{Index, IndexMut},
+    rc::Rc,
+};
+
+use crate::Cartridge;
 
 /// The Gameboy's memory mapper.
 ///
@@ -8,6 +13,7 @@ use std::ops::{Index, IndexMut};
 /// the same as the hardware version did, mapping the various memory
 /// addresses to the actual implementors.
 pub struct MMU {
+    cartridge: Rc<Option<Cartridge>>,
     memory: [u8; 0x10000],
 }
 
@@ -17,6 +23,13 @@ pub struct MMU {
 // would just defer to it for the appropriate memory range.
 
 impl MMU {
+    pub fn new(cartridge: Rc<Option<Cartridge>>) -> Self {
+        Self {
+            cartridge,
+            memory: [0; 0x10000],
+        }
+    }
+
     pub fn bank0(&self) -> &[u8] {
         &self.memory[0x0000..=0x3FFF]
     }
@@ -42,14 +55,6 @@ impl MMU {
     }
 }
 
-impl Default for MMU {
-    fn default() -> Self {
-        Self {
-            memory: [0; 0x10000],
-        }
-    }
-}
-
 impl std::fmt::Debug for MMU {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "MMU {{ }}")
@@ -59,12 +64,14 @@ impl std::fmt::Debug for MMU {
 impl Index<u16> for MMU {
     type Output = u8;
     fn index(&self, address: u16) -> &Self::Output {
+        // TODO: This needs to actually map things :/
         &self.memory[address as usize]
     }
 }
 
 impl IndexMut<u16> for MMU {
     fn index_mut(&mut self, address: u16) -> &mut Self::Output {
+        // TODO: This needs to actually map things :/
         &mut self.memory[address as usize]
     }
 }
