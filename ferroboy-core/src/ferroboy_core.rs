@@ -57,7 +57,7 @@ impl Core for FerroboyCore {
 
         match cartridge_builder.build() {
             Ok(cart) => {
-                self.state.cartridge.replace(cart);
+                self.state.load_cartridge(cart);
                 self.game_data = Some(game_data);
 
                 let av_info = AudioVideoInfo::new()

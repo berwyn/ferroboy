@@ -202,7 +202,7 @@ mod tests {
             let mut state = State::default();
             state.cpu.set16(WideRegister::SP, 0xBEEF);
             state.cpu.set16(WideRegister::PC, 0xDEAD);
-            state.cartridge = Some(cartridge);
+            state.load_cartridge(cartridge);
             state
         }
 
@@ -228,11 +228,8 @@ mod tests {
         #[test]
         fn it_writes_the_new_program_counter() {
             let mut state = setup();
-            state.cartridge = state.cartridge.map(|mut cart| {
-                cart.data[0xDEAD] = 0x20;
-                cart.data[0xDEAE] = 0x20;
-                cart
-            });
+            state.mmu[0xDEAD] = 0x20;
+            state.mmu[0xDEAE] = 0x20;
 
             CallOperation(None).act(&mut state).unwrap();
 
@@ -252,11 +249,8 @@ mod tests {
                 // Check that the call succeeds when the flag is in the correct state
                 let mut state = setup();
                 state.cpu.set_flag_value(*flag, *is_set);
-                state.cartridge = state.cartridge.map(|mut cart| {
-                    cart.data[0xDEAD] = 0x20;
-                    cart.data[0xDEAE] = 0x20;
-                    cart
-                });
+                state.mmu[0xDEAD] = 0x20;
+                state.mmu[0xDEAE] = 0x20;
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 
@@ -265,11 +259,8 @@ mod tests {
                 // Check that the call noops when the flag is in the incorrect state
                 state = setup();
                 state.cpu.set_flag_value(*flag, !is_set);
-                state.cartridge = state.cartridge.map(|mut cart| {
-                    cart.data[0xDEAD] = 0x20;
-                    cart.data[0xDEAE] = 0x20;
-                    cart
-                });
+                state.mmu[0xDEAD] = 0x20;
+                state.mmu[0xDEAE] = 0x20;
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 

@@ -1,18 +1,30 @@
+use std::rc::Rc;
+
 use crate::system::{Cartridge, Config, WideRegister, CPU, MMU};
 
 /// The current state of the emulation.
 ///
 /// This struct serves as the overall wrapper for the emulation system
 /// and holds all the references to the various sub-systems.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct State {
     pub config: Config,
     pub cpu: CPU,
     pub mmu: MMU,
-    pub cartridge: Option<Cartridge>,
+    pub cartridge: Rc<Option<Cartridge>>,
 }
 
 impl State {
+    pub fn is_halted(&self) -> bool {
+        self.cpu.is_halted()
+    }
+
+    pub fn load_cartridge(&mut self, cartridge: Cartridge) {
+        let rc = Rc::new(Some(cartridge));
+        self.mmu = MMU::new(rc.clone());
+        self.cartridge = rc.clone();
+    }
+
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
         let pc = self.cpu.get16(WideRegister::PC);
         let word = self.mmu[pc];
@@ -48,15 +60,24 @@ impl State {
     }
 
     pub(crate) fn map_cartridge(&mut self) -> crate::Result<()> {
-        if let Some(cart) = &self.cartridge {
+        if let Some(cart) = self.cartridge.as_ref() {
             cart.load_banks(&mut self.mmu);
         }
 
         Ok(())
     }
+}
 
-    pub fn is_halted(&self) -> bool {
-        self.cpu.is_halted()
+impl Default for State {
+    fn default() -> Self {
+        let cartridge = Rc::new(None);
+
+        Self {
+            config: Config::default(),
+            cpu: CPU::default(),
+            mmu: MMU::new(cartridge.clone()),
+            cartridge: cartridge.clone(),
+        }
     }
 }
 
@@ -81,12 +102,14 @@ impl StateBuilder {
         self
     }
 
-    pub fn build(mut self) -> State {
+    pub fn build(self) -> State {
+        let rc = Rc::new(self.cartridge);
+
         State {
             config: self.config,
             cpu: Default::default(),
-            mmu: Default::default(),
-            cartridge: self.cartridge.take(),
+            mmu: MMU::new(rc.clone()),
+            cartridge: rc.clone(),
         }
     }
 }
