@@ -592,6 +592,8 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
     map.insert(0xC5, leak(PushOperation(WideRegister::BC)));
 
     map.insert(0xCA, leak(JumpPositionOperation(JumpPositionFlags::Zero)));
+    map.insert(0xCC, leak(CallOperation(Some(CallCondition::Zero))));
+    map.insert(0xCD, leak(CallOperation(None)));
 }
 
 #[allow(non_snake_case)] // `D` is a hex number here, not a letter
@@ -603,11 +605,13 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
         leak(JumpPositionOperation(JumpPositionFlags::NotCarry)),
     );
 
+    map.insert(0xD4, leak(CallOperation(Some(CallCondition::NotCarry))));
     map.insert(0xD5, leak(PushOperation(WideRegister::DE)));
 
     map.insert(0xD6, leak(SubOperation(SubTarget::Immediate)));
 
     map.insert(0xDA, leak(JumpPositionOperation(JumpPositionFlags::Carry)));
+    map.insert(0xDC, leak(CallOperation(Some(CallCondition::Carry))));
 }
 
 #[allow(non_snake_case)] // `E` is a hex number here, not a letter
