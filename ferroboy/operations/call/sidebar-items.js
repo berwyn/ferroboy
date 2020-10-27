@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CallCondition","The condition under which the call should or should not be executed."]],"struct":[["CallOperation","Jumps to the target register, preserving the program counter in the stack pointer."]]});
