@@ -193,11 +193,7 @@ mod tests {
 
         fn setup() -> State {
             let mut cartridge = Cartridge::default();
-            cartridge.data = Vec::with_capacity(0x7FFF);
-
-            for _ in 0..0xFFFF {
-                cartridge.data.push(0);
-            }
+            cartridge.data = vec![0; 0xFFFF];
 
             let mut state = State::default();
             state.cpu.set16(WideRegister::SP, 0xBEEF);
