@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["MakeWriter","A type that can create [`io::Write`] instances."]]});
+initSidebarItems({"trait":[["MakeWriter","A type that can create `io::Write` instances."]]});

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tracing-subscriber-0.2.11/src/field/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../tracing_subscriber/index.html'><div class='logo-container'><img src='https://raw.githubusercontent.com/tokio-rs/tracing/master/assets/logo.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/tracing-subscriber-0.2.11/src/field/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../tracing_subscriber/index.html'><div class='logo-container'><img src='https://raw.githubusercontent.com/tokio-rs/tracing/master/assets/logo.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -390,7 +392,7 @@
     <span class="kw">type</span> <span class="ident">Visitor</span>: <span class="ident">Visit</span>;
 
     <span class="doccomment">/// Make a new visitor for the provided `target`.</span>
-    <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Visitor</span>;
+    <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Visitor</span>;
 }
 
 <span class="doccomment">/// A [visitor] that produces output once it has visited a set of fields.</span>
@@ -400,11 +402,11 @@
     <span class="doccomment">/// Completes the visitor, returning any output.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is called once a full set of fields has been visited.</span>
-    <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Out</span>;
+    <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Out</span>;
 
     <span class="doccomment">/// Visit a set of fields, and return the output of finishing the visitor</span>
     <span class="doccomment">/// once the fields have been visited.</span>
-    <span class="kw">fn</span> <span class="ident">visit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">R</span>) <span class="op">-&gt;</span> <span class="ident">Out</span>
+    <span class="kw">fn</span> <span class="ident">visit</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">R</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Out</span>
     <span class="kw">where</span>
         <span class="ident">R</span>: <span class="ident">RecordFields</span>,
         <span class="self">Self</span>: <span class="ident">Sized</span>,
@@ -450,7 +452,7 @@
 <span class="doccomment">/// [event]: https://docs.rs/tracing-core/latest/tracing_core/event/struct.Event.html</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RecordFields</span>: <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">RecordFieldsMarker</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Record all the fields in `self` with the provided `visitor`.</span>
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>);
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">Visit</span>);
 }
 
 <span class="doccomment">/// Extension trait implemented for all `MakeVisitor` implementations that</span>
@@ -462,7 +464,7 @@
 {
     <span class="doccomment">/// Visits all fields in `fields` with a new visitor constructed from</span>
     <span class="doccomment">/// `target`.</span>
-    <span class="kw">fn</span> <span class="ident">visit_with</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">Out</span>
+    <span class="kw">fn</span> <span class="ident">visit_with</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>, <span class="ident">fields</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Out</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">RecordFields</span>,
     {
@@ -472,39 +474,39 @@
 
 <span class="doccomment">/// Extension trait implemented by visitors to indicate that they write to an</span>
 <span class="doccomment">/// `io::Write` instance, and allow access to that writer.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">VisitWrite</span>: <span class="ident">VisitOutput</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">VisitWrite</span>: <span class="ident">VisitOutput</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Returns the writer that this visitor writes to.</span>
-    <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">io</span>::<span class="ident">Write</span>;
+    <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">io</span>::<span class="ident">Write</span>;
 }
 
 <span class="doccomment">/// Extension trait implemented by visitors to indicate that they write to a</span>
 <span class="doccomment">/// `fmt::Write` instance, and allow access to that writer.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">VisitFmt</span>: <span class="ident">VisitOutput</span><span class="op">&lt;</span><span class="ident">fmt</span>::<span class="prelude-ty">Result</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Returns the formatter that this visitor writes to.</span>
-    <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>;
+    <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>;
 }
 
 <span class="doccomment">/// Extension trait providing `MakeVisitor` combinators.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MakeExt</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="self">Self</span>: <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-    <span class="self">Self</span>: <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
+    <span class="self">Self</span>: <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
     <span class="doccomment">/// Wraps `self` so that any `fmt::Debug` fields are recorded using the</span>
     <span class="doccomment">/// alternate formatter (`{:#?}`).</span>
-    <span class="kw">fn</span> <span class="ident">debug_alt</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">debug</span>::<span class="ident">Alt</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">debug_alt</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">debug</span>::<span class="ident">Alt</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">debug</span>::<span class="ident">Alt</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Wraps `self` so that any string fields named &quot;message&quot; are recorded</span>
     <span class="doccomment">/// using `fmt::Display`.</span>
-    <span class="kw">fn</span> <span class="ident">display_messages</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">display</span>::<span class="ident">Messages</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">display_messages</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">display</span>::<span class="ident">Messages</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="ident">display</span>::<span class="ident">Messages</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 
     <span class="doccomment">/// Wraps `self` so that when fields are formatted to a writer, they are</span>
     <span class="doccomment">/// separated by the provided `delimiter`.</span>
-    <span class="kw">fn</span> <span class="ident">delimited</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">delimiter</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="ident">delimited</span>::<span class="ident">Delimited</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="self">Self</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">delimited</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">delimiter</span>: <span class="ident">D</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">delimited</span>::<span class="ident">Delimited</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="self">Self</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">D</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span>,
         <span class="self">Self</span>::<span class="ident">Visitor</span>: <span class="ident">VisitFmt</span>,
@@ -517,21 +519,21 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">RecordFieldsMarker</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RecordFields</span> <span class="kw">for</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) {
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">Visit</span>) {
         <span class="ident">Event</span>::<span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">RecordFieldsMarker</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RecordFields</span> <span class="kw">for</span> <span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) {
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">Visit</span>) {
         <span class="ident">Attributes</span>::<span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">RecordFieldsMarker</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Record</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">RecordFields</span> <span class="kw">for</span> <span class="ident">Record</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) {
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">Visit</span>) {
         <span class="ident">Record</span>::<span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>)
     }
 }
@@ -541,7 +543,7 @@
 <span class="kw">where</span>
     <span class="ident">F</span>: <span class="ident">RecordFields</span>,
 {
-    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">Visit</span>) {
+    <span class="kw">fn</span> <span class="ident">record</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">Visit</span>) {
         <span class="ident">F</span>::<span class="ident">record</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="ident">visitor</span>)
     }
 }
@@ -550,11 +552,11 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">V</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">V</span>,
+    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">V</span>,
     <span class="ident">V</span>: <span class="ident">Visit</span>,
 {
     <span class="kw">type</span> <span class="ident">Visitor</span> <span class="op">=</span> <span class="ident">V</span>;
-    <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Visitor</span> {
+    <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Visitor</span> {
         (<span class="self">self</span>)(<span class="ident">target</span>)
     }
 }
@@ -573,12 +575,12 @@
 {
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">M</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">M</span> <span class="kw">where</span> <span class="ident">M</span>: <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">M</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">M</span> <span class="kw">where</span> <span class="ident">M</span>: <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span> {}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">M</span><span class="op">&gt;</span> <span class="ident">MakeExt</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">M</span>
 <span class="kw">where</span>
     <span class="ident">M</span>: <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span>,
-    <span class="ident">M</span>: <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">M</span>: <span class="kw">crate</span>::<span class="ident">sealed</span>::<span class="ident">Sealed</span><span class="op">&lt;</span><span class="ident">MakeExtMarker</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
 }
 
@@ -608,21 +610,21 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">TestAttrs2</span>;
 
     <span class="kw">impl</span> <span class="ident">TestAttrs1</span> {
-        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">T</span> {
+        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
             <span class="kw">let</span> <span class="ident">fieldset</span> <span class="op">=</span> <span class="ident">TEST_META_1</span>.<span class="ident">fields</span>();
             <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;question&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;life, the universe, and everything&quot;</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="string">&quot;life, the universe, and everything&quot;</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
                 (<span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;question.answer&quot;</span>).<span class="ident">unwrap</span>(), <span class="prelude-val">None</span>),
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;tricky&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;can_you_do_it&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
             ];
             <span class="kw">let</span> <span class="ident">valueset</span> <span class="op">=</span> <span class="ident">fieldset</span>.<span class="ident">value_set</span>(<span class="ident">values</span>);
@@ -632,25 +634,25 @@
     }
 
     <span class="kw">impl</span> <span class="ident">TestAttrs2</span> {
-        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">T</span> {
+        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident">Attributes</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
             <span class="kw">let</span> <span class="ident">fieldset</span> <span class="op">=</span> <span class="ident">TEST_META_1</span>.<span class="ident">fields</span>();
             <span class="kw">let</span> <span class="ident">none</span> <span class="op">=</span> <span class="ident">tracing_core</span>::<span class="ident">field</span>::<span class="ident">debug</span>(<span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>::<span class="prelude-val">None</span>);
             <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;question&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">none</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">none</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;question.answer&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">42</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="number">42</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;tricky&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">true</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
                 (
                     <span class="kw-2">&amp;</span><span class="ident">fieldset</span>.<span class="ident">field</span>(<span class="string">&quot;can_you_do_it&quot;</span>).<span class="ident">unwrap</span>(),
-                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">false</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">Value</span>),
+                    <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="bool-val">false</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">Value</span>),
                 ),
             ];
             <span class="kw">let</span> <span class="ident">valueset</span> <span class="op">=</span> <span class="ident">fieldset</span>.<span class="ident">value_set</span>(<span class="ident">values</span>);
@@ -660,7 +662,7 @@
     }
 
     <span class="kw">struct</span> <span class="ident">TestCallsite1</span>;
-    <span class="kw">static</span> <span class="ident">TEST_CALLSITE_1</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="kw">dyn</span> <span class="ident">Callsite</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">TestCallsite1</span>;
+    <span class="kw">static</span> <span class="ident">TEST_CALLSITE_1</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">dyn</span> <span class="ident">Callsite</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">TestCallsite1</span>;
     <span class="kw">static</span> <span class="ident">TEST_META_1</span>: <span class="ident">Metadata</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">tracing_core</span>::<span class="macro">metadata</span><span class="macro">!</span> {
         <span class="ident">name</span>: <span class="string">&quot;field_test1&quot;</span>,
         <span class="ident">target</span>: <span class="macro">module_path</span><span class="macro">!</span>(),
@@ -675,19 +677,19 @@
             <span class="macro">unimplemented</span><span class="macro">!</span>()
         }
 
-        <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Metadata</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Metadata</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
             <span class="kw-2">&amp;</span><span class="ident">TEST_META_1</span>
         }
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">MakeDebug</span>;
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>,
+        <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>,
         <span class="ident">err</span>: <span class="ident">fmt</span>::<span class="prelude-ty">Result</span>,
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">writer</span>,
                 <span class="ident">err</span>: <span class="prelude-val">Ok</span>(()),
@@ -696,26 +698,26 @@
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Visit</span> <span class="kw">for</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">record_debug</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">Field</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Debug</span>) {
+        <span class="kw">fn</span> <span class="ident">record_debug</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">Field</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Debug</span>) {
             <span class="macro">write</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}={:?}&quot;</span>, <span class="ident">field</span>, <span class="ident">value</span>).<span class="ident">unwrap</span>();
         }
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">VisitOutput</span><span class="op">&lt;</span><span class="ident">fmt</span>::<span class="prelude-ty">Result</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
             <span class="self">self</span>.<span class="ident">err</span>
         }
     }
 
     <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">VisitFmt</span> <span class="kw">for</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span> {
+        <span class="kw">fn</span> <span class="ident">writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span> {
             <span class="self">self</span>.<span class="ident">writer</span>
         }
     }
 
-    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MakeDebug</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">MakeVisitor</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MakeDebug</span> {
         <span class="kw">type</span> <span class="ident">Visitor</span> <span class="op">=</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
-        <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="kw">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>) <span class="op">-&gt;</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="kw">fn</span> <span class="ident">make_visitor</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">fmt</span>::<span class="ident">Write</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">DebugVisitor</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
             <span class="ident">DebugVisitor</span>::<span class="ident">new</span>(<span class="ident">w</span>)
         }
     }

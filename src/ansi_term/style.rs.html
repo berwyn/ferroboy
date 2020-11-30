@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/ansi_term-0.12.1/src/style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../ansi_term/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/ansi_term-0.12.1/src/style.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../ansi_term/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -579,7 +581,7 @@
     <span class="doccomment">/// let style = Style::new();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;hi&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span>::<span class="ident">default</span>()
     }
 
@@ -593,7 +595,7 @@
     <span class="doccomment">/// let style = Style::new().bold();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;hey&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_bold</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -607,7 +609,7 @@
     <span class="doccomment">/// let style = Style::new().dimmed();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;sup&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dimmed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dimmed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_dimmed</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -621,7 +623,7 @@
     <span class="doccomment">/// let style = Style::new().italic();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;greetings&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">italic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">italic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_italic</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -635,7 +637,7 @@
     <span class="doccomment">/// let style = Style::new().underline();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;salutations&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">underline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">underline</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_underline</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -648,7 +650,7 @@
     <span class="doccomment">/// let style = Style::new().blink();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;wazzup&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">blink</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">blink</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_blink</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -662,7 +664,7 @@
     <span class="doccomment">/// let style = Style::new().reverse();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;aloha&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reverse</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reverse</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_reverse</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -676,7 +678,7 @@
     <span class="doccomment">/// let style = Style::new().hidden();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;ahoy&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hidden</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hidden</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_hidden</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -690,7 +692,7 @@
     <span class="doccomment">/// let style = Style::new().strikethrough();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;yo&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strikethrough</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strikethrough</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">is_strikethrough</span>: <span class="bool-val">true</span>, .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -704,7 +706,7 @@
     <span class="doccomment">/// let style = Style::new().fg(Colour::Yellow);</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;hi&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fg</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">foreground</span>: <span class="ident">Colour</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fg</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">foreground</span>: <span class="ident">Colour</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="ident">foreground</span>), .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -718,7 +720,7 @@
     <span class="doccomment">/// let style = Style::new().on(Colour::Blue);</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;eyyyy&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">background</span>: <span class="ident">Colour</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">background</span>: <span class="ident">Colour</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">background</span>: <span class="prelude-val">Some</span>(<span class="ident">background</span>), .. <span class="kw-2">*</span><span class="self">self</span> }
     }
 
@@ -733,8 +735,8 @@
     <span class="doccomment">/// assert_eq!(true,  Style::default().is_plain());</span>
     <span class="doccomment">/// assert_eq!(false, Style::default().bold().is_plain());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_plain</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span> <span class="op">==</span> <span class="ident">Style</span>::<span class="ident">default</span>()
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_plain</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Style</span>::<span class="ident">default</span>()
     }
 }
 
@@ -750,7 +752,7 @@
     <span class="doccomment">/// assert_eq!(false, Style::default().is_bold);</span>
     <span class="doccomment">/// assert_eq!(&quot;txt&quot;, Style::default().paint(&quot;txt&quot;).to_string());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> {
             <span class="ident">foreground</span>: <span class="prelude-val">None</span>,
             <span class="ident">background</span>: <span class="prelude-val">None</span>,
@@ -843,7 +845,7 @@
     <span class="doccomment">/// let style = Colour::Red.normal();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;hi&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normal</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normal</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -858,7 +860,7 @@
     <span class="doccomment">/// let style = Colour::Green.bold();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;hey&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bold</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bold</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_bold</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -873,7 +875,7 @@
     <span class="doccomment">/// let style = Colour::Yellow.dimmed();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;sup&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dimmed</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dimmed</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_dimmed</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -888,7 +890,7 @@
     <span class="doccomment">/// let style = Colour::Blue.italic();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;greetings&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">italic</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">italic</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_italic</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -903,7 +905,7 @@
     <span class="doccomment">/// let style = Colour::Purple.underline();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;salutations&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">underline</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">underline</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_underline</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -918,7 +920,7 @@
     <span class="doccomment">/// let style = Colour::Cyan.blink();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;wazzup&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">blink</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">blink</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_blink</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -933,7 +935,7 @@
     <span class="doccomment">/// let style = Colour::Black.reverse();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;aloha&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reverse</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reverse</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_reverse</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -948,7 +950,7 @@
     <span class="doccomment">/// let style = Colour::White.hidden();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;ahoy&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hidden</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hidden</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_hidden</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -963,7 +965,7 @@
     <span class="doccomment">/// let style = Colour::Fixed(244).strikethrough();</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;yo&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strikethrough</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">strikethrough</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">is_strikethrough</span>: <span class="bool-val">true</span>, .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 
@@ -978,7 +980,7 @@
     <span class="doccomment">/// let style = Colour::RGB(31, 31, 31).on(Colour::White);</span>
     <span class="doccomment">/// println!(&quot;{}&quot;, style.paint(&quot;eyyyy&quot;));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on</span>(<span class="self">self</span>, <span class="ident">background</span>: <span class="ident">Colour</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">on</span>(<span class="self">self</span>, <span class="ident">background</span>: <span class="ident">Colour</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">Style</span> { <span class="ident">foreground</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>), <span class="ident">background</span>: <span class="prelude-val">Some</span>(<span class="ident">background</span>), .. <span class="ident">Style</span>::<span class="ident">default</span>() }
     }
 }
@@ -995,7 +997,7 @@
     <span class="doccomment">/// assert_eq!(green_foreground, Colour::Green.into());</span>
     <span class="doccomment">/// assert_eq!(green_foreground, Style::from(Colour::Green));</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">colour</span>: <span class="ident">Colour</span>) <span class="op">-&gt;</span> <span class="ident">Style</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">colour</span>: <span class="ident">Colour</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Style</span> {
         <span class="ident">colour</span>.<span class="ident">normal</span>()
     }
 }

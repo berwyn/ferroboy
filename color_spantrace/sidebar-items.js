@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["colorize","Display a [`SpanTrace`] with colors and source"]]});
+initSidebarItems({"fn":[["colorize","Display a `SpanTrace` with colors and source"]]});
