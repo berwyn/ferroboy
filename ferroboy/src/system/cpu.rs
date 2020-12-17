@@ -28,6 +28,8 @@ impl Default for Flags {
 pub struct CPU {
     halted: bool,
     interrupts_enabled: bool,
+    /// Whether or not the previous operation set the CPU to use the CB prefix operations.
+    pub(crate) in_prefix_mode: bool,
 
     clock: u64,
     f: Flags,
@@ -170,6 +172,7 @@ impl Default for CPU {
         Self {
             halted: false,
             interrupts_enabled: true,
+            in_prefix_mode: false,
 
             clock: 0,
             f: Flags::CLEAR,

@@ -592,6 +592,7 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
     map.insert(0xC5, leak(PushOperation(WideRegister::BC)));
 
     map.insert(0xCA, leak(JumpPositionOperation(JumpPositionFlags::Zero)));
+    map.insert(0xCB, leak(PrefixOperation));
     map.insert(0xCC, leak(CallOperation(Some(CallCondition::Zero))));
     map.insert(0xCD, leak(CallOperation(None)));
 }

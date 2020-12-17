@@ -1,4 +1,4 @@
-use ferroboy::{Disassemble, Operation};
+use ferroboy::Operation;
 use prettytable::{Cell, Row, Table};
 
 fn print_header(table: &mut Table) {
@@ -19,12 +19,15 @@ fn print_row(table: &mut Table, leading: u8, opcodes: &[Option<&dyn Operation>])
     cells.push(Cell::new(&head));
 
     for operation in opcodes {
-        if let Some(op) = operation {
-            let description = format!("{}", op.describe().unwrap());
-            cells.push(Cell::new(&description))
-        } else {
-            cells.push(Cell::new("-"))
-        }
+        let cell = match operation {
+            Some(op) => {
+                let description = format!("{}", op.describe().unwrap());
+                Cell::new(&description)
+            }
+            None => Cell::new("-"),
+        };
+
+        cells.push(cell);
     }
 
     table.add_row(Row::new(cells));
