@@ -156,8 +156,10 @@ mod tests {
 
         #[test]
         fn it_disassembles_properly() {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0xBE, 0xEF];
+            let cartridge = Cartridge {
+                data: vec![0xBE, 0xEF],
+                ..Default::default()
+            };
 
             let op = CallOperation(None);
             let assembly = op.disassemble(&cartridge, 0).unwrap();
@@ -192,8 +194,10 @@ mod tests {
         use super::*;
 
         fn setup() -> State {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0; 0xFFFF];
+            let cartridge = Cartridge {
+                data: vec![0; 0xFFFF],
+                ..Default::default()
+            };
 
             let mut state = State::default();
             state.cpu.set16(WideRegister::SP, 0xBEEF);

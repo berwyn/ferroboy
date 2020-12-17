@@ -355,8 +355,10 @@ mod tests {
 
     #[test]
     fn it_disassembles_immediate_to_register() {
-        let mut cartridge = Cartridge::default();
-        cartridge.data = vec![0x00, 0xBE, 0xEF];
+        let cartridge = Cartridge {
+            data: vec![0x00, 0xBE, 0xEF],
+            ..Default::default()
+        };
 
         let op = Load8ImmediateOperation(Register::A);
 
