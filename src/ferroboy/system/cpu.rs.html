@@ -227,6 +227,9 @@
 <span id="224">224</span>
 <span id="225">225</span>
 <span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">core</span>::<span class="ident">convert</span>::<span class="ident">TryInto</span>;
 
@@ -258,6 +261,8 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CPU</span> {
     <span class="ident">halted</span>: <span class="ident">bool</span>,
     <span class="ident">interrupts_enabled</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Whether or not the previous operation set the CPU to use the CB prefix operations.</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">in_prefix_mode</span>: <span class="ident">bool</span>,
 
     <span class="ident">clock</span>: <span class="ident">u64</span>,
     <span class="ident">f</span>: <span class="ident">Flags</span>,
@@ -400,6 +405,7 @@
         <span class="self">Self</span> {
             <span class="ident">halted</span>: <span class="bool-val">false</span>,
             <span class="ident">interrupts_enabled</span>: <span class="bool-val">true</span>,
+            <span class="ident">in_prefix_mode</span>: <span class="bool-val">false</span>,
 
             <span class="ident">clock</span>: <span class="number">0</span>,
             <span class="ident">f</span>: <span class="ident">Flags</span>::<span class="ident">CLEAR</span>,

@@ -650,6 +650,7 @@
 <span id="647">647</span>
 <span id="648">648</span>
 <span id="649">649</span>
+<span id="650">650</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -1245,6 +1246,7 @@
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC5</span>, <span class="ident">leak</span>(<span class="ident">PushOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCA</span>, <span class="ident">leak</span>(<span class="ident">JumpPositionOperation</span>(<span class="ident">JumpPositionFlags</span>::<span class="ident">Zero</span>)));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCB</span>, <span class="ident">leak</span>(<span class="ident">PrefixOperation</span>));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCC</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">CallCondition</span>::<span class="ident">Zero</span>))));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCD</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">None</span>)));
 }

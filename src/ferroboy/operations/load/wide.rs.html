@@ -114,6 +114,8 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">assembly</span>::{<span class="ident">AssemblyInstruction</span>, <span class="ident">AssemblyInstructionBuilder</span>, <span class="ident">Disassemble</span>},
@@ -218,8 +220,10 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">it_disassembles_correctly</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cartridge</span> <span class="op">=</span> <span class="ident">Cartridge</span>::<span class="ident">default</span>();
-        <span class="ident">cartridge</span>.<span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x00</span>, <span class="number">0xBE</span>, <span class="number">0xEF</span>];
+        <span class="kw">let</span> <span class="ident">cartridge</span> <span class="op">=</span> <span class="ident">Cartridge</span> {
+            <span class="ident">data</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0x00</span>, <span class="number">0xBE</span>, <span class="number">0xEF</span>],
+            ..<span class="ident">Default</span>::<span class="ident">default</span>()
+        };
 
         <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">Load16ImmediateOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>);
 
