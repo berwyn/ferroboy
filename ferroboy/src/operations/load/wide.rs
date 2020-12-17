@@ -101,8 +101,10 @@ mod tests {
 
     #[test]
     fn it_disassembles_correctly() -> crate::Result<()> {
-        let mut cartridge = Cartridge::default();
-        cartridge.data = vec![0x00, 0xBE, 0xEF];
+        let cartridge = Cartridge {
+            data: vec![0x00, 0xBE, 0xEF],
+            ..Default::default()
+        };
 
         let op = Load16ImmediateOperation(WideRegister::BC);
 

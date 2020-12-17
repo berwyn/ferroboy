@@ -193,8 +193,10 @@ mod tests {
 
         #[test]
         fn it_disassembles_correctly() {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0x00, 0xFF, 0xBE];
+            let cartridge = Cartridge {
+                data: vec![0x00, 0xFF, 0xBE],
+                ..Default::default()
+            };
 
             let nop = JumpRelativeOperation(JumpRelativeFlag::Nop);
             let nop_instruction: AssemblyInstruction = nop.disassemble(&cartridge, 0).unwrap();

@@ -227,8 +227,10 @@ mod tests {
 
         #[test]
         fn it_disassembles_correctly() -> crate::Result<()> {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0x00, 0xFF, 0xFF, 0xDE, 0xAD];
+            let cartridge = Cartridge {
+                data: vec![0x00, 0xFF, 0xFF, 0xDE, 0xAD],
+                ..Default::default()
+            };
 
             let nop = JumpPositionOperation(JumpPositionFlags::Nop);
             assert_eq!("JP $FFFF", nop.disassemble(&cartridge, 0)?.to_string());

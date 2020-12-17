@@ -153,8 +153,10 @@ mod tests {
 
         #[test]
         fn it_disassembles_correctly() {
-            let mut cartridge = Cartridge::default();
-            cartridge.data = vec![0xDE, 0xAD, 0xBE, 0xEF];
+            let cartridge = Cartridge {
+                data: vec![0xDE, 0xAD, 0xBE, 0xEF],
+                ..Default::default()
+            };
 
             let operation = CpOperation(CpTarget::Register(Register::B));
             let instruction = operation.disassemble(&cartridge, 0).unwrap();
