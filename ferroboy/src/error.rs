@@ -15,6 +15,8 @@ pub enum Error {
 
     #[error("The state isn't ready yet")]
     StateNotReady,
+    #[error("The state isn't valid and cannot continue executing")]
+    InvalidState,
     #[error("The address {0} isn't valid")]
     AddressOutOfRange(u32),
     #[error("'{0:0<2X}' isn't a valid opcode")]

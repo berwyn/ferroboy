@@ -39,6 +39,7 @@ impl std::fmt::Display for XorTarget {
 /// |:-------|:-----|
 /// | Length | 1*   |
 /// | Cycles | 4**  |
+///
 /// \* `SUB d8` is 2 bytes
 /// \*\* `SUB (HL)` and `SUB d8` are 8 cycles
 ///

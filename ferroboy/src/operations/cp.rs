@@ -39,6 +39,7 @@ impl std::fmt::Display for CpTarget {
 /// |:-------|:-----|
 /// | Length | 1*   |
 /// | Cycles | 4**  |
+///
 /// \* `CP d8` is 2 bytes
 /// \*\* `CP (HL)` and `CP d8` are 8 cycles
 ///
