@@ -41,6 +41,7 @@ impl std::fmt::Display for CallCondition {
 /// |:-------|:-----|
 /// | Length | 3    |
 /// | Cycles | 24\* |
+///
 /// \* In cases where a conditional is provided and not satisfied, the call is 12 cycles.
 ///
 /// ## Flags

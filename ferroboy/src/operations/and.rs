@@ -39,6 +39,7 @@ impl std::fmt::Display for AndTarget {
 /// |:-------|:-----|
 /// | Length | 1*   |
 /// | Cycles | 4**  |
+///
 /// \* `SUB d8` is two bytes long.
 /// \*\* `SUB (HL)` and `SUB d8` are both 8 cycles.
 ///
