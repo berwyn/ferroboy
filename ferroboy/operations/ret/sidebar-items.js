@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["RetCondition","The condition to check before returning."]],"struct":[["RetOperation","Sets the program counter to the address stored in the stack pointer, if the condition check succeeds."]]});

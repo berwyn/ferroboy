@@ -651,6 +651,11 @@
 <span id="648">648</span>
 <span id="649">649</span>
 <span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 
@@ -1234,6 +1239,7 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `C` is a hex number here, not a letter</span>
 <span class="kw">fn</span> <span class="ident">load_rank_C_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC0</span>, <span class="ident">leak</span>(<span class="ident">RetOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">RetCondition</span>::<span class="ident">NotZero</span>))));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC1</span>, <span class="ident">leak</span>(<span class="ident">PopOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
@@ -1245,6 +1251,8 @@
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC4</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">CallCondition</span>::<span class="ident">NotZero</span>))));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC5</span>, <span class="ident">leak</span>(<span class="ident">PushOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">BC</span>)));
 
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC8</span>, <span class="ident">leak</span>(<span class="ident">RetOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">RetCondition</span>::<span class="ident">Zero</span>))));
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xC9</span>, <span class="ident">leak</span>(<span class="ident">RetOperation</span>(<span class="prelude-val">None</span>)));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCA</span>, <span class="ident">leak</span>(<span class="ident">JumpPositionOperation</span>(<span class="ident">JumpPositionFlags</span>::<span class="ident">Zero</span>)));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCB</span>, <span class="ident">leak</span>(<span class="ident">PrefixOperation</span>));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xCC</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">CallCondition</span>::<span class="ident">Zero</span>))));
@@ -1253,6 +1261,7 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// `D` is a hex number here, not a letter</span>
 <span class="kw">fn</span> <span class="ident">load_rank_D_ops</span>(<span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OpCodeMap</span>) {
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD0</span>, <span class="ident">leak</span>(<span class="ident">RetOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">RetCondition</span>::<span class="ident">NotCarry</span>))));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD1</span>, <span class="ident">leak</span>(<span class="ident">PopOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">DE</span>)));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(
@@ -1262,8 +1271,9 @@
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD4</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">CallCondition</span>::<span class="ident">NotCarry</span>))));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD5</span>, <span class="ident">leak</span>(<span class="ident">PushOperation</span>(<span class="ident">WideRegister</span>::<span class="ident">DE</span>)));
-
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD6</span>, <span class="ident">leak</span>(<span class="ident">SubOperation</span>(<span class="ident">SubTarget</span>::<span class="ident">Immediate</span>)));
+
+    <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xD8</span>, <span class="ident">leak</span>(<span class="ident">RetOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">RetCondition</span>::<span class="ident">Carry</span>))));
 
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xDA</span>, <span class="ident">leak</span>(<span class="ident">JumpPositionOperation</span>(<span class="ident">JumpPositionFlags</span>::<span class="ident">Carry</span>)));
     <span class="ident">map</span>.<span class="ident">insert</span>(<span class="number">0xDC</span>, <span class="ident">leak</span>(<span class="ident">CallOperation</span>(<span class="prelude-val">Some</span>(<span class="ident">CallCondition</span>::<span class="ident">Carry</span>))));

@@ -55,6 +55,8 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">thiserror</span>::<span class="ident">Error</span>;
 
@@ -73,6 +75,8 @@
 
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The state isn&#39;t ready yet&quot;</span>)]</span>
     <span class="ident">StateNotReady</span>,
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The state isn&#39;t valid and cannot continue executing&quot;</span>)]</span>
+    <span class="ident">InvalidState</span>,
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The address {0} isn&#39;t valid&quot;</span>)]</span>
     <span class="ident">AddressOutOfRange</span>(<span class="ident">u32</span>),
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;&#39;{0:0&lt;2X}&#39; isn&#39;t a valid opcode&quot;</span>)]</span>
