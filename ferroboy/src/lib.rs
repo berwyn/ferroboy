@@ -30,7 +30,9 @@ pub type Result<T> = core::result::Result<T, crate::error::Error>;
 /// Prepare the system and start the emulation.
 pub fn start(state: &mut State) -> Result<()> {
     if state.cartridge.is_some() {
-        return state.map_cartridge().and(state.jump(0x0100)).map(|_| ());
+        return state.map_cartridge().map(|_| {
+            state.jump(0x0100);
+        });
     }
 
     Err(Error::StateNotReady)

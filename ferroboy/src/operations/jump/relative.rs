@@ -105,13 +105,13 @@ impl Operation for JumpRelativeOperation {
 
         match self.0 {
             JumpRelativeFlag::Nop => {
-                state.jump(program_counter + offset)?;
+                state.jump(program_counter + offset);
                 state.cpu.increment_clock(12);
                 Ok(())
             }
             JumpRelativeFlag::Carry => {
                 if state.cpu.has_flag(Flags::CARRY) {
-                    state.jump(program_counter + offset)?;
+                    state.jump(program_counter + offset);
                     state.cpu.increment_clock(12);
                 } else {
                     state.cpu.increment_clock(8);
@@ -121,7 +121,7 @@ impl Operation for JumpRelativeOperation {
             }
             JumpRelativeFlag::NotCarry => {
                 if !state.cpu.has_flag(Flags::CARRY) {
-                    state.jump(program_counter + offset)?;
+                    state.jump(program_counter + offset);
                     state.cpu.increment_clock(12);
                 } else {
                     state.cpu.increment_clock(8);
@@ -131,7 +131,7 @@ impl Operation for JumpRelativeOperation {
             }
             JumpRelativeFlag::Zero => {
                 if state.cpu.has_flag(Flags::ZERO) {
-                    state.jump(program_counter + offset)?;
+                    state.jump(program_counter + offset);
                     state.cpu.increment_clock(12);
                 } else {
                     state.cpu.increment_clock(8);
@@ -141,7 +141,7 @@ impl Operation for JumpRelativeOperation {
             }
             JumpRelativeFlag::NotZero => {
                 if !state.cpu.has_flag(Flags::ZERO) {
-                    state.jump(program_counter + offset)?;
+                    state.jump(program_counter + offset);
                     state.cpu.increment_clock(12);
                 } else {
                     state.cpu.increment_clock(8);
