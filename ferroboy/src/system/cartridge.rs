@@ -233,7 +233,7 @@ impl<'a> CartridgeBuilder<'a> {
         let title = Self::parse_cartridge_title(&buffer)?;
         let bank_count = Self::parse_bank_count(&buffer)?;
         let ram_size = Self::parse_ram_size(&buffer)?;
-        let is_japanese = Self::is_japanese(&buffer)?;
+        let is_japanese = Self::is_japanese(&buffer);
         let cartridge_type = Self::parse_cartridge_type(&buffer)?;
 
         Ok(Cartridge {
@@ -291,8 +291,8 @@ impl<'a> CartridgeBuilder<'a> {
         Ok(value)
     }
 
-    fn is_japanese(buffer: &[u8]) -> crate::Result<bool> {
-        Ok(buffer[0x14A] == 0)
+    fn is_japanese(buffer: &[u8]) -> bool {
+        buffer[0x14A] == 0
     }
 
     fn parse_cartridge_type(buffer: &[u8]) -> crate::Result<CartridgeType> {

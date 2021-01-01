@@ -117,7 +117,7 @@ impl Operation for JumpPositionOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         if JumpPositionFlags::Register.eq(&self.0) {
             let address = state.cpu.get16(WideRegister::HL);
-            state.jump(address)?;
+            state.jump(address);
             state.cpu.increment_clock(4);
 
             return Ok(());
@@ -127,13 +127,13 @@ impl Operation for JumpPositionOperation {
 
         match self.0 {
             JumpPositionFlags::Nop => {
-                state.jump(address)?;
+                state.jump(address);
                 state.cpu.increment_clock(16);
                 Ok(())
             }
             JumpPositionFlags::Zero => {
                 if state.cpu.has_flag(Flags::ZERO) {
-                    state.jump(address)?;
+                    state.jump(address);
                     state.cpu.increment_clock(16);
                 } else {
                     state.cpu.increment_clock(12);
@@ -143,7 +143,7 @@ impl Operation for JumpPositionOperation {
             }
             JumpPositionFlags::NotZero => {
                 if !state.cpu.has_flag(Flags::ZERO) {
-                    state.jump(address)?;
+                    state.jump(address);
                     state.cpu.increment_clock(16);
                 } else {
                     state.cpu.increment_clock(12);
@@ -153,7 +153,7 @@ impl Operation for JumpPositionOperation {
             }
             JumpPositionFlags::Carry => {
                 if state.cpu.has_flag(Flags::CARRY) {
-                    state.jump(address)?;
+                    state.jump(address);
                     state.cpu.increment_clock(16);
                 } else {
                     state.cpu.increment_clock(12);
@@ -163,7 +163,7 @@ impl Operation for JumpPositionOperation {
             }
             JumpPositionFlags::NotCarry => {
                 if !state.cpu.has_flag(Flags::CARRY) {
-                    state.jump(address)?;
+                    state.jump(address);
                     state.cpu.increment_clock(16);
                 } else {
                     state.cpu.increment_clock(12);

@@ -52,19 +52,19 @@ impl State {
         }
     }
 
-    pub(crate) fn jump(&mut self, destination: u16) -> crate::Result<()> {
+    pub(crate) fn jump(&mut self, destination: u16) {
         // FIXME(berwyn): Validate jump target
         self.cpu.set16(WideRegister::PC, destination);
-
-        Ok(())
     }
 
     pub(crate) fn map_cartridge(&mut self) -> crate::Result<()> {
-        if let Some(cart) = self.cartridge.as_ref() {
-            cart.load_banks(&mut self.mmu);
+        match self.cartridge.as_ref() {
+            Some(cart) => {
+                cart.load_banks(&mut self.mmu);
+                Ok(())
+            }
+            None => Err(crate::Error::InvalidState),
         }
-
-        Ok(())
     }
 }
 
