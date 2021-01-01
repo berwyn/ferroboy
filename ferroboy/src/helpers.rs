@@ -23,6 +23,15 @@ pub fn u16_to_word(word: u16) -> (u8, u8) {
     (high, low)
 }
 
+/// Formats addresses in a common Z80 hex format
+pub fn format_hex_address(address: u16, wide: bool) -> String {
+    if wide {
+        format!("${:0>4X}", address)
+    } else {
+        format!("${:0>2X}", address)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -592,12 +592,15 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
     map.insert(0xC4, leak(CallOperation(Some(CallCondition::NotZero))));
     map.insert(0xC5, leak(PushOperation(WideRegister::BC)));
 
+    map.insert(0xC7, leak(RstOperation(0x00)));
     map.insert(0xC8, leak(RetOperation(Some(RetCondition::Zero))));
     map.insert(0xC9, leak(RetOperation(None)));
     map.insert(0xCA, leak(JumpPositionOperation(JumpPositionFlags::Zero)));
     map.insert(0xCB, leak(PrefixOperation));
     map.insert(0xCC, leak(CallOperation(Some(CallCondition::Zero))));
     map.insert(0xCD, leak(CallOperation(None)));
+
+    map.insert(0xCF, leak(RstOperation(0x08)));
 }
 
 #[allow(non_snake_case)] // `D` is a hex number here, not a letter
@@ -613,11 +616,13 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
     map.insert(0xD4, leak(CallOperation(Some(CallCondition::NotCarry))));
     map.insert(0xD5, leak(PushOperation(WideRegister::DE)));
     map.insert(0xD6, leak(SubOperation(SubTarget::Immediate)));
-
+    map.insert(0xD7, leak(RstOperation(0x10)));
     map.insert(0xD8, leak(RetOperation(Some(RetCondition::Carry))));
 
     map.insert(0xDA, leak(JumpPositionOperation(JumpPositionFlags::Carry)));
     map.insert(0xDC, leak(CallOperation(Some(CallCondition::Carry))));
+
+    map.insert(0xDF, leak(RstOperation(0x18)));
 }
 
 #[allow(non_snake_case)] // `E` is a hex number here, not a letter
@@ -635,6 +640,7 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
     map.insert(0xE5, leak(PushOperation(WideRegister::HL)));
 
     map.insert(0xE6, leak(AndOperation(AndTarget::Immediate)));
+    map.insert(0xE7, leak(RstOperation(0x20)));
 
     map.insert(
         0xE9,
@@ -642,14 +648,21 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
     );
 
     map.insert(0xEE, leak(XorOperation(XorTarget::Immediate)));
+    map.insert(0xEF, leak(RstOperation(0x28)));
 }
 
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
 fn load_rank_F_ops(map: &mut OpCodeMap) {
     map.insert(0xF1, leak(PopOperation(WideRegister::HL)));
+
     map.insert(0xF3, leak(DisableInterruptsOperation));
+
     map.insert(0xF5, leak(PushOperation(WideRegister::AF)));
     map.insert(0xF6, leak(OrOperation(OrTarget::Immediate)));
+    map.insert(0xF7, leak(RstOperation(0x30)));
+
     map.insert(0xFB, leak(EnableInterruptsOperation));
+
     map.insert(0xFE, leak(CpOperation(CpTarget::Immediate)));
+    map.insert(0xFF, leak(RstOperation(0x38)));
 }
