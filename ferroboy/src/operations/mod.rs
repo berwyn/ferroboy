@@ -49,6 +49,9 @@ pub use push::*;
 mod ret;
 pub use ret::*;
 
+mod rst;
+pub use rst::*;
+
 mod rotate;
 pub use rotate::*;
 
