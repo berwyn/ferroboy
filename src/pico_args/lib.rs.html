@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/pico-args-0.3.4/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/pico-args-0.4.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
 <link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../pico_args/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
@@ -768,124 +768,18 @@
 <span id="765">765</span>
 <span id="766">766</span>
 <span id="767">767</span>
-<span id="768">768</span>
-<span id="769">769</span>
-<span id="770">770</span>
-<span id="771">771</span>
-<span id="772">772</span>
-<span id="773">773</span>
-<span id="774">774</span>
-<span id="775">775</span>
-<span id="776">776</span>
-<span id="777">777</span>
-<span id="778">778</span>
-<span id="779">779</span>
-<span id="780">780</span>
-<span id="781">781</span>
-<span id="782">782</span>
-<span id="783">783</span>
-<span id="784">784</span>
-<span id="785">785</span>
-<span id="786">786</span>
-<span id="787">787</span>
-<span id="788">788</span>
-<span id="789">789</span>
-<span id="790">790</span>
-<span id="791">791</span>
-<span id="792">792</span>
-<span id="793">793</span>
-<span id="794">794</span>
-<span id="795">795</span>
-<span id="796">796</span>
-<span id="797">797</span>
-<span id="798">798</span>
-<span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
-<span id="802">802</span>
-<span id="803">803</span>
-<span id="804">804</span>
-<span id="805">805</span>
-<span id="806">806</span>
-<span id="807">807</span>
-<span id="808">808</span>
-<span id="809">809</span>
-<span id="810">810</span>
-<span id="811">811</span>
-<span id="812">812</span>
-<span id="813">813</span>
-<span id="814">814</span>
-<span id="815">815</span>
-<span id="816">816</span>
-<span id="817">817</span>
-<span id="818">818</span>
-<span id="819">819</span>
-<span id="820">820</span>
-<span id="821">821</span>
-<span id="822">822</span>
-<span id="823">823</span>
-<span id="824">824</span>
-<span id="825">825</span>
-<span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
-<span id="837">837</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/*!
 An ultra simple CLI arguments parser.
 
-- Only flags, options, free arguments and subcommands are supported.
-- Arguments can be separated by a space or `=`.
-- Non UTF-8 arguments are supported.
+If you think that this library doesn&#39;t support some feature, it&#39;s probably intentional.
+
 - No help generation.
+- Only flags, options, free arguments and subcommands are supported.
 - No combined flags (like `-vvv`, `-abc` or `-j1`).
-- Arguments are parsed in a linear order. From first to last.
-
-## Example
-
-```rust
-struct Args {
-    help: bool,
-    version: bool,
-    number: u32,
-    opt_number: Option&lt;u32&gt;,
-    width: u32,
-    free: Vec&lt;String&gt;,
-}
-
-fn parse_width(s: &amp;str) -&gt; Result&lt;u32, String&gt; {
-    s.parse().map_err(|_| &quot;not a number&quot;.to_string())
-}
-
-fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let mut args = pico_args::Arguments::from_env();
-    // Arguments can be parsed in any order.
-    let args = Args {
-        // You can use a slice for multiple commands
-        help: args.contains([&quot;-h&quot;, &quot;--help&quot;]),
-        // or just a string for a single one.
-        version: args.contains(&quot;-V&quot;),
-        // Parses an optional value that implements `FromStr`.
-        number: args.opt_value_from_str(&quot;--number&quot;)?.unwrap_or(5),
-        // Parses an optional value that implements `FromStr`.
-        opt_number: args.opt_value_from_str(&quot;--opt-number&quot;)?,
-        // Parses an optional value using a specified function.
-        width: args.opt_value_from_fn(&quot;--width&quot;, parse_width)?.unwrap_or(10),
-        // Will return all free arguments or an error if any flags are left.
-        free: args.free()?,
-    };
-
-    Ok(())
-}
-```
+- Options can be separated by a space, `=` or nothing. See build features.
+- Arguments can be in any order.
+- Non UTF-8 arguments are supported.
 
 ## Build features
 
@@ -893,9 +787,16 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
 
   Allows parsing arguments separated by `=`. Enabled by default.&lt;br/&gt;
   This feature adds about 1KiB to the resulting binary.
+
+- `short-space-opt`
+
+  Makes the space between short keys and their values optional (e.g. `-w10`).&lt;br/&gt;
+  If `eq-separator` is enabled, then it takes precedence and the &#39;=&#39; is not included.&lt;br/&gt;
+  If `eq-separator` is disabled, then `-K=value` gives an error instead of returning `&quot;=value&quot;`.&lt;br/&gt;
+  The optional space is only applicable for short keys because `--keyvalue` would be ambiguous.
 */</span>
 
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/pico-args/0.3.4&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/pico-args/0.4.0&quot;</span>)]</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
@@ -911,6 +812,9 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     <span class="doccomment">/// Arguments must be a valid UTF-8 strings.</span>
     <span class="ident">NonUtf8Argument</span>,
 
+    <span class="doccomment">/// A missing free-standing argument.</span>
+    <span class="ident">MissingArgument</span>,
+
     <span class="doccomment">/// A missing option.</span>
     <span class="ident">MissingOption</span>(<span class="ident">Keys</span>),
 
@@ -924,9 +828,6 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     <span class="doccomment">/// Failed to parse a raw free-standing argument.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
     <span class="ident">ArgumentParsingFailed</span> { <span class="ident">cause</span>: <span class="ident">String</span> },
-
-    <span class="doccomment">/// Unused arguments left.</span>
-    <span class="ident">UnusedArgsLeft</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
@@ -934,6 +835,9 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">Error</span>::<span class="ident">NonUtf8Argument</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;argument is not a UTF-8 string&quot;</span>)
+            }
+            <span class="ident">Error</span>::<span class="ident">MissingArgument</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;free-standing argument is missing&quot;</span>)
             }
             <span class="ident">Error</span>::<span class="ident">MissingOption</span>(<span class="ident">key</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">second</span>().<span class="ident">is_empty</span>() {
@@ -950,20 +854,6 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
             }
             <span class="ident">Error</span>::<span class="ident">ArgumentParsingFailed</span> { <span class="ident">cause</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;failed to parse a binary argument cause {}&quot;</span>, <span class="ident">cause</span>)
-            }
-            <span class="ident">Error</span>::<span class="ident">UnusedArgsLeft</span>(<span class="ident">args</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">// Do not use `args.join()`, because it adds 1.2KiB.</span>
-
-                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;unused arguments left: &quot;</span>)<span class="question-mark">?</span>;
-                <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">arg</span>) <span class="kw">in</span> <span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                    <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">arg</span>)<span class="question-mark">?</span>;
-
-                    <span class="kw">if</span> <span class="ident">i</span> <span class="op">!</span><span class="op">=</span> <span class="ident">args</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> {
-                        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;, &quot;</span>)<span class="question-mark">?</span>;
-                    }
-                }
-
-                <span class="prelude-val">Ok</span>(())
             }
         }
     }
@@ -988,6 +878,9 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     <span class="doccomment">/// Creates a parser from a vector of arguments.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The executable path **must** be removed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This can be used for supporting `--` arguments to forward to another program.</span>
+    <span class="doccomment">/// See `examples/dash_dash.rs` for an example.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_vec</span>(<span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Arguments</span>(<span class="ident">args</span>)
     }
@@ -1003,7 +896,13 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
         <span class="ident">Arguments</span>(<span class="ident">args</span>)
     }
 
-    <span class="doccomment">/// Returns the name of the subcommand, that is, the first positional argument.</span>
+    <span class="doccomment">/// Parses the name of the subcommand, that is, the first positional argument.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `None` when subcommand starts with `-` or when there are no arguments left.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// - When arguments is not a UTF-8 string.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">subcommand</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>() {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
@@ -1023,6 +922,8 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
 
     <span class="doccomment">/// Checks that arguments contain a specified flag.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// Searches through all argument, not only the first/next one.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Must be used only once for each flag.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Keys</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keys</span>: <span class="ident">A</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">contains_impl</span>(<span class="ident">keys</span>.<span class="ident">into</span>())
@@ -1032,10 +933,10 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     <span class="kw">fn</span> <span class="ident">contains_impl</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keys</span>: <span class="ident">Keys</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">idx</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">index_of</span>(<span class="ident">keys</span>) {
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
-            <span class="kw">return</span> <span class="bool-val">true</span>;
+            <span class="bool-val">true</span>
+        } <span class="kw">else</span> {
+            <span class="bool-val">false</span>
         }
-
-        <span class="bool-val">false</span>
     }
 
     <span class="doccomment">/// Parses a key-value pair using `FromStr` trait.</span>
@@ -1051,6 +952,8 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     }
 
     <span class="doccomment">/// Parses a key-value pair using a specified function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Searches through all argument, not only the first/next one.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// When a key-value pair is separated by a space, the algorithm</span>
     <span class="doccomment">/// will threat the next argument after the key as a value,</span>
@@ -1302,7 +1205,7 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
 
     <span class="doccomment">/// Parses an optional key-value pair using a specified function.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// The same as `value_from_os_str`, but returns `Ok(None)` when option is not present.</span>
+    <span class="doccomment">/// The same as [`value_from_os_str`], but returns `Ok(None)` when option is not present.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [`value_from_os_str`]: struct.Arguments.html#method.value_from_os_str</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">opt_value_from_os_str</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Keys</span><span class="op">&gt;</span>, <span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
@@ -1410,7 +1313,7 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
     <span class="doccomment">/// Parses a free-standing argument using `FromStr` trait.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is a shorthand for `free_from_fn(FromStr::from_str)`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_from_str</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_from_str</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">FromStr</span>,
         <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">Display</span>,
@@ -1420,30 +1323,71 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
 
     <span class="doccomment">/// Parses a free-standing argument using a specified function.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// Parses the first argument from the list of remaining arguments.</span>
+    <span class="doccomment">/// Therefore, it&#39;s up to the caller to check if the argument is actually</span>
+    <span class="doccomment">/// a free-standing one and not an unused flag/option.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Sadly, there is no way to automatically check for flag/option.</span>
+    <span class="doccomment">/// `-`, `--`, `-1`, `-0.5`, `--.txt` - all of this arguments can have different</span>
+    <span class="doccomment">/// meaning depending on the caller requirements.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Must be used only once for each argument.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// - When any flags are left.</span>
     <span class="doccomment">/// - When argument is not a UTF-8 string. Use [`free_from_os_str`] instead.</span>
-    <span class="doccomment">/// - When value parsing failed.</span>
+    <span class="doccomment">/// - When argument parsing failed.</span>
+    <span class="doccomment">/// - When argument is not present.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`value_from_os_str`]: struct.Arguments.html#method.value_from_os_str</span>
+    <span class="doccomment">/// [`free_from_os_str`]: struct.Arguments.html#method.free_from_os_str</span>
     <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_from_fn</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">f</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">check_for_flags</span>()<span class="question-mark">?</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">opt_free_from_fn</span>(<span class="ident">f</span>)<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">MissingArgument</span>)
+    }
 
+    <span class="doccomment">/// Parses a free-standing argument using a specified function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The same as [`free_from_fn`], but parses `&amp;OsStr` instead of `&amp;str`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`free_from_fn`]: struct.Arguments.html#method.free_from_fn</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_from_os_str</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">f</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">OsStr</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">opt_free_from_os_str</span>(<span class="ident">f</span>)<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">MissingArgument</span>)
+    }
+
+    <span class="doccomment">/// Parses an optional free-standing argument using `FromStr` trait.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The same as [`free_from_str`], but returns `Ok(None)` when argument is not present.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`free_from_str`]: struct.Arguments.html#method.free_from_str</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">opt_free_from_str</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span>
+            <span class="ident">T</span>: <span class="ident">FromStr</span>,
+            <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">Display</span>,
+    {
+        <span class="self">self</span>.<span class="ident">opt_free_from_fn</span>(<span class="ident">FromStr</span>::<span class="ident">from_str</span>)
+    }
+
+    <span class="doccomment">/// Parses an optional free-standing argument using a specified function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The same as [`free_from_fn`], but returns `Ok(None)` when argument is not present.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`free_from_fn`]: struct.Arguments.html#method.free_from_fn</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">opt_free_from_fn</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">f</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>() {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         } <span class="kw">else</span> {
-            <span class="comment">// A simple take_first() implementation.</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">OsString</span>::<span class="ident">new</span>();
-            <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">swap</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">first_mut</span>().<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">value</span>);
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="number">0</span>);
-
+            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="number">0</span>);
             <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">os_to_str</span>(<span class="ident">value</span>.<span class="ident">as_os_str</span>())<span class="question-mark">?</span>;
             <span class="kw">match</span> <span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">value</span>)),
@@ -1457,27 +1401,18 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
 
     <span class="doccomment">/// Parses a free-standing argument using a specified function.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Must be used only once for each argument.</span>
+    <span class="doccomment">/// The same as [`free_from_os_str`], but returns `Ok(None)` when argument is not present.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// - When any flags are left.</span>
-    <span class="doccomment">/// - When value parsing failed.</span>
+    <span class="doccomment">/// [`free_from_os_str`]: struct.Arguments.html#method.free_from_os_str</span>
     <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_from_os_str</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">opt_free_from_os_str</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span>: <span class="ident">Display</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">f</span>: <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="ident">OsStr</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">check_for_flags</span>()<span class="question-mark">?</span>;
-
         <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>() {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         } <span class="kw">else</span> {
-            <span class="comment">// A simple take_first() implementation.</span>
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">OsString</span>::<span class="ident">new</span>();
-            <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">swap</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">first_mut</span>().<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">value</span>);
-            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="number">0</span>);
-
+            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="number">0</span>);
             <span class="kw">match</span> <span class="ident">f</span>(<span class="ident">value</span>.<span class="ident">as_os_str</span>()) {
                 <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">value</span>)),
                 <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ArgumentParsingFailed</span> { <span class="ident">cause</span>: <span class="ident">error_to_string</span>(<span class="ident">e</span>) }),
@@ -1485,88 +1420,13 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
         }
     }
 
-    <span class="doccomment">/// Returns a list of free arguments as Strings.</span>
+    <span class="doccomment">/// Returns a list of remaining arguments.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This list will also include `-`, which indicates stdin.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// - When any flags are left.</span>
-    <span class="doccomment">/// - When any of the arguments is not a UTF-8 string.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">check_for_flags</span>()<span class="question-mark">?</span>;
-
-        <span class="comment">// This code produces 1.7KiB</span>
-        <span class="comment">//</span>
-        <span class="comment">// let mut args = Vec::new();</span>
-        <span class="comment">// for arg in self.0 {</span>
-        <span class="comment">//     let arg = os_to_str(arg.as_os_str())?.to_string();</span>
-        <span class="comment">//     args.push(arg);</span>
-        <span class="comment">// }</span>
-
-        <span class="comment">// And this one is only 874B</span>
-
-        <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="ident">os_to_str</span>(<span class="ident">arg</span>.<span class="ident">as_os_str</span>())<span class="question-mark">?</span>;
-        }
-
-        <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>()).<span class="ident">collect</span>();
-        <span class="prelude-val">Ok</span>(<span class="ident">args</span>)
-    }
-
-    <span class="doccomment">/// Returns a list of free arguments as OsStrings.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This list will also include `-`, which indicates stdin.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// - When any flags are left.</span>
-    <span class="doccomment">///   Only UTF-8 strings will be checked for flag prefixes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free_os</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">check_for_flags</span>()<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="number">0</span>)
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">check_for_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="comment">// Check that there are no flags left.</span>
-        <span class="comment">// But allow `-` which is used to indicate stdin.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags_left</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">to_str</span>() {
-                <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> <span class="ident">s</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;-&quot;</span> {
-                    <span class="ident">flags_left</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="ident">to_string</span>());
-                }
-            }
-        }
-
-        <span class="kw">if</span> <span class="ident">flags_left</span>.<span class="ident">is_empty</span>() {
-            <span class="prelude-val">Ok</span>(())
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">UnusedArgsLeft</span>(<span class="ident">flags_left</span>))
-        }
-    }
-
-    <span class="doccomment">/// Checks that all flags were processed.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Use it instead of [`free`] if you do not expect any free arguments.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// [`free`]: struct.Arguments.html#method.free</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-            <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">to_str</span>() {
-                    <span class="ident">args</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="ident">to_string</span>());
-                } <span class="kw">else</span> {
-                    <span class="ident">args</span>.<span class="ident">push</span>(<span class="string">&quot;binary data&quot;</span>.<span class="ident">to_string</span>());
-                }
-            }
-
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">UnusedArgsLeft</span>(<span class="ident">args</span>));
-        }
-
-        <span class="prelude-val">Ok</span>(())
+    <span class="doccomment">/// It&#39;s up to the caller what to do with them.</span>
+    <span class="doccomment">/// One can report an error about unused arguments,</span>
+    <span class="doccomment">/// other can use them for further processing.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OsString</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>
     }
 }
 
