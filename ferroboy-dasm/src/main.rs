@@ -15,7 +15,7 @@ fn main() -> eyre::Result<()> {
         .unwrap()
         .unwrap_or(false);
 
-    args.finish()?;
+    args.finish();
 
     if !quiet {
         println!("ferroboy-dasm v{}", env!("CARGO_PKG_VERSION"));
