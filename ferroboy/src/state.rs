@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::system::{Cartridge, Config, WideRegister, CPU, MMU};
+use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 
 /// The current state of the emulation.
 ///
@@ -9,8 +9,8 @@ use crate::system::{Cartridge, Config, WideRegister, CPU, MMU};
 #[derive(Debug)]
 pub struct State {
     pub config: Config,
-    pub cpu: CPU,
-    pub mmu: MMU,
+    pub cpu: Cpu,
+    pub mmu: Mmu,
     pub cartridge: Rc<Option<Cartridge>>,
 }
 
@@ -21,12 +21,12 @@ impl State {
 
     pub fn load_cartridge(&mut self, cartridge: Cartridge) {
         let rc = Rc::new(Some(cartridge));
-        self.mmu = MMU::new(rc.clone());
+        self.mmu = Mmu::new(rc.clone());
         self.cartridge = rc;
     }
 
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
-        let pc = self.cpu.get16(WideRegister::PC);
+        let pc = self.cpu.get16(WideRegister::Pc);
         let word = self.mmu[pc];
 
         self.increment_program_counter()?;
@@ -42,10 +42,10 @@ impl State {
     }
 
     pub(crate) fn increment_program_counter(&mut self) -> crate::Result<u16> {
-        let pointer = self.cpu.get16(WideRegister::PC);
+        let pointer = self.cpu.get16(WideRegister::Pc);
         match pointer.checked_add(1) {
             Some(new_pointer) => {
-                self.cpu.set16(WideRegister::PC, new_pointer);
+                self.cpu.set16(WideRegister::Pc, new_pointer);
                 Ok(new_pointer)
             }
             None => Err(crate::error::Error::AddressOutOfRange((pointer as u32) + 1)),
@@ -54,7 +54,7 @@ impl State {
 
     pub(crate) fn jump(&mut self, destination: u16) {
         // FIXME(berwyn): Validate jump target
-        self.cpu.set16(WideRegister::PC, destination);
+        self.cpu.set16(WideRegister::Pc, destination);
     }
 
     pub(crate) fn map_cartridge(&mut self) -> crate::Result<()> {
@@ -74,8 +74,8 @@ impl Default for State {
 
         Self {
             config: Config::default(),
-            cpu: CPU::default(),
-            mmu: MMU::new(cartridge.clone()),
+            cpu: Cpu::default(),
+            mmu: Mmu::new(cartridge.clone()),
             cartridge,
         }
     }
@@ -108,7 +108,7 @@ impl StateBuilder {
         State {
             config: self.config,
             cpu: Default::default(),
-            mmu: MMU::new(rc.clone()),
+            mmu: Mmu::new(rc.clone()),
             cartridge: rc,
         }
     }
@@ -122,26 +122,26 @@ mod tests {
     fn it_reads_a_byte() {
         let mut state = State::default();
 
-        state.cpu.set16(WideRegister::PC, 0x00);
+        state.cpu.set16(WideRegister::Pc, 0x00);
         state.mmu.mutate(|mmu| mmu[0x00] = 0xFE);
 
         let byte = state.read_byte().unwrap();
 
         assert_eq!(0xFE, byte);
-        assert_eq!(0x01, state.cpu.get16(WideRegister::PC));
+        assert_eq!(0x01, state.cpu.get16(WideRegister::Pc));
     }
 
     #[test]
     fn it_reads_a_word() {
         let mut state = State::default();
 
-        state.cpu.set16(WideRegister::PC, 0x00);
+        state.cpu.set16(WideRegister::Pc, 0x00);
         state.mmu.mutate(|mmu| mmu[0x00] = 0xBE);
         state.mmu.mutate(|mmu| mmu[0x01] = 0xEF);
 
         let word = state.read_word().unwrap();
 
         assert_eq!((0xBE, 0xEF), word);
-        assert_eq!(0x02, state.cpu.get16(WideRegister::PC));
+        assert_eq!(0x02, state.cpu.get16(WideRegister::Pc));
     }
 }

@@ -25,7 +25,7 @@ impl Default for Flags {
 
 /// An implementation of the Gameboy's LR35902 CPU.
 #[derive(Debug)]
-pub struct CPU {
+pub struct Cpu {
     halted: bool,
     interrupts_enabled: bool,
     /// Whether or not the previous operation set the CPU to use the CB prefix operations.
@@ -48,7 +48,7 @@ pub struct CPU {
     pc: u16,
 }
 
-impl CPU {
+impl Cpu {
     pub(crate) fn get(&self, register: Register) -> u8 {
         match register {
             Register::A => self.a,
@@ -64,9 +64,9 @@ impl CPU {
 
     pub(crate) fn get16(&self, register: WideRegister) -> u16 {
         match register {
-            WideRegister::SP => self.sp,
-            WideRegister::PC => self.pc,
-            WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
+            WideRegister::Sp => self.sp,
+            WideRegister::Pc => self.pc,
+            WideRegister::Af | WideRegister::Bc | WideRegister::De | WideRegister::Hl => {
                 let (high, low) = register.try_into().unwrap();
                 word_to_u16((self.get(high), self.get(low)))
             }
@@ -91,15 +91,15 @@ impl CPU {
 
     pub(crate) fn set16(&mut self, register: WideRegister, value: u16) -> u16 {
         match register {
-            WideRegister::SP => {
+            WideRegister::Sp => {
                 self.sp = value;
                 self.sp
             }
-            WideRegister::PC => {
+            WideRegister::Pc => {
                 self.pc = value;
                 self.pc
             }
-            WideRegister::AF | WideRegister::BC | WideRegister::DE | WideRegister::HL => {
+            WideRegister::Af | WideRegister::Bc | WideRegister::De | WideRegister::Hl => {
                 let (high_byte, low_byte) = u16_to_word(value);
                 let (high, low) = register.try_into().unwrap();
 
@@ -167,7 +167,7 @@ impl CPU {
     }
 }
 
-impl Default for CPU {
+impl Default for Cpu {
     fn default() -> Self {
         Self {
             halted: false,

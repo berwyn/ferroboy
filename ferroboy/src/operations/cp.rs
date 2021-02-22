@@ -1,7 +1,7 @@
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
-    system::{Flags, Register, WideRegister, ALU},
+    system::{Alu, Flags, Register, WideRegister},
     Cartridge, State,
 };
 
@@ -80,7 +80,7 @@ impl Operation for CpOperation {
         let right = match &self.0 {
             CpTarget::Register(r) => state.cpu.get(*r),
             CpTarget::Address => {
-                let address = state.cpu.get16(WideRegister::HL);
+                let address = state.cpu.get16(WideRegister::Hl);
                 state.mmu[address]
             }
             CpTarget::Immediate => state.read_byte()?,

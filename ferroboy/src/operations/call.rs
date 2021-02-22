@@ -90,8 +90,8 @@ impl Disassemble for CallOperation {
 
 impl Operation for CallOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let target = state.cpu.get16(WideRegister::SP) - 2;
-        let program_counter = state.cpu.get16(WideRegister::PC);
+        let target = state.cpu.get16(WideRegister::Sp) - 2;
+        let program_counter = state.cpu.get16(WideRegister::Pc);
 
         let conditional_passed = self
             .0
@@ -109,8 +109,8 @@ impl Operation for CallOperation {
 
             let address = word_to_u16(state.read_word()?);
 
-            state.cpu.set16(WideRegister::SP, target);
-            state.cpu.set16(WideRegister::PC, address);
+            state.cpu.set16(WideRegister::Sp, target);
+            state.cpu.set16(WideRegister::Pc, address);
             state.cpu.increment_clock(24);
         } else {
             state.cpu.increment_clock(12);
@@ -201,8 +201,8 @@ mod tests {
             };
 
             let mut state = State::default();
-            state.cpu.set16(WideRegister::SP, 0xBEEF);
-            state.cpu.set16(WideRegister::PC, 0xDEAD);
+            state.cpu.set16(WideRegister::Sp, 0xBEEF);
+            state.cpu.set16(WideRegister::Pc, 0xDEAD);
             state.load_cartridge(cartridge);
             state
         }
@@ -213,7 +213,7 @@ mod tests {
 
             CallOperation(None).act(&mut state).unwrap();
 
-            assert_eq!(0xBEED, state.cpu.get16(WideRegister::SP));
+            assert_eq!(0xBEED, state.cpu.get16(WideRegister::Sp));
         }
 
         #[test]
@@ -234,7 +234,7 @@ mod tests {
 
             CallOperation(None).act(&mut state).unwrap();
 
-            assert_eq!(0x2020, state.cpu.get16(WideRegister::PC));
+            assert_eq!(0x2020, state.cpu.get16(WideRegister::Pc));
         }
 
         #[test]
@@ -255,7 +255,7 @@ mod tests {
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 
-                assert_eq!(0x2020, state.cpu.get16(WideRegister::PC));
+                assert_eq!(0x2020, state.cpu.get16(WideRegister::Pc));
 
                 // Check that the call noops when the flag is in the incorrect state
                 state = setup();
@@ -265,7 +265,7 @@ mod tests {
 
                 CallOperation(Some(*condition)).act(&mut state).unwrap();
 
-                assert_eq!(0xDEAD, state.cpu.get16(WideRegister::PC));
+                assert_eq!(0xDEAD, state.cpu.get16(WideRegister::Pc));
             }
         }
     }

@@ -3,7 +3,7 @@ use crate::{
     error::OperationError,
     operations::Operation,
     state::State,
-    system::{Cartridge, Flags, WideRegister, ALU},
+    system::{Alu, Cartridge, Flags, WideRegister},
 };
 
 /*
@@ -52,15 +52,15 @@ pub struct Add16Operation(pub WideRegister);
 
 impl Operation for Add16Operation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        if WideRegister::PC.eq(&self.0) {
+        if WideRegister::Pc.eq(&self.0) {
             return Err(OperationError::InvalidWideRegister(self.0).into());
         }
 
-        let target = state.cpu.get16(WideRegister::HL);
+        let target = state.cpu.get16(WideRegister::Hl);
         let source = state.cpu.get16(self.0);
         let (new_value, carry, half_carry) = target.alu_add(source);
 
-        state.cpu.set16(WideRegister::HL, new_value);
+        state.cpu.set16(WideRegister::Hl, new_value);
         state.cpu.increment_clock(8);
 
         state.cpu.clear_flag(Flags::SUBTRACTION);
@@ -92,7 +92,7 @@ mod tests {
 
     #[test]
     fn it_disassembles_properly() {
-        let op = Add16Operation(WideRegister::AF);
+        let op = Add16Operation(WideRegister::Af);
         let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("ADD HL,AF", instruction.to_string());
@@ -101,12 +101,12 @@ mod tests {
     #[test]
     fn it_adds_the_lower_byte() {
         let mut state = State::default();
-        state.cpu.set16(WideRegister::BC, 0x0010);
+        state.cpu.set16(WideRegister::Bc, 0x0010);
 
         assert_eq!(0x00, state.cpu.get(Register::H));
         assert_eq!(0x00, state.cpu.get(Register::L));
 
-        Add16Operation(WideRegister::BC).act(&mut state).unwrap();
+        Add16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::H));
         assert_eq!(0x10, state.cpu.get(Register::L));
@@ -117,12 +117,12 @@ mod tests {
     #[test]
     fn it_adds_the_upper_byte() {
         let mut state = State::default();
-        state.cpu.set16(WideRegister::BC, 0x0F10);
+        state.cpu.set16(WideRegister::Bc, 0x0F10);
 
         assert_eq!(0x00, state.cpu.get(Register::H));
         assert_eq!(0x00, state.cpu.get(Register::L));
 
-        Add16Operation(WideRegister::BC).act(&mut state).unwrap();
+        Add16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
         assert_eq!(0x0F, state.cpu.get(Register::H));
         assert_eq!(0x10, state.cpu.get(Register::L));
@@ -139,7 +139,7 @@ mod tests {
         assert_eq!(0x08, state.cpu.get(Register::H));
         assert_eq!(0x00, state.cpu.get(Register::L));
 
-        Add16Operation(WideRegister::BC).act(&mut state).unwrap();
+        Add16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
         assert_eq!(0x10, state.cpu.get(Register::H));
         assert_eq!(0x00, state.cpu.get(Register::L));
@@ -150,13 +150,13 @@ mod tests {
     #[test]
     fn it_sets_carry() {
         let mut state = State::default();
-        state.cpu.set16(WideRegister::HL, 0xFFFF);
-        state.cpu.set16(WideRegister::BC, 0x0001);
+        state.cpu.set16(WideRegister::Hl, 0xFFFF);
+        state.cpu.set16(WideRegister::Bc, 0x0001);
 
         assert_eq!(0xFF, state.cpu.get(Register::H));
         assert_eq!(0xFF, state.cpu.get(Register::L));
 
-        Add16Operation(WideRegister::BC).act(&mut state).unwrap();
+        Add16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
         assert_eq!(0x00, state.cpu.get(Register::H));
         assert_eq!(0x00, state.cpu.get(Register::L));
@@ -169,7 +169,7 @@ mod tests {
         let mut state = State::default();
         state.cpu.set_flag(Flags::SUBTRACTION);
 
-        Add16Operation(WideRegister::BC).act(&mut state).unwrap();
+        Add16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
         assert!(!state.cpu.has_flag(Flags::SUBTRACTION));
     }

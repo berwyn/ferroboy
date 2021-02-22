@@ -2,7 +2,7 @@ use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
     state::State,
-    system::{Cartridge, Flags, Register, ALU},
+    system::{Alu, Cartridge, Flags, Register},
 };
 
 /// Add the contents of one register to another

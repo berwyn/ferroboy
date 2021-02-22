@@ -68,7 +68,7 @@ mod tests {
 
     #[test]
     fn it_disassembles_correctly() {
-        let inc = Inc16Operation(WideRegister::BC);
+        let inc = Inc16Operation(WideRegister::Bc);
         let inc_instruction = inc.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("INC BC", inc_instruction.to_string());
@@ -77,7 +77,7 @@ mod tests {
     #[test]
     fn it_increments_the_lower_byte() {
         let mut state = State::default();
-        let op = Inc16Operation(WideRegister::BC);
+        let op = Inc16Operation(WideRegister::Bc);
 
         assert_eq!(0x00, state.cpu.get(Register::B));
         assert_eq!(0x00, state.cpu.get(Register::C));
@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn it_increments_the_upper_byte() {
         let mut state = State::default();
-        let op = Inc16Operation(WideRegister::BC);
+        let op = Inc16Operation(WideRegister::Bc);
 
         state.cpu.set(Register::C, 0xFF);
 
@@ -107,7 +107,7 @@ mod tests {
     #[test]
     fn it_wraps_over() {
         let mut state = State::default();
-        let op = Inc16Operation(WideRegister::BC);
+        let op = Inc16Operation(WideRegister::Bc);
 
         state.cpu.set(Register::B, 0xFF);
         state.cpu.set(Register::C, 0xFF);

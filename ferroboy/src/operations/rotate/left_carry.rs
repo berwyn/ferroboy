@@ -6,9 +6,9 @@ use crate::{
 };
 
 #[derive(Copy, Clone, Debug)]
-pub struct RLCAOperation;
+pub struct RlcaOperation;
 
-impl Operation for RLCAOperation {
+impl Operation for RlcaOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let accumulator = state.cpu.get(Register::A);
         let tail = accumulator >> 7;
@@ -27,7 +27,7 @@ impl Operation for RLCAOperation {
     }
 }
 
-impl Disassemble for RLCAOperation {
+impl Disassemble for RlcaOperation {
     fn disassemble(&self, _: &Cartridge, _: usize) -> crate::Result<AssemblyInstruction> {
         self.describe()
     }
@@ -51,7 +51,7 @@ mod tests {
             let mut state = State::default();
             state.cpu.set(Register::A, 0b1111_1110);
 
-            RLCAOperation.act(&mut state).unwrap();
+            RlcaOperation.act(&mut state).unwrap();
 
             assert_eq!(0b1111_1101, state.cpu.get(Register::A));
             assert!(state.cpu.has_flag(Flags::CARRY));
@@ -65,7 +65,7 @@ mod tests {
             state.cpu.set_flag(Flags::SUBTRACTION);
             state.cpu.set_flag(Flags::HALF_CARRY);
 
-            RLCAOperation.act(&mut state).unwrap();
+            RlcaOperation.act(&mut state).unwrap();
 
             assert!(!state.cpu.has_flag(Flags::ZERO));
             assert!(!state.cpu.has_flag(Flags::SUBTRACTION));
@@ -81,7 +81,7 @@ mod tests {
         fn it_disassembles_correctly() {
             assert_eq!(
                 "RLCA",
-                RLCAOperation
+                RlcaOperation
                     .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()

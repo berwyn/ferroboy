@@ -322,7 +322,7 @@ mod tests {
     #[test]
     fn it_loads_a_value_from_memory_to_register() {
         let mut state = State::default();
-        let op = Load8FromMemoryOperation(Register::B, WideRegister::HL);
+        let op = Load8FromMemoryOperation(Register::B, WideRegister::Hl);
 
         state.mmu.mutate(|mmu| mmu[0x5E50] = 0xFE);
         state.cpu.set(Register::H, 0x5E);
@@ -339,11 +339,11 @@ mod tests {
     fn it_writes_a_register_into_memory() {
         let mut state = State::default();
         let op = Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::PC),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Pc),
             Register::A,
         );
 
-        state.cpu.set16(WideRegister::PC, 0x5E50);
+        state.cpu.set16(WideRegister::Pc, 0x5E50);
         state.cpu.set(Register::A, 0xBE);
 
         assert_eq!(0x00, state.mmu[0x5E50]);
@@ -378,7 +378,7 @@ mod tests {
 
     #[test]
     fn it_disassembles_memory_to_register() {
-        let op = Load8FromMemoryOperation(Register::A, WideRegister::BC);
+        let op = Load8FromMemoryOperation(Register::A, WideRegister::Bc);
         let instruction = op.disassemble(&Cartridge::default(), 0).unwrap();
 
         assert_eq!("LD A,(BC)", instruction.to_string());
@@ -387,7 +387,7 @@ mod tests {
     #[test]
     fn it_dissassembles_register_to_memory() {
         let op = Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::A,
         );
         let instruction: AssemblyInstruction = op.disassemble(&Cartridge::default(), 0).unwrap();

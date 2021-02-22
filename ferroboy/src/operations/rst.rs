@@ -38,13 +38,13 @@ pub struct RstOperation(pub u16);
 
 impl Operation for RstOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let address = state.cpu.get16(WideRegister::PC);
-        let target = state.cpu.get16(WideRegister::SP) - 2;
+        let address = state.cpu.get16(WideRegister::Pc);
+        let target = state.cpu.get16(WideRegister::Sp) - 2;
 
         state.mmu[target] = (address >> 8) as u8;
         state.mmu[target + 1] = address as u8;
 
-        state.cpu.set16(WideRegister::PC, self.0);
+        state.cpu.set16(WideRegister::Pc, self.0);
 
         state.cpu.increment_clock(16);
 
@@ -82,8 +82,8 @@ mod tests {
 
         fn setup_state() -> State {
             let mut state = State::default();
-            state.cpu.set16(WideRegister::PC, 0xDEAD);
-            state.cpu.set16(WideRegister::SP, 0xBEF1);
+            state.cpu.set16(WideRegister::Pc, 0xDEAD);
+            state.cpu.set16(WideRegister::Sp, 0xBEF1);
             state
         }
 
@@ -105,7 +105,7 @@ mod tests {
 
             RstOperation(0x38).act(&mut state).unwrap();
 
-            let program_counter = state.cpu.get16(WideRegister::PC);
+            let program_counter = state.cpu.get16(WideRegister::Pc);
 
             assert_eq!(0x38, program_counter);
         }

@@ -10,20 +10,20 @@ use crate::{error::OperationError, system::Register};
 pub enum WideRegister {
     /// Register AF uses the Accumulator as the high byte and
     /// the flags as the low byte, creating a pseudo-16bit register.
-    AF,
+    Af,
     /// Register BC uses Register B as the high byte and register
     /// C as the low byte, creating a pseudo-16bit register.
-    BC,
+    Bc,
     /// Register DE uses Register D as the high byte and register
     /// E as the low byte, creating a pseudo-16bit register.
-    DE,
+    De,
     /// Register HL uses Register H as the high byte and register
     /// L as the low byte, creating a pseudo-16bit register.
-    HL,
+    Hl,
     /// The stack pointer
-    SP,
+    Sp,
     /// The program counter
-    PC,
+    Pc,
 }
 
 impl core::convert::TryFrom<WideRegister> for (Register, Register) {
@@ -31,10 +31,10 @@ impl core::convert::TryFrom<WideRegister> for (Register, Register) {
 
     fn try_from(value: WideRegister) -> core::result::Result<Self, Self::Error> {
         let pair = match value {
-            WideRegister::AF => (Register::A, Register::F),
-            WideRegister::BC => (Register::B, Register::C),
-            WideRegister::DE => (Register::D, Register::E),
-            WideRegister::HL => (Register::H, Register::L),
+            WideRegister::Af => (Register::A, Register::F),
+            WideRegister::Bc => (Register::B, Register::C),
+            WideRegister::De => (Register::D, Register::E),
+            WideRegister::Hl => (Register::H, Register::L),
             _ => return Err(OperationError::InvalidWideRegister(value).into()),
         };
 
@@ -48,12 +48,12 @@ impl std::fmt::Display for WideRegister {
             f,
             "{}",
             match self {
-                WideRegister::AF => "AF",
-                WideRegister::BC => "BC",
-                WideRegister::DE => "DE",
-                WideRegister::HL => "HL",
-                WideRegister::SP => "SP",
-                WideRegister::PC => "PC",
+                WideRegister::Af => "AF",
+                WideRegister::Bc => "BC",
+                WideRegister::De => "DE",
+                WideRegister::Hl => "HL",
+                WideRegister::Sp => "SP",
+                WideRegister::Pc => "PC",
             }
         )
     }

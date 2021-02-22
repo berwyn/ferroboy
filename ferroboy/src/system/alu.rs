@@ -1,5 +1,5 @@
 /// A trait to encapsulate DMG-01 4-bit ALU operations.
-pub trait ALU: Copy + Sized {
+pub trait Alu: Copy + Sized {
     /// Adds a value to this object, returning the new value,
     /// whether a carry happened, and whether a half-carry happened.
     fn alu_add(self, other: Self) -> (Self, bool, bool);
@@ -10,7 +10,7 @@ pub trait ALU: Copy + Sized {
     fn alu_sub(self, other: Self) -> (Self, bool, bool);
 }
 
-impl ALU for u8 {
+impl Alu for u8 {
     fn alu_add(self, other: Self) -> (Self, bool, bool) {
         let result = self.wrapping_add(other);
         let carry = self > result;
@@ -28,7 +28,7 @@ impl ALU for u8 {
     }
 }
 
-impl ALU for u16 {
+impl Alu for u16 {
     fn alu_add(self, other: Self) -> (Self, bool, bool) {
         let result = self.wrapping_add(other);
         let carry = self > result;
