@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["MMU","The Gameboy's memory mapper."]]});
+initSidebarItems({"struct":[["Mmu","The Gameboy's memory mapper."]]});

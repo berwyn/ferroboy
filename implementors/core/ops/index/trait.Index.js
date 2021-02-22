@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["ferroboy"] = [{"text":"impl Index&lt;u16&gt; for MMU","synthetic":false,"types":[]}];
+implementors["ferroboy"] = [{"text":"impl Index&lt;u16&gt; for Mmu","synthetic":false,"types":[]}];
 implementors["gimli"] = [{"text":"impl&lt;'input, Endian&gt; Index&lt;usize&gt; for EndianSlice&lt;'input, Endian&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Endian: Endianity,&nbsp;</span>","synthetic":false,"types":[]},{"text":"impl&lt;'input, Endian&gt; Index&lt;RangeFrom&lt;usize&gt;&gt; for EndianSlice&lt;'input, Endian&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Endian: Endianity,&nbsp;</span>","synthetic":false,"types":[]}];
 implementors["syn"] = [{"text":"impl&lt;T, P&gt; Index&lt;usize&gt; for Punctuated&lt;T, P&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

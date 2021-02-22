@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["RLCAOperation",""]]});
+initSidebarItems({"struct":[["RlcaOperation",""]]});

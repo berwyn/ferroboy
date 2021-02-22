@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `ferroboy/src/system/cartridge.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>cartridge.rs - source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../ferroboy/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../ferroboy/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -336,7 +336,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">assembly</span>::{<span class="ident">AssemblyInstruction</span>, <span class="ident">AssemblyInstructionStream</span>},
     <span class="ident">error</span>::<span class="ident">CartridgeLoadError</span>,
-    <span class="ident">system</span>::{<span class="ident">Config</span>, <span class="ident">MMU</span>},
+    <span class="ident">system</span>::{<span class="ident">Config</span>, <span class="ident">Mmu</span>},
 };
 
 <span class="kw">const</span> <span class="ident">CARTRIDGE_HEADER</span>: [<span class="ident">u8</span>; <span class="number">48</span>] <span class="op">=</span> [
@@ -355,41 +355,41 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CartridgeType</span> {
     <span class="ident">RomOnly</span> <span class="op">=</span> <span class="number">0x00</span>,
 
-    <span class="ident">MBC1</span> <span class="op">=</span> <span class="number">0x01</span>,
-    <span class="ident">MBC1WithRAM</span> <span class="op">=</span> <span class="number">0x02</span>,
-    <span class="ident">MBC1WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0x03</span>,
+    <span class="ident">Mbc1</span> <span class="op">=</span> <span class="number">0x01</span>,
+    <span class="ident">Mbc1WithRam</span> <span class="op">=</span> <span class="number">0x02</span>,
+    <span class="ident">Mbc1WithRamAndBattery</span> <span class="op">=</span> <span class="number">0x03</span>,
 
-    <span class="ident">MBC2</span> <span class="op">=</span> <span class="number">0x05</span>,
-    <span class="ident">MBC2WithBattery</span> <span class="op">=</span> <span class="number">0x06</span>,
+    <span class="ident">Mbc2</span> <span class="op">=</span> <span class="number">0x05</span>,
+    <span class="ident">Mbc2WithBattery</span> <span class="op">=</span> <span class="number">0x06</span>,
 
-    <span class="ident">ROMAndRAM</span> <span class="op">=</span> <span class="number">0x08</span>,
-    <span class="ident">ROMAndRAMAndBattery</span> <span class="op">=</span> <span class="number">0x09</span>,
+    <span class="ident">RomAndRam</span> <span class="op">=</span> <span class="number">0x08</span>,
+    <span class="ident">RomAndRamAndBattery</span> <span class="op">=</span> <span class="number">0x09</span>,
 
-    <span class="ident">MMM01</span> <span class="op">=</span> <span class="number">0x0B</span>,
-    <span class="ident">MMM01WithRAM</span> <span class="op">=</span> <span class="number">0x0C</span>,
-    <span class="ident">MMM01WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0x0D</span>,
+    <span class="ident">Mmm01</span> <span class="op">=</span> <span class="number">0x0B</span>,
+    <span class="ident">Mmm01WithRam</span> <span class="op">=</span> <span class="number">0x0C</span>,
+    <span class="ident">Mmm01WithRamAndBattery</span> <span class="op">=</span> <span class="number">0x0D</span>,
 
-    <span class="ident">MBC3WithTimerAndBattery</span> <span class="op">=</span> <span class="number">0x0F</span>,
-    <span class="ident">MBC3WithTimerAndBatteryAndRAM</span> <span class="op">=</span> <span class="number">0x10</span>,
-    <span class="ident">MBC3</span> <span class="op">=</span> <span class="number">0x11</span>,
-    <span class="ident">MBC3WithRAM</span> <span class="op">=</span> <span class="number">0x12</span>,
-    <span class="ident">MBC3WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0x13</span>,
+    <span class="ident">Mbc3WithTimerAndBattery</span> <span class="op">=</span> <span class="number">0x0F</span>,
+    <span class="ident">Mbc3WithTimerAndBatteryAndRam</span> <span class="op">=</span> <span class="number">0x10</span>,
+    <span class="ident">Mbc3</span> <span class="op">=</span> <span class="number">0x11</span>,
+    <span class="ident">Mbc3WithRam</span> <span class="op">=</span> <span class="number">0x12</span>,
+    <span class="ident">Mbc3WithRamAndBattery</span> <span class="op">=</span> <span class="number">0x13</span>,
 
-    <span class="ident">MBC4</span> <span class="op">=</span> <span class="number">0x15</span>,
-    <span class="ident">MBC4WithRAM</span> <span class="op">=</span> <span class="number">0x16</span>,
-    <span class="ident">MBC4WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0x17</span>,
+    <span class="ident">Mbc4</span> <span class="op">=</span> <span class="number">0x15</span>,
+    <span class="ident">Mbc4WithRam</span> <span class="op">=</span> <span class="number">0x16</span>,
+    <span class="ident">Mbc4WithRamAndBattery</span> <span class="op">=</span> <span class="number">0x17</span>,
 
-    <span class="ident">MBC5</span> <span class="op">=</span> <span class="number">0x19</span>,
-    <span class="ident">MBC5WithRAM</span> <span class="op">=</span> <span class="number">0x1A</span>,
-    <span class="ident">MBC5WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0x1B</span>,
-    <span class="ident">MBC5WithRumble</span> <span class="op">=</span> <span class="number">0x1C</span>,
-    <span class="ident">MBC5WithRumbleAndBattery</span> <span class="op">=</span> <span class="number">0x1D</span>,
-    <span class="ident">MBC5WithRumbleAndBatteryAndRAM</span> <span class="op">=</span> <span class="number">0x1E</span>,
+    <span class="ident">Mbc5</span> <span class="op">=</span> <span class="number">0x19</span>,
+    <span class="ident">Mbc5WithRam</span> <span class="op">=</span> <span class="number">0x1A</span>,
+    <span class="ident">Mbc5WithRamAndBattery</span> <span class="op">=</span> <span class="number">0x1B</span>,
+    <span class="ident">Mbc5WithRumble</span> <span class="op">=</span> <span class="number">0x1C</span>,
+    <span class="ident">Mbc5WithRumbleAndBattery</span> <span class="op">=</span> <span class="number">0x1D</span>,
+    <span class="ident">Mbc5WithRumbleAndBatteryAndRam</span> <span class="op">=</span> <span class="number">0x1E</span>,
 
     <span class="ident">PocketCamera</span> <span class="op">=</span> <span class="number">0xFC</span>,
     <span class="ident">BandaiTama5</span> <span class="op">=</span> <span class="number">0xFD</span>,
     <span class="ident">HuC3</span> <span class="op">=</span> <span class="number">0xFE</span>,
-    <span class="ident">HuC1WithRAMAndBattery</span> <span class="op">=</span> <span class="number">0xFF</span>,
+    <span class="ident">HuC1WithRamAndBattery</span> <span class="op">=</span> <span class="number">0xFF</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">CartridgeType</span> {
@@ -397,41 +397,41 @@
         <span class="kw">match</span> <span class="ident">byte</span> {
             <span class="number">0x00</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">RomOnly</span>),
 
-            <span class="number">0x01</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC1</span>),
-            <span class="number">0x02</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC1WithRAM</span>),
-            <span class="number">0x03</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC1WithRAMAndBattery</span>),
+            <span class="number">0x01</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc1</span>),
+            <span class="number">0x02</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc1WithRam</span>),
+            <span class="number">0x03</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc1WithRamAndBattery</span>),
 
-            <span class="number">0x05</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC2</span>),
-            <span class="number">0x06</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC2WithBattery</span>),
+            <span class="number">0x05</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc2</span>),
+            <span class="number">0x06</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc2WithBattery</span>),
 
-            <span class="number">0x08</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">ROMAndRAM</span>),
-            <span class="number">0x09</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">ROMAndRAMAndBattery</span>),
+            <span class="number">0x08</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">RomAndRam</span>),
+            <span class="number">0x09</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">RomAndRamAndBattery</span>),
 
-            <span class="number">0x0B</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MMM01</span>),
-            <span class="number">0x0C</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MMM01WithRAM</span>),
-            <span class="number">0x0D</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MMM01WithRAMAndBattery</span>),
+            <span class="number">0x0B</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mmm01</span>),
+            <span class="number">0x0C</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mmm01WithRam</span>),
+            <span class="number">0x0D</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mmm01WithRamAndBattery</span>),
 
-            <span class="number">0x0F</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC3WithTimerAndBattery</span>),
-            <span class="number">0x10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC3WithTimerAndBatteryAndRAM</span>),
-            <span class="number">0x11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC3</span>),
-            <span class="number">0x12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC3WithRAM</span>),
-            <span class="number">0x13</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC3WithRAMAndBattery</span>),
+            <span class="number">0x0F</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc3WithTimerAndBattery</span>),
+            <span class="number">0x10</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc3WithTimerAndBatteryAndRam</span>),
+            <span class="number">0x11</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc3</span>),
+            <span class="number">0x12</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc3WithRam</span>),
+            <span class="number">0x13</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc3WithRamAndBattery</span>),
 
-            <span class="number">0x15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC4</span>),
-            <span class="number">0x16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC4WithRAM</span>),
-            <span class="number">0x17</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC4WithRAMAndBattery</span>),
+            <span class="number">0x15</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc4</span>),
+            <span class="number">0x16</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc4WithRam</span>),
+            <span class="number">0x17</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc4WithRamAndBattery</span>),
 
-            <span class="number">0x19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5</span>),
-            <span class="number">0x1A</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5WithRAM</span>),
-            <span class="number">0x1B</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5WithRAMAndBattery</span>),
-            <span class="number">0x1C</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5WithRumble</span>),
-            <span class="number">0x1D</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5WithRumbleAndBattery</span>),
-            <span class="number">0x1E</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">MBC5WithRumbleAndBatteryAndRAM</span>),
+            <span class="number">0x19</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5</span>),
+            <span class="number">0x1A</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5WithRam</span>),
+            <span class="number">0x1B</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5WithRamAndBattery</span>),
+            <span class="number">0x1C</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5WithRumble</span>),
+            <span class="number">0x1D</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5WithRumbleAndBattery</span>),
+            <span class="number">0x1E</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">Mbc5WithRumbleAndBatteryAndRam</span>),
 
             <span class="number">0xFC</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">PocketCamera</span>),
             <span class="number">0xFD</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">BandaiTama5</span>),
             <span class="number">0xFE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">HuC3</span>),
-            <span class="number">0xFF</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">HuC1WithRAMAndBattery</span>),
+            <span class="number">0xFF</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">HuC1WithRamAndBattery</span>),
 
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">CartridgeLoadError</span>::<span class="ident">InvalidMapper</span>.<span class="ident">into</span>()),
         }
@@ -462,7 +462,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">load_banks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mmu</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MMU</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">load_banks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mmu</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Mmu</span>) {
         <span class="ident">mmu</span>.<span class="ident">bank0_mut</span>().<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>[<span class="number">0x0000</span>..<span class="op">=</span><span class="number">0x3FFF</span>]);
         <span class="ident">mmu</span>.<span class="ident">bank1_mut</span>().<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>[<span class="number">0x4000</span>..<span class="op">=</span><span class="number">0x7FFF</span>])
     }
