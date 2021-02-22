@@ -3,6 +3,30 @@ name: Rust
 on: [push]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: Setup up a Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: beta
+          components: clippy, rustfmt
+          default: true
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+      - name: clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features --all-targets
+
   build:
     strategy:
       matrix:
@@ -26,16 +50,6 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-      - name: Format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: -- --check
-      - name: Lint
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --all-targets
       - name: Test
         uses: actions-rs/cargo@v1
         with:
