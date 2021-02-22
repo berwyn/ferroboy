@@ -101,7 +101,7 @@ pub struct JumpRelativeOperation(pub JumpRelativeFlag);
 impl Operation for JumpRelativeOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         let offset = state.read_byte()? as u16;
-        let program_counter = state.cpu.get16(WideRegister::PC);
+        let program_counter = state.cpu.get16(WideRegister::Pc);
 
         match self.0 {
             JumpRelativeFlag::Nop => {

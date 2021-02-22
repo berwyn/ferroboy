@@ -41,17 +41,17 @@ fn leak<T>(value: T) -> &'static T {
 fn load_rank_0_ops(map: &mut OpCodeMap) {
     map.insert(0x00, leak(NopOperation));
 
-    map.insert(0x01, leak(Load16ImmediateOperation(WideRegister::BC)));
+    map.insert(0x01, leak(Load16ImmediateOperation(WideRegister::Bc)));
 
     map.insert(
         0x02,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::BC),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Bc),
             Register::A,
         )),
     );
 
-    map.insert(0x03, leak(Inc16Operation(WideRegister::BC)));
+    map.insert(0x03, leak(Inc16Operation(WideRegister::Bc)));
 
     map.insert(0x04, leak(Inc8Operation(Register::B)));
 
@@ -59,16 +59,16 @@ fn load_rank_0_ops(map: &mut OpCodeMap) {
 
     map.insert(0x06, leak(Load8ImmediateOperation(Register::B)));
 
-    map.insert(0x07, leak(RLCAOperation));
+    map.insert(0x07, leak(RlcaOperation));
 
-    map.insert(0x09, leak(Add16Operation(WideRegister::BC)));
+    map.insert(0x09, leak(Add16Operation(WideRegister::Bc)));
 
     map.insert(
         0x0A,
-        leak(Load8FromMemoryOperation(Register::A, WideRegister::BC)),
+        leak(Load8FromMemoryOperation(Register::A, WideRegister::Bc)),
     );
 
-    map.insert(0x0B, leak(Dec16Operation(WideRegister::BC)));
+    map.insert(0x0B, leak(Dec16Operation(WideRegister::Bc)));
 
     map.insert(0x0C, leak(Inc8Operation(Register::C)));
 
@@ -76,23 +76,23 @@ fn load_rank_0_ops(map: &mut OpCodeMap) {
 
     map.insert(0x0E, leak(Load8ImmediateOperation(Register::C)));
 
-    map.insert(0x0F, leak(RRCAOperation));
+    map.insert(0x0F, leak(RrcaOperation));
 }
 
 fn load_rank_1_ops(map: &mut OpCodeMap) {
     map.insert(0x10, leak(StopOperation));
 
-    map.insert(0x11, leak(Load16ImmediateOperation(WideRegister::DE)));
+    map.insert(0x11, leak(Load16ImmediateOperation(WideRegister::De)));
 
     map.insert(
         0x12,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::DE),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::De),
             Register::A,
         )),
     );
 
-    map.insert(0x13, leak(Inc16Operation(WideRegister::DE)));
+    map.insert(0x13, leak(Inc16Operation(WideRegister::De)));
 
     map.insert(0x14, leak(Inc8Operation(Register::D)));
 
@@ -102,14 +102,14 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
 
     map.insert(0x18, leak(JumpRelativeOperation(JumpRelativeFlag::Nop)));
 
-    map.insert(0x19, leak(Add16Operation(WideRegister::DE)));
+    map.insert(0x19, leak(Add16Operation(WideRegister::De)));
 
     map.insert(
         0x1A,
-        leak(Load8FromMemoryOperation(Register::A, WideRegister::DE)),
+        leak(Load8FromMemoryOperation(Register::A, WideRegister::De)),
     );
 
-    map.insert(0x1B, leak(Dec16Operation(WideRegister::DE)));
+    map.insert(0x1B, leak(Dec16Operation(WideRegister::De)));
 
     map.insert(0x1C, leak(Inc8Operation(Register::E)));
 
@@ -121,11 +121,11 @@ fn load_rank_1_ops(map: &mut OpCodeMap) {
 fn load_rank_2_ops(map: &mut OpCodeMap) {
     map.insert(0x20, leak(JumpRelativeOperation(JumpRelativeFlag::NotZero)));
 
-    map.insert(0x21, leak(Load16ImmediateOperation(WideRegister::HL)));
+    map.insert(0x21, leak(Load16ImmediateOperation(WideRegister::Hl)));
 
     // TODO(berwyn): 0x22 ld (hl+), A <-- what is HL+?
 
-    map.insert(0x23, leak(Inc16Operation(WideRegister::HL)));
+    map.insert(0x23, leak(Inc16Operation(WideRegister::Hl)));
 
     map.insert(0x24, leak(Inc8Operation(Register::H)));
 
@@ -135,9 +135,9 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
 
     map.insert(0x28, leak(JumpRelativeOperation(JumpRelativeFlag::Zero)));
 
-    map.insert(0x29, leak(Add16Operation(WideRegister::HL)));
+    map.insert(0x29, leak(Add16Operation(WideRegister::Hl)));
 
-    map.insert(0x2B, leak(Dec16Operation(WideRegister::HL)));
+    map.insert(0x2B, leak(Dec16Operation(WideRegister::Hl)));
 
     map.insert(0x2C, leak(Inc8Operation(Register::L)));
 
@@ -152,17 +152,17 @@ fn load_rank_3_ops(map: &mut OpCodeMap) {
         leak(JumpRelativeOperation(JumpRelativeFlag::NotCarry)),
     );
 
-    map.insert(0x31, leak(Load16ImmediateOperation(WideRegister::SP)));
+    map.insert(0x31, leak(Load16ImmediateOperation(WideRegister::Sp)));
 
     // TODO(berwyn): 0x32 ld (hl-), A <-- what is HL-?
 
-    map.insert(0x33, leak(Inc16Operation(WideRegister::SP)));
+    map.insert(0x33, leak(Inc16Operation(WideRegister::Sp)));
 
     map.insert(0x38, leak(JumpRelativeOperation(JumpRelativeFlag::Carry)));
 
-    map.insert(0x39, leak(Add16Operation(WideRegister::SP)));
+    map.insert(0x39, leak(Add16Operation(WideRegister::Sp)));
 
-    map.insert(0x3B, leak(Dec16Operation(WideRegister::SP)));
+    map.insert(0x3B, leak(Dec16Operation(WideRegister::Sp)));
 
     map.insert(0x3C, leak(Inc8Operation(Register::A)));
 
@@ -204,7 +204,7 @@ fn load_rank_4_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x46,
-        leak(Load8FromMemoryOperation(Register::B, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::B, WideRegister::Hl)),
     );
 
     map.insert(
@@ -244,7 +244,7 @@ fn load_rank_4_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x4E,
-        leak(Load8FromMemoryOperation(Register::C, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::C, WideRegister::Hl)),
     );
 
     map.insert(
@@ -286,7 +286,7 @@ fn load_rank_5_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x56,
-        leak(Load8FromMemoryOperation(Register::D, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::D, WideRegister::Hl)),
     );
 
     map.insert(
@@ -326,7 +326,7 @@ fn load_rank_5_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x5E,
-        leak(Load8FromMemoryOperation(Register::E, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::E, WideRegister::Hl)),
     );
 
     map.insert(
@@ -368,7 +368,7 @@ fn load_rank_6_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x66,
-        leak(Load8FromMemoryOperation(Register::H, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::H, WideRegister::Hl)),
     );
 
     map.insert(
@@ -408,7 +408,7 @@ fn load_rank_6_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x6E,
-        leak(Load8FromMemoryOperation(Register::L, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::L, WideRegister::Hl)),
     );
 
     map.insert(
@@ -421,7 +421,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x70,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::B,
         )),
     );
@@ -429,7 +429,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x71,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::C,
         )),
     );
@@ -437,7 +437,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x72,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::D,
         )),
     );
@@ -445,7 +445,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x73,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::E,
         )),
     );
@@ -453,7 +453,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x74,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::H,
         )),
     );
@@ -461,7 +461,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x75,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::L,
         )),
     );
@@ -471,7 +471,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
     map.insert(
         0x77,
         leak(Load8RegisterToMemoryOperation(
-            Load8RegisterToMemoryTarget::WideRegister(WideRegister::HL),
+            Load8RegisterToMemoryTarget::WideRegister(WideRegister::Hl),
             Register::A,
         )),
     );
@@ -508,7 +508,7 @@ fn load_rank_7_ops(map: &mut OpCodeMap) {
 
     map.insert(
         0x7E,
-        leak(Load8FromMemoryOperation(Register::A, WideRegister::HL)),
+        leak(Load8FromMemoryOperation(Register::A, WideRegister::Hl)),
     );
 
     map.insert(
@@ -581,7 +581,7 @@ fn load_rank_B_ops(map: &mut OpCodeMap) {
 #[allow(non_snake_case)] // `C` is a hex number here, not a letter
 fn load_rank_C_ops(map: &mut OpCodeMap) {
     map.insert(0xC0, leak(RetOperation(Some(RetCondition::NotZero))));
-    map.insert(0xC1, leak(PopOperation(WideRegister::BC)));
+    map.insert(0xC1, leak(PopOperation(WideRegister::Bc)));
 
     map.insert(
         0xC2,
@@ -590,7 +590,7 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
 
     map.insert(0xC3, leak(JumpPositionOperation(JumpPositionFlags::Nop)));
     map.insert(0xC4, leak(CallOperation(Some(CallCondition::NotZero))));
-    map.insert(0xC5, leak(PushOperation(WideRegister::BC)));
+    map.insert(0xC5, leak(PushOperation(WideRegister::Bc)));
 
     map.insert(0xC7, leak(RstOperation(0x00)));
     map.insert(0xC8, leak(RetOperation(Some(RetCondition::Zero))));
@@ -606,7 +606,7 @@ fn load_rank_C_ops(map: &mut OpCodeMap) {
 #[allow(non_snake_case)] // `D` is a hex number here, not a letter
 fn load_rank_D_ops(map: &mut OpCodeMap) {
     map.insert(0xD0, leak(RetOperation(Some(RetCondition::NotCarry))));
-    map.insert(0xD1, leak(PopOperation(WideRegister::DE)));
+    map.insert(0xD1, leak(PopOperation(WideRegister::De)));
 
     map.insert(
         0xD2,
@@ -614,7 +614,7 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
     );
 
     map.insert(0xD4, leak(CallOperation(Some(CallCondition::NotCarry))));
-    map.insert(0xD5, leak(PushOperation(WideRegister::DE)));
+    map.insert(0xD5, leak(PushOperation(WideRegister::De)));
     map.insert(0xD6, leak(SubOperation(SubTarget::Immediate)));
     map.insert(0xD7, leak(RstOperation(0x10)));
     map.insert(0xD8, leak(RetOperation(Some(RetCondition::Carry))));
@@ -627,7 +627,7 @@ fn load_rank_D_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // `E` is a hex number here, not a letter
 fn load_rank_E_ops(map: &mut OpCodeMap) {
-    map.insert(0xE1, leak(PopOperation(WideRegister::DE)));
+    map.insert(0xE1, leak(PopOperation(WideRegister::De)));
 
     map.insert(
         0xE2,
@@ -637,7 +637,7 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
         )),
     );
 
-    map.insert(0xE5, leak(PushOperation(WideRegister::HL)));
+    map.insert(0xE5, leak(PushOperation(WideRegister::Hl)));
 
     map.insert(0xE6, leak(AndOperation(AndTarget::Immediate)));
     map.insert(0xE7, leak(RstOperation(0x20)));
@@ -653,11 +653,11 @@ fn load_rank_E_ops(map: &mut OpCodeMap) {
 
 #[allow(non_snake_case)] // 'F' is a hex number here, not a letter
 fn load_rank_F_ops(map: &mut OpCodeMap) {
-    map.insert(0xF1, leak(PopOperation(WideRegister::HL)));
+    map.insert(0xF1, leak(PopOperation(WideRegister::Hl)));
 
     map.insert(0xF3, leak(DisableInterruptsOperation));
 
-    map.insert(0xF5, leak(PushOperation(WideRegister::AF)));
+    map.insert(0xF5, leak(PushOperation(WideRegister::Af)));
     map.insert(0xF6, leak(OrOperation(OrTarget::Immediate)));
     map.insert(0xF7, leak(RstOperation(0x30)));
 

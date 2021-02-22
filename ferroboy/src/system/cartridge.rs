@@ -5,7 +5,7 @@ use std::io::BufReader;
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionStream},
     error::CartridgeLoadError,
-    system::{Config, MMU},
+    system::{Config, Mmu},
 };
 
 const CARTRIDGE_HEADER: [u8; 48] = [
@@ -24,41 +24,41 @@ const CARTRIDGE_HEADER: [u8; 48] = [
 pub enum CartridgeType {
     RomOnly = 0x00,
 
-    MBC1 = 0x01,
-    MBC1WithRAM = 0x02,
-    MBC1WithRAMAndBattery = 0x03,
+    Mbc1 = 0x01,
+    Mbc1WithRam = 0x02,
+    Mbc1WithRamAndBattery = 0x03,
 
-    MBC2 = 0x05,
-    MBC2WithBattery = 0x06,
+    Mbc2 = 0x05,
+    Mbc2WithBattery = 0x06,
 
-    ROMAndRAM = 0x08,
-    ROMAndRAMAndBattery = 0x09,
+    RomAndRam = 0x08,
+    RomAndRamAndBattery = 0x09,
 
-    MMM01 = 0x0B,
-    MMM01WithRAM = 0x0C,
-    MMM01WithRAMAndBattery = 0x0D,
+    Mmm01 = 0x0B,
+    Mmm01WithRam = 0x0C,
+    Mmm01WithRamAndBattery = 0x0D,
 
-    MBC3WithTimerAndBattery = 0x0F,
-    MBC3WithTimerAndBatteryAndRAM = 0x10,
-    MBC3 = 0x11,
-    MBC3WithRAM = 0x12,
-    MBC3WithRAMAndBattery = 0x13,
+    Mbc3WithTimerAndBattery = 0x0F,
+    Mbc3WithTimerAndBatteryAndRam = 0x10,
+    Mbc3 = 0x11,
+    Mbc3WithRam = 0x12,
+    Mbc3WithRamAndBattery = 0x13,
 
-    MBC4 = 0x15,
-    MBC4WithRAM = 0x16,
-    MBC4WithRAMAndBattery = 0x17,
+    Mbc4 = 0x15,
+    Mbc4WithRam = 0x16,
+    Mbc4WithRamAndBattery = 0x17,
 
-    MBC5 = 0x19,
-    MBC5WithRAM = 0x1A,
-    MBC5WithRAMAndBattery = 0x1B,
-    MBC5WithRumble = 0x1C,
-    MBC5WithRumbleAndBattery = 0x1D,
-    MBC5WithRumbleAndBatteryAndRAM = 0x1E,
+    Mbc5 = 0x19,
+    Mbc5WithRam = 0x1A,
+    Mbc5WithRamAndBattery = 0x1B,
+    Mbc5WithRumble = 0x1C,
+    Mbc5WithRumbleAndBattery = 0x1D,
+    Mbc5WithRumbleAndBatteryAndRam = 0x1E,
 
     PocketCamera = 0xFC,
     BandaiTama5 = 0xFD,
     HuC3 = 0xFE,
-    HuC1WithRAMAndBattery = 0xFF,
+    HuC1WithRamAndBattery = 0xFF,
 }
 
 impl CartridgeType {
@@ -66,41 +66,41 @@ impl CartridgeType {
         match byte {
             0x00 => Ok(Self::RomOnly),
 
-            0x01 => Ok(Self::MBC1),
-            0x02 => Ok(Self::MBC1WithRAM),
-            0x03 => Ok(Self::MBC1WithRAMAndBattery),
+            0x01 => Ok(Self::Mbc1),
+            0x02 => Ok(Self::Mbc1WithRam),
+            0x03 => Ok(Self::Mbc1WithRamAndBattery),
 
-            0x05 => Ok(Self::MBC2),
-            0x06 => Ok(Self::MBC2WithBattery),
+            0x05 => Ok(Self::Mbc2),
+            0x06 => Ok(Self::Mbc2WithBattery),
 
-            0x08 => Ok(Self::ROMAndRAM),
-            0x09 => Ok(Self::ROMAndRAMAndBattery),
+            0x08 => Ok(Self::RomAndRam),
+            0x09 => Ok(Self::RomAndRamAndBattery),
 
-            0x0B => Ok(Self::MMM01),
-            0x0C => Ok(Self::MMM01WithRAM),
-            0x0D => Ok(Self::MMM01WithRAMAndBattery),
+            0x0B => Ok(Self::Mmm01),
+            0x0C => Ok(Self::Mmm01WithRam),
+            0x0D => Ok(Self::Mmm01WithRamAndBattery),
 
-            0x0F => Ok(Self::MBC3WithTimerAndBattery),
-            0x10 => Ok(Self::MBC3WithTimerAndBatteryAndRAM),
-            0x11 => Ok(Self::MBC3),
-            0x12 => Ok(Self::MBC3WithRAM),
-            0x13 => Ok(Self::MBC3WithRAMAndBattery),
+            0x0F => Ok(Self::Mbc3WithTimerAndBattery),
+            0x10 => Ok(Self::Mbc3WithTimerAndBatteryAndRam),
+            0x11 => Ok(Self::Mbc3),
+            0x12 => Ok(Self::Mbc3WithRam),
+            0x13 => Ok(Self::Mbc3WithRamAndBattery),
 
-            0x15 => Ok(Self::MBC4),
-            0x16 => Ok(Self::MBC4WithRAM),
-            0x17 => Ok(Self::MBC4WithRAMAndBattery),
+            0x15 => Ok(Self::Mbc4),
+            0x16 => Ok(Self::Mbc4WithRam),
+            0x17 => Ok(Self::Mbc4WithRamAndBattery),
 
-            0x19 => Ok(Self::MBC5),
-            0x1A => Ok(Self::MBC5WithRAM),
-            0x1B => Ok(Self::MBC5WithRAMAndBattery),
-            0x1C => Ok(Self::MBC5WithRumble),
-            0x1D => Ok(Self::MBC5WithRumbleAndBattery),
-            0x1E => Ok(Self::MBC5WithRumbleAndBatteryAndRAM),
+            0x19 => Ok(Self::Mbc5),
+            0x1A => Ok(Self::Mbc5WithRam),
+            0x1B => Ok(Self::Mbc5WithRamAndBattery),
+            0x1C => Ok(Self::Mbc5WithRumble),
+            0x1D => Ok(Self::Mbc5WithRumbleAndBattery),
+            0x1E => Ok(Self::Mbc5WithRumbleAndBatteryAndRam),
 
             0xFC => Ok(Self::PocketCamera),
             0xFD => Ok(Self::BandaiTama5),
             0xFE => Ok(Self::HuC3),
-            0xFF => Ok(Self::HuC1WithRAMAndBattery),
+            0xFF => Ok(Self::HuC1WithRamAndBattery),
 
             _ => Err(CartridgeLoadError::InvalidMapper.into()),
         }
@@ -131,7 +131,7 @@ impl Cartridge {
         }
     }
 
-    pub(crate) fn load_banks(&self, mmu: &mut MMU) {
+    pub(crate) fn load_banks(&self, mmu: &mut Mmu) {
         mmu.bank0_mut().copy_from_slice(&self.data[0x0000..=0x3FFF]);
         mmu.bank1_mut().copy_from_slice(&self.data[0x4000..=0x7FFF])
     }

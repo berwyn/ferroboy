@@ -65,7 +65,7 @@ pub struct RetOperation(pub Option<RetCondition>);
 
 impl Operation for RetOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
-        let target = state.cpu.get16(WideRegister::SP);
+        let target = state.cpu.get16(WideRegister::Sp);
         let (high, low) = (state.mmu[target], state.mmu[target + 1]);
         let address = word_to_u16((high, low));
 
@@ -98,8 +98,8 @@ impl Operation for RetOperation {
             }
         }
 
-        state.cpu.set16(WideRegister::PC, address);
-        state.cpu.set16(WideRegister::SP, target + 2);
+        state.cpu.set16(WideRegister::Pc, address);
+        state.cpu.set16(WideRegister::Sp, target + 2);
 
         Ok(())
     }
@@ -188,8 +188,8 @@ mod tests {
 
         fn create_state() -> State {
             let mut state = State::default();
-            state.cpu.set16(WideRegister::PC, 0xDEAD);
-            state.cpu.set16(WideRegister::SP, 0xBEEF);
+            state.cpu.set16(WideRegister::Pc, 0xDEAD);
+            state.cpu.set16(WideRegister::Sp, 0xBEEF);
             state.mmu[0xBEEF] = 0xFA;
             state.mmu[0xBEF0] = 0xCE;
             state
@@ -203,13 +203,13 @@ mod tests {
 
             assert_eq!(
                 0xFACE,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It sets the program counter"
             );
 
             assert_eq!(
                 0xBEF1,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It sets the stack pointer"
             );
         }
@@ -225,13 +225,13 @@ mod tests {
 
             assert_eq!(
                 0xDEAD,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEEF,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
 
@@ -243,13 +243,13 @@ mod tests {
 
             assert_eq!(
                 0xFACE,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEF1,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
         }
@@ -265,13 +265,13 @@ mod tests {
 
             assert_eq!(
                 0xDEAD,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEEF,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
 
@@ -283,13 +283,13 @@ mod tests {
 
             assert_eq!(
                 0xFACE,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEF1,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
         }
@@ -305,13 +305,13 @@ mod tests {
 
             assert_eq!(
                 0xDEAD,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEEF,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
 
@@ -323,13 +323,13 @@ mod tests {
 
             assert_eq!(
                 0xFACE,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEF1,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
         }
@@ -345,13 +345,13 @@ mod tests {
 
             assert_eq!(
                 0xDEAD,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEEF,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
 
@@ -363,13 +363,13 @@ mod tests {
 
             assert_eq!(
                 0xFACE,
-                state.cpu.get16(WideRegister::PC),
+                state.cpu.get16(WideRegister::Pc),
                 "It leaves the program counter alone"
             );
 
             assert_eq!(
                 0xBEF1,
-                state.cpu.get16(WideRegister::SP),
+                state.cpu.get16(WideRegister::Sp),
                 "It leaves the stack pointer alone"
             );
         }

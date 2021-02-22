@@ -12,7 +12,7 @@ use crate::Cartridge;
 /// mapped into the RAM at different offsets. This struct does much
 /// the same as the hardware version did, mapping the various memory
 /// addresses to the actual implementors.
-pub struct MMU {
+pub struct Mmu {
     cartridge: Rc<Option<Cartridge>>,
     memory: [u8; 0x10000],
 }
@@ -22,7 +22,7 @@ pub struct MMU {
 // handle the memory that was associated with the GameLink cable, and this class
 // would just defer to it for the appropriate memory range.
 
-impl MMU {
+impl Mmu {
     pub fn new(cartridge: Rc<Option<Cartridge>>) -> Self {
         Self {
             cartridge,
@@ -55,13 +55,13 @@ impl MMU {
     }
 }
 
-impl std::fmt::Debug for MMU {
+impl std::fmt::Debug for Mmu {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "MMU {{ }}")
     }
 }
 
-impl Index<u16> for MMU {
+impl Index<u16> for Mmu {
     type Output = u8;
     fn index(&self, address: u16) -> &Self::Output {
         // TODO: This needs to actually map things :/
@@ -69,7 +69,7 @@ impl Index<u16> for MMU {
     }
 }
 
-impl IndexMut<u16> for MMU {
+impl IndexMut<u16> for Mmu {
     fn index_mut(&mut self, address: u16) -> &mut Self::Output {
         // TODO: This needs to actually map things :/
         &mut self.memory[address as usize]
@@ -77,10 +77,10 @@ impl IndexMut<u16> for MMU {
 }
 
 #[cfg(test)]
-impl MMU {
+impl Mmu {
     pub fn mutate<F>(&mut self, mutator: F)
     where
-        F: FnOnce(&mut MMU),
+        F: FnOnce(&mut Mmu),
     {
         mutator(self);
     }

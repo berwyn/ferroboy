@@ -88,7 +88,7 @@ mod tests {
             m[0x01] = 0xEF;
         });
 
-        let op = Load16ImmediateOperation(WideRegister::BC);
+        let op = Load16ImmediateOperation(WideRegister::Bc);
 
         assert_eq!(0x00, state.cpu.get(Register::B));
         assert_eq!(0x00, state.cpu.get(Register::C));
@@ -106,7 +106,7 @@ mod tests {
             ..Default::default()
         };
 
-        let op = Load16ImmediateOperation(WideRegister::BC);
+        let op = Load16ImmediateOperation(WideRegister::Bc);
 
         assert_eq!("LD BC,$BEEF", op.disassemble(&cartridge, 0)?.to_string());
 

@@ -80,7 +80,7 @@ impl Operation for XorOperation {
         let right = match &self.0 {
             XorTarget::Register(reg) => state.cpu.get(*reg),
             XorTarget::Address => {
-                let address = state.cpu.get16(WideRegister::HL);
+                let address = state.cpu.get16(WideRegister::Hl);
                 state.mmu[address]
             }
             XorTarget::Immediate => state.read_byte()?,

@@ -80,7 +80,7 @@ impl Operation for OrOperation {
         let right = match &self.0 {
             OrTarget::Register(reg) => state.cpu.get(*reg),
             OrTarget::Address => {
-                let address = state.cpu.get16(WideRegister::HL);
+                let address = state.cpu.get16(WideRegister::Hl);
                 state.mmu[address]
             }
             OrTarget::Immediate => state.read_byte()?,

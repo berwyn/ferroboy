@@ -116,7 +116,7 @@ pub struct JumpPositionOperation(pub JumpPositionFlags);
 impl Operation for JumpPositionOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         if JumpPositionFlags::Register.eq(&self.0) {
-            let address = state.cpu.get16(WideRegister::HL);
+            let address = state.cpu.get16(WideRegister::Hl);
             state.jump(address);
             state.cpu.increment_clock(4);
 

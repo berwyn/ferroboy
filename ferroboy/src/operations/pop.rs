@@ -45,16 +45,16 @@ pub struct PopOperation(pub WideRegister);
 impl Operation for PopOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
-            WideRegister::PC | WideRegister::SP => {
+            WideRegister::Pc | WideRegister::Sp => {
                 Err(OperationError::InvalidWideRegister(self.0).into())
             }
             _ => {
                 let (high, low) = self.0.try_into().unwrap();
-                let address = state.cpu.get16(WideRegister::SP);
+                let address = state.cpu.get16(WideRegister::Sp);
 
                 state.cpu.set(low, state.mmu[address]);
                 state.cpu.set(high, state.mmu[address + 1]);
-                state.cpu.set16(WideRegister::SP, address + 2);
+                state.cpu.set16(WideRegister::Sp, address + 2);
                 state.cpu.increment_clock(12);
 
                 Ok(())
@@ -90,17 +90,17 @@ mod tests {
             state.mmu[0x00] = 0xEF;
             state.mmu[0x01] = 0xBE;
 
-            PopOperation(WideRegister::HL).act(&mut state).unwrap();
+            PopOperation(WideRegister::Hl).act(&mut state).unwrap();
 
-            assert_eq!(0xBEEF, state.cpu.get16(WideRegister::HL));
-            assert_eq!(0x02, state.cpu.get16(WideRegister::SP));
+            assert_eq!(0xBEEF, state.cpu.get16(WideRegister::Hl));
+            assert_eq!(0x02, state.cpu.get16(WideRegister::Sp));
         }
 
         // TODO(berwyn): Check the message
         #[test]
         #[should_panic]
         fn it_disallows_sp() {
-            PopOperation(WideRegister::SP)
+            PopOperation(WideRegister::Sp)
                 .act(&mut State::default())
                 .unwrap();
         }
@@ -109,7 +109,7 @@ mod tests {
         #[test]
         #[should_panic]
         fn it_disallows_pc() {
-            PopOperation(WideRegister::PC)
+            PopOperation(WideRegister::Pc)
                 .act(&mut State::default())
                 .unwrap();
         }
@@ -122,7 +122,7 @@ mod tests {
         fn it_disassembles_correctly() {
             assert_eq!(
                 "POP HL",
-                PopOperation(WideRegister::HL)
+                PopOperation(WideRegister::Hl)
                     .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()

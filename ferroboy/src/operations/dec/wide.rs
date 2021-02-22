@@ -2,7 +2,7 @@ use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
     state::State,
-    system::{Cartridge, WideRegister, ALU},
+    system::{Alu, Cartridge, WideRegister},
 };
 
 /// Decrements a wide register.
@@ -70,9 +70,9 @@ mod tests {
         #[test]
         fn it_should_decrement_a_register() {
             let mut state = State::default();
-            state.cpu.set16(WideRegister::BC, 0x0100);
+            state.cpu.set16(WideRegister::Bc, 0x0100);
 
-            Dec16Operation(WideRegister::BC).act(&mut state).unwrap();
+            Dec16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
             assert_eq!(0x00, state.cpu.get(Register::B));
             assert_eq!(0xFF, state.cpu.get(Register::C));
@@ -86,7 +86,7 @@ mod tests {
             state.cpu.set_flag(Flags::HALF_CARRY);
             state.cpu.set_flag(Flags::CARRY);
 
-            Dec16Operation(WideRegister::BC).act(&mut state).unwrap();
+            Dec16Operation(WideRegister::Bc).act(&mut state).unwrap();
 
             assert!(state.cpu.has_flag(Flags::ZERO));
             assert!(state.cpu.has_flag(Flags::SUBTRACTION));
@@ -102,7 +102,7 @@ mod tests {
         fn it_disassembles_correctly() {
             assert_eq!(
                 "DEC BC",
-                Dec16Operation(WideRegister::BC)
+                Dec16Operation(WideRegister::Bc)
                     .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()

@@ -43,18 +43,18 @@ pub struct PushOperation(pub WideRegister);
 impl Operation for PushOperation {
     fn act(&self, state: &mut State) -> crate::Result<()> {
         match self.0 {
-            WideRegister::SP | WideRegister::PC => {
+            WideRegister::Sp | WideRegister::Pc => {
                 Err(OperationError::InvalidWideRegister(self.0).into())
             }
             _ => {
                 let (high, low) = self.0.try_into().unwrap();
                 let (high, low) = (state.cpu.get(high), state.cpu.get(low));
 
-                let address = state.cpu.get16(WideRegister::SP);
+                let address = state.cpu.get16(WideRegister::Sp);
                 state.mmu[address - 1] = high;
                 state.mmu[address - 2] = low;
 
-                state.cpu.set16(WideRegister::SP, address - 2);
+                state.cpu.set16(WideRegister::Sp, address - 2);
                 state.cpu.increment_clock(16);
 
                 Ok(())
@@ -87,12 +87,12 @@ mod tests {
         #[test]
         fn it_pushes_a_register_to_the_stack_pointer() {
             let mut state = State::default();
-            state.cpu.set16(WideRegister::HL, 0xBEEF);
-            state.cpu.set16(WideRegister::SP, 0x02);
+            state.cpu.set16(WideRegister::Hl, 0xBEEF);
+            state.cpu.set16(WideRegister::Sp, 0x02);
 
-            PushOperation(WideRegister::HL).act(&mut state).unwrap();
+            PushOperation(WideRegister::Hl).act(&mut state).unwrap();
 
-            assert_eq!(0x00, state.cpu.get16(WideRegister::SP));
+            assert_eq!(0x00, state.cpu.get16(WideRegister::Sp));
             assert_eq!(0xEF, state.mmu[0x00]);
             assert_eq!(0xBE, state.mmu[0x01]);
         }
@@ -100,7 +100,7 @@ mod tests {
         #[test]
         #[should_panic]
         fn it_disallows_sp() {
-            PushOperation(WideRegister::SP)
+            PushOperation(WideRegister::Sp)
                 .act(&mut State::default())
                 .unwrap();
         }
@@ -108,7 +108,7 @@ mod tests {
         #[test]
         #[should_panic]
         fn it_disallows_pc() {
-            PushOperation(WideRegister::PC)
+            PushOperation(WideRegister::Pc)
                 .act(&mut State::default())
                 .unwrap();
         }
@@ -121,7 +121,7 @@ mod tests {
         fn it_disassembles_correctly() {
             assert_eq!(
                 "PUSH HL",
-                PushOperation(WideRegister::HL)
+                PushOperation(WideRegister::Hl)
                     .disassemble(&Cartridge::default(), 0)
                     .unwrap()
                     .to_string()

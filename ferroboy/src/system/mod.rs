@@ -6,14 +6,14 @@ mod mmu;
 mod opcodes;
 mod register;
 
-pub use alu::ALU;
+pub use alu::Alu;
 pub use cartridge::Cartridge;
 pub use cartridge::CartridgeBuilder;
 pub use cartridge::CartridgeType;
 pub use config::Config;
 pub use config::ConfigBuilder;
+pub use cpu::Cpu;
 pub use cpu::Flags;
-pub use cpu::CPU;
-pub use mmu::MMU;
+pub use mmu::Mmu;
 pub use opcodes::OPCODES;
 pub use register::{Register, WideRegister};

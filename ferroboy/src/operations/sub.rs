@@ -1,7 +1,7 @@
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
-    system::{Flags, Register, WideRegister, ALU},
+    system::{Alu, Flags, Register, WideRegister},
     Cartridge, State,
 };
 
@@ -61,7 +61,7 @@ impl Operation for SubOperation {
         let right = match &self.0 {
             SubTarget::Register(reg) => state.cpu.get(*reg),
             SubTarget::Address => {
-                let address = state.cpu.get16(WideRegister::HL);
+                let address = state.cpu.get16(WideRegister::Hl);
                 state.mmu[address]
             }
             SubTarget::Immediate => state.read_byte()?,

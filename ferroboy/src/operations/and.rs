@@ -64,7 +64,7 @@ impl Operation for AndOperation {
         let right = match &self.0 {
             AndTarget::Register(reg) => state.cpu.get(*reg),
             AndTarget::Address => {
-                let address = state.cpu.get16(WideRegister::HL);
+                let address = state.cpu.get16(WideRegister::Hl);
                 state.mmu[address]
             }
             AndTarget::Immediate => state.read_byte()?,

@@ -1,7 +1,7 @@
 use crate::{
     assembly::{AssemblyInstruction, AssemblyInstructionBuilder, Disassemble},
     operations::Operation,
-    system::{Flags, Register, ALU},
+    system::{Alu, Flags, Register},
 };
 
 /// Decrements a register.

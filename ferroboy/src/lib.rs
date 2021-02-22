@@ -43,7 +43,7 @@ pub fn start(state: &mut State) -> Result<()> {
 /// In an ideal world, this should be done at the clock rate of the Gameboy, but technically
 /// can be done at any rate.
 pub fn tick(state: &mut State) -> Result<&'static dyn crate::operations::Operation> {
-    let address = state.cpu.get16(WideRegister::PC);
+    let address = state.cpu.get16(WideRegister::Pc);
     let opcode = state.mmu[address];
 
     state.increment_program_counter()?;
