@@ -10,7 +10,7 @@ introspection = []
 
 [dependencies]
 bitflags = "1.2.1"
-once_cell = "1.6.0"
+once_cell = "1.7.0"
 thiserror = "1.0.24"
 
 [dev-dependencies]
