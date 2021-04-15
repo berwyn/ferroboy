@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["ferroboy_core"] = [{"text":"impl Core for FerroboyCore","synthetic":false,"types":[]}];
+implementors["ferroboy_core"] = [{"text":"impl <a class=\"trait\" href=\"libretro_backend/trait.Core.html\" title=\"trait libretro_backend::Core\">Core</a> for <a class=\"struct\" href=\"ferroboy_core/ferroboy_core/struct.FerroboyCore.html\" title=\"struct ferroboy_core::ferroboy_core::FerroboyCore\">FerroboyCore</a>","synthetic":false,"types":["ferroboy_core::ferroboy_core::FerroboyCore"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
