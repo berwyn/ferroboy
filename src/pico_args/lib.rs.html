@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/pico-args-0.4.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/pico-args-0.4.1/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
 <link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../pico_args/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
@@ -768,6 +768,41 @@
 <span id="765">765</span>
 <span id="766">766</span>
 <span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/*!
 An ultra simple CLI arguments parser.
@@ -776,7 +811,7 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
 
 - No help generation.
 - Only flags, options, free arguments and subcommands are supported.
-- No combined flags (like `-vvv`, `-abc` or `-j1`).
+- No combined flags (like `-vvv` or `-abc`).
 - Options can be separated by a space, `=` or nothing. See build features.
 - Arguments can be in any order.
 - Non UTF-8 arguments are supported.
@@ -794,9 +829,12 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
   If `eq-separator` is enabled, then it takes precedence and the &#39;=&#39; is not included.&lt;br/&gt;
   If `eq-separator` is disabled, then `-K=value` gives an error instead of returning `&quot;=value&quot;`.&lt;br/&gt;
   The optional space is only applicable for short keys because `--keyvalue` would be ambiguous.
+
+- `combined-flags`
+  Allows combination of flags, e.g. `-abc` instead of `-a -b -c`. If `short-space-opt` or `eq-separator` are enabled, you must parse flags after values, to prevent ambiguities.
 */</span>
 
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/pico-args/0.4.0&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/pico-args/0.4.1&quot;</span>)]</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
@@ -885,11 +923,11 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
         <span class="ident">Arguments</span>(<span class="ident">args</span>)
     }
 
-    <span class="doccomment">/// Creates a parser from [`env::args`].</span>
+    <span class="doccomment">/// Creates a parser from [`env::args_os`].</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The executable path will be removed.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [`env::args`]: https://doc.rust-lang.org/stable/std/env/fn.args.html</span>
+    <span class="doccomment">/// [`env::args_os`]: https://doc.rust-lang.org/stable/std/env/fn.args_os.html</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_env</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">args</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">env</span>::<span class="ident">args_os</span>().<span class="ident">collect</span>();
         <span class="ident">args</span>.<span class="ident">remove</span>(<span class="number">0</span>);
@@ -935,6 +973,26 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
             <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="ident">idx</span>);
             <span class="bool-val">true</span>
         } <span class="kw">else</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;combined-flags&quot;</span>)]</span>
+            <span class="comment">// Combined flags only work of the short flag is a single character</span>
+            {
+                <span class="kw">if</span> <span class="ident">keys</span>.<span class="ident">first</span>().<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">2</span> {
+                    <span class="kw">let</span> <span class="ident">short_flag</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">keys</span>.<span class="ident">first</span>()[<span class="number">1</span>..<span class="number">2</span>];
+                    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">item</span>.<span class="ident">to_str</span>() {
+                            <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">starts_with</span>(<span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> <span class="ident">s</span>.<span class="ident">contains</span>(<span class="ident">short_flag</span>) {
+                                <span class="kw">if</span> <span class="ident">s</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">2</span> {
+                                    <span class="comment">// last flag</span>
+                                    <span class="self">self</span>.<span class="number">0</span>.<span class="ident">remove</span>(<span class="ident">n</span>);
+                                } <span class="kw">else</span> {
+                                    <span class="self">self</span>.<span class="number">0</span>[<span class="ident">n</span>] <span class="op">=</span> <span class="ident">s</span>.<span class="ident">replacen</span>(<span class="ident">short_flag</span>, <span class="string">&quot;&quot;</span>, <span class="number">1</span>).<span class="ident">into</span>();
+                                }
+                                <span class="kw">return</span> <span class="bool-val">true</span>;
+                            }
+                        }
+                    }
+                }
+            }
             <span class="bool-val">false</span>
         }
     }
@@ -1521,10 +1579,20 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>; <span class="number">2</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">v</span>[<span class="number">0</span>].<span class="ident">starts_with</span>(<span class="string">&quot;-&quot;</span>), <span class="string">&quot;an argument should start with &#39;-&#39;&quot;</span>);
-        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">v</span>[<span class="number">0</span>].<span class="ident">starts_with</span>(<span class="string">&quot;--&quot;</span>), <span class="string">&quot;the first argument should be short&quot;</span>);
+        <span class="ident">validate_shortflag</span>(<span class="ident">v</span>[<span class="number">0</span>]);
+        <span class="macro">debug_assert</span><span class="macro">!</span>(
+            <span class="op">!</span><span class="ident">v</span>[<span class="number">0</span>].<span class="ident">starts_with</span>(<span class="string">&quot;--&quot;</span>),
+            <span class="string">&quot;the first argument should be short&quot;</span>
+        );
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">v</span>[<span class="number">1</span>].<span class="ident">starts_with</span>(<span class="string">&quot;--&quot;</span>), <span class="string">&quot;the second argument should be long&quot;</span>);
-
         <span class="ident">Keys</span>(<span class="ident">v</span>)
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">validate_shortflag</span>(<span class="ident">short_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars</span> <span class="op">=</span> <span class="ident">short_key</span>[<span class="number">1</span>..].<span class="ident">chars</span>();
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">first</span>) <span class="op">=</span> <span class="ident">chars</span>.<span class="ident">next</span>() {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">short_key</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">2</span> <span class="op">|</span><span class="op">|</span> <span class="ident">chars</span>.<span class="ident">all</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="ident">first</span>), <span class="string">&quot;short keys should be a single character or a repeated character&quot;</span>);
     }
 }
 
@@ -1532,7 +1600,9 @@ If you think that this library doesn&#39;t support some feature, it&#39;s probab
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">starts_with</span>(<span class="string">&quot;-&quot;</span>), <span class="string">&quot;an argument should start with &#39;-&#39;&quot;</span>);
-
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">v</span>.<span class="ident">starts_with</span>(<span class="string">&quot;--&quot;</span>) {
+            <span class="ident">validate_shortflag</span>(<span class="ident">v</span>);
+        }
         <span class="ident">Keys</span>([<span class="ident">v</span>, <span class="string">&quot;&quot;</span>])
     }
 }
