@@ -103,7 +103,7 @@ mod tests {
             .act(&mut state)
             .unwrap();
 
-        assert_eq!(false, state.cpu.has_flag(Flags::SUBTRACTION))
+        assert!(!state.cpu.has_flag(Flags::SUBTRACTION))
     }
 
     #[test]
