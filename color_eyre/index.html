@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `color_eyre` crate."><meta name="keywords" content="rust, rustlang, rust-lang, color_eyre"><title>color_eyre - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script id="default-settings"></script><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="An error report handler for panics and the `eyre` crate for colorful, consistent, and well formatted error reports for all kinds of errors."><meta name="keywords" content="rust, rustlang, rust-lang, color_eyre"><title>color_eyre - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script id="default-settings"></script><script src="../storage.js"></script><script src="../crates.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../color_eyre/index.html'><div class='logo-container rust-logo'><img src='../rust-logo.png' alt='logo'></div></a><p class="location">Crate color_eyre</p><div class="block version"><p>Version 0.5.1</p></div><div class="sidebar-elems"><a id="all-types" href="all.html"><p>See all color_eyre's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class="location"></p><div id="sidebar-vars" data-name="color_eyre" data-ty="mod" data-relpath="../"></div></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
-                <a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Crate <a class="mod" href="">color_eyre</a></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../src/color_eyre/lib.rs.html#1-438" title="goto source code">[src]</a></span></h1><div class="docblock"><p>An error report handler for panics and the <a href="https://docs.rs/eyre"><code>eyre</code></a> crate for colorful, consistent, and well
+<link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../color_eyre/index.html'><div class='logo-container rust-logo'><img src='../rust-logo.png' alt='logo'></div></a><p class="location">Crate color_eyre</p><div class="block version"><p>Version 0.5.1</p></div><div class="sidebar-elems"><a id="all-types" href="all.html"><p>See all color_eyre's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class="location"></p><div id="sidebar-vars" data-name="color_eyre" data-ty="mod" data-relpath="../"></div></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Crate <a class="mod" href="">color_eyre</a></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../src/color_eyre/lib.rs.html#1-438" title="goto source code">[src]</a></span></h1><div class="docblock"><p>An error report handler for panics and the <a href="https://docs.rs/eyre"><code>eyre</code></a> crate for colorful, consistent, and well
 formatted error reports for all kinds of errors.</p>
 <h2 id="tldr" class="section-header"><a href="#tldr">TLDR</a></h2>
 <p><code>color_eyre</code> helps you build error reports that look like this:</p>
@@ -42,7 +42,7 @@ color-eyre = &quot;0.5&quot;
     <span class="comment">// ...</span>
 }</pre></div>
 <h3 id="disabling-tracing-support" class="section-header"><a href="#disabling-tracing-support">Disabling tracing support</a></h3>
-<p>If you don't plan on using <code>tracing_error</code> and <code>SpanTrace</code> you can disable the
+<p>If you don’t plan on using <code>tracing_error</code> and <code>SpanTrace</code> you can disable the
 tracing integration to cut down on unused dependencies:</p>
 <pre><code class="language-toml">[dependencies]
 color-eyre = { version = &quot;0.5&quot;, default-features = false }
@@ -50,7 +50,7 @@ color-eyre = { version = &quot;0.5&quot;, default-features = false }
 <h3 id="disabling-spantrace-capture-by-default" class="section-header"><a href="#disabling-spantrace-capture-by-default">Disabling SpanTrace capture by default</a></h3>
 <p>color-eyre defaults to capturing span traces. This is because <code>SpanTrace</code>
 capture is significantly cheaper than <code>Backtrace</code> capture. However, like
-backtraces, span traces are most useful for debugging applications, and it's
+backtraces, span traces are most useful for debugging applications, and it’s
 not uncommon to want to disable span trace capture by default to keep noise out
 developer.</p>
 <p>To disable span trace capture you must explicitly set one of the env variables
@@ -64,16 +64,16 @@ that regulate <code>SpanTrace</code> capture to <code>&quot;0&quot;</code>:</p>
 <p>In debug mode <code>color-eyre</code> behaves noticably worse than <code>eyre</code>. This is caused
 by the fact that <code>eyre</code> uses <code>std::backtrace::Backtrace</code> instead of
 <code>backtrace::Backtrace</code>. The std version of backtrace is precompiled with
-optimizations, this means that whether or not you're in debug mode doesn't
+optimizations, this means that whether or not you’re in debug mode doesn’t
 matter much for how expensive backtrace capture is, it will always be in the
 10s of milliseconds to capture. A debug version of <code>backtrace::Backtrace</code>
-however isn't so lucky, and can take an order of magnitude more time to capture
+however isn’t so lucky, and can take an order of magnitude more time to capture
 a backtrace compared to its std counterpart.</p>
 <p>Cargo <a href="https://doc.rust-lang.org/cargo/reference/profiles.html#overrides">profile
 overrides</a>
 can be used to mitigate this problem. By configuring your project to always
 build <code>backtrace</code> with optimizations you should get the same performance from
-<code>color-eyre</code> that you're used to with <code>eyre</code>. To do so add the following to
+<code>color-eyre</code> that you’re used to with <code>eyre</code>. To do so add the following to
 your Cargo.toml:</p>
 <pre><code class="language-toml">[profile.dev.package.backtrace]
 opt-level = 3
@@ -252,7 +252,7 @@ so stdout ends up being empty and is skipped in the final report. This gives
 us a short and concise error report indicating exactly what was attempted and
 how it failed.</p>
 <h3 id="aggregating-multiple-errors-into-one-report" class="section-header"><a href="#aggregating-multiple-errors-into-one-report">Aggregating multiple errors into one report</a></h3>
-<p>It's not uncommon for programs like batched task runners or parsers to want
+<p>It’s not uncommon for programs like batched task runners or parsers to want
 to return an error with multiple sources. The current version of the error
 trait does not support this use case very well, though there is <a href="https://github.com/rust-lang/rfcs/pull/2895">work being
 done</a> to improve this.</p>
@@ -261,7 +261,7 @@ error trait. <code>color-eyre</code> supports such composition in its error repo
 the <code>Help</code> trait.</p>
 <p>For an example of how to aggregate errors check out <a href="https://github.com/yaahc/color-eyre/blob/master/examples/multiple_errors.rs"><code>examples/multiple_errors.rs</code></a>.</p>
 <h3 id="custom-configuration-for-color-backtrace-for-setting-custom-filters-and-more" class="section-header"><a href="#custom-configuration-for-color-backtrace-for-setting-custom-filters-and-more">Custom configuration for <code>color-backtrace</code> for setting custom filters and more</a></h3>
-<p>The pretty printing for backtraces and span traces isn't actually provided by
+<p>The pretty printing for backtraces and span traces isn’t actually provided by
 <code>color-eyre</code>, but instead comes from its dependencies <a href="https://docs.rs/color-backtrace"><code>color-backtrace</code></a> and
 <a href="https://github.com/yaahc/color-spantrace"><code>color-spantrace</code></a>. <code>color-backtrace</code> in particular has many more features
 than are exported by <code>color-eyre</code>, such as customized color schemes, panic
@@ -280,5 +280,5 @@ and error reporting hooks</p>
 reports and <a href="https://docs.rs/tracing-error"><code>tracing-error</code></a> support.</p>
 </td></tr></table><h2 id="functions" class="section-header"><a href="#functions">Functions</a></h2>
 <table><tr class="module-item"><td><a class="fn" href="fn.install.html" title="color_eyre::install fn">install</a></td><td class="docblock-short"><p>Install the default panic and error report hooks</p>
-</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="color_eyre"></div>
-    <script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="color_eyre" data-search-js="../search-index.js"></div>
+    <script src="../main.js"></script></body></html>
