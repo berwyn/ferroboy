@@ -2,7 +2,8 @@
 name = "ferroboy"
 version = "0.1.0"
 authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 
 [features]
 disassembly = []
@@ -11,11 +12,11 @@ introspection = []
 [dependencies]
 bitflags = "1.3.2"
 once_cell = "1.8.0"
-thiserror = "1.0.29"
+thiserror = "1.0.30"
 
 [dev-dependencies]
 pico-args = "0.4.2"
-pretty_assertions = "0.7.2"
+pretty_assertions = "1.0.0"
 prettytable-rs = "0.8.0"
 
 [[example]]

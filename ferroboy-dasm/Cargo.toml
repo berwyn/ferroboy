@@ -2,7 +2,8 @@
 name = "ferroboy-dasm"
 version = "0.1.0"
 authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 
 [dependencies]
 eyre = "0.6.5"
