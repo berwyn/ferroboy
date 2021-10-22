@@ -95,8 +95,8 @@ mod tests {
 
         op.act(&mut state).unwrap();
 
-        assert_eq!(0xBE, state.cpu.get(Register::B));
-        assert_eq!(0xEF, state.cpu.get(Register::C));
+        assert_eq!(0xBE, state.cpu.get(Register::C));
+        assert_eq!(0xEF, state.cpu.get(Register::B));
     }
 
     #[test]

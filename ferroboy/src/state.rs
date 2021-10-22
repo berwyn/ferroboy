@@ -141,7 +141,7 @@ mod tests {
 
         let word = state.read_word().unwrap();
 
-        assert_eq!((0xBE, 0xEF), word);
+        assert_eq!((0xEF, 0xBE), word);
         assert_eq!(0x02, state.cpu.get16(WideRegister::Pc));
     }
 }
