@@ -4,10 +4,14 @@ use std::sync::{
 };
 
 use druid::{
-    widget::{Flex, Image, Label},
-    AppLauncher, Env, ImageBuf, PlatformError, Widget, WindowDesc,
+    widget::{Button, Flex, Image, Label},
+    AppLauncher, Command, Env, ImageBuf, PlatformError, Target, Widget, WidgetExt, WindowDesc,
 };
 use ferroboy::State;
+
+mod delegate;
+mod selectors;
+mod state;
 
 const DMG_CPU_CLOCK_DURATION: f32 = 1. / 4.194304;
 
@@ -27,7 +31,7 @@ fn main() -> Result<(), PlatformError> {
         )
         .build();
 
-    let main_window = WindowDesc::new(|| ui_builder());
+    let main_window = WindowDesc::new(|| ui_builder()).title("Ferroboy");
 
     let state = Arc::new(RwLock::new(state));
     let target = state.clone();
@@ -60,22 +64,44 @@ fn main() -> Result<(), PlatformError> {
         ));
     });
 
+    {
+        let mut state = state.write().expect("Couldn't write to startup state!");
+        ferroboy::start(&mut state).expect("Couldn't start emulation!");
+    }
+
     AppLauncher::with_window(main_window)
+        .delegate(delegate::TopLevelDelegate)
         .use_simple_logger()
         .launch(state)
 }
 
-fn ui_builder() -> impl Widget<Arc<RwLock<State>>> {
+fn ui_builder() -> impl Widget<state::State> {
+    let data_column = Flex::column()
+        .with_flex_child(step_button(), 1.0)
+        .with_default_spacer()
+        .with_flex_child(register_table(), 1.0)
+        .expand_width();
+
+    Flex::row()
+        .with_child(graphics_buffer())
+        .with_flex_child(data_column, 1.0)
+}
+
+fn graphics_buffer() -> impl Widget<state::State> {
     let pixelbuf: &[u8] = &[0u8; 160 * 144];
 
     let imagebuf = ImageBuf::from_raw(pixelbuf, druid::piet::ImageFormat::Grayscale, 160, 144);
 
-    let image = Image::new(imagebuf);
-
-    Flex::row().with_child(image).with_child(register_table())
+    Image::new(imagebuf)
 }
 
-fn register_table() -> impl Widget<Arc<RwLock<State>>> {
+fn step_button() -> impl Widget<state::State> {
+    Button::new("Step").on_click(|context, _data, _env| {
+        context.submit_command(Command::new(selectors::SELECTOR_STEP, (), Target::Auto))
+    })
+}
+
+fn register_table() -> impl Widget<state::State> {
     let mut widget = Flex::column();
     widget.add_child(Label::new("Narrow"));
 
