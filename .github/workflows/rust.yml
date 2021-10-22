@@ -20,7 +20,7 @@ jobs:
         # Required to build Druid
         run: |
           sudo apt-get update
-          sudo apt-get install -yqq libx11-dev libpanago1.0-dev libxkbcommon-dev libxkbcommon11-dev
+          sudo apt-get install -yqq libx11-dev libpango1.0-dev libxkbcommon-dev libxkbcommon-x11-dev
       - name: Format
         uses: actions-rs/cargo@v1
         with:
