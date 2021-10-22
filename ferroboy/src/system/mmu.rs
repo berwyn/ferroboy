@@ -1,6 +1,7 @@
 use std::{
     ops::{Index, IndexMut},
     rc::Rc,
+    sync::Arc,
 };
 
 use crate::Cartridge;
@@ -13,7 +14,7 @@ use crate::Cartridge;
 /// the same as the hardware version did, mapping the various memory
 /// addresses to the actual implementors.
 pub struct Mmu {
-    cartridge: Rc<Option<Cartridge>>,
+    cartridge: Arc<Option<Cartridge>>,
     memory: [u8; 0x10000],
 }
 
@@ -23,7 +24,7 @@ pub struct Mmu {
 // would just defer to it for the appropriate memory range.
 
 impl Mmu {
-    pub fn new(cartridge: Rc<Option<Cartridge>>) -> Self {
+    pub fn new(cartridge: Arc<Option<Cartridge>>) -> Self {
         Self {
             cartridge,
             memory: [0; 0x10000],

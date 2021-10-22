@@ -1,0 +1,10 @@
+[package]
+name = "ferroboy-desktop"
+version = "0.1.0"
+authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+druid = { version = "0.7.0", features = ["image"] }
+ferroboy = { path = "../ferroboy", features = ["introspection"] }
+pico-args = "0.4.1"

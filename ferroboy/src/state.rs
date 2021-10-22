@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{rc::Rc, sync::Arc};
 
 use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 
@@ -11,7 +11,7 @@ pub struct State {
     pub config: Config,
     pub cpu: Cpu,
     pub mmu: Mmu,
-    pub cartridge: Rc<Option<Cartridge>>,
+    pub cartridge: Arc<Option<Cartridge>>,
 }
 
 impl State {
@@ -20,9 +20,9 @@ impl State {
     }
 
     pub fn load_cartridge(&mut self, cartridge: Cartridge) {
-        let rc = Rc::new(Some(cartridge));
-        self.mmu = Mmu::new(rc.clone());
-        self.cartridge = rc;
+        let cart = Arc::new(Some(cartridge));
+        self.mmu = Mmu::new(cart.clone());
+        self.cartridge = cart;
     }
 
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
@@ -70,7 +70,7 @@ impl State {
 
 impl Default for State {
     fn default() -> Self {
-        let cartridge = Rc::new(None);
+        let cartridge = Arc::new(None);
 
         Self {
             config: Config::default(),
@@ -103,13 +103,13 @@ impl StateBuilder {
     }
 
     pub fn build(self) -> State {
-        let rc = Rc::new(self.cartridge);
+        let cart = Arc::new(self.cartridge);
 
         State {
             config: self.config,
             cpu: Default::default(),
-            mmu: Mmu::new(rc.clone()),
-            cartridge: rc,
+            mmu: Mmu::new(cart.clone()),
+            cartridge: cart,
         }
     }
 }

@@ -3,5 +3,6 @@
 members = [
     "ferroboy",
     "ferroboy-core",
-    "ferroboy-dasm"
+    "ferroboy-dasm",
+    "ferroboy-desktop"
 ]
