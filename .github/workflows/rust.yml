@@ -16,6 +16,11 @@ jobs:
           toolchain: beta
           components: clippy, rustfmt
           default: true
+      - name: Setup X11
+        # Required to build Druid
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yqq libx11-dev libpanago1.0-dev libxkbcommon-dev libxkbcommon11-dev
       - name: Format
         uses: actions-rs/cargo@v1
         with:
@@ -46,6 +51,12 @@ jobs:
           toolchain: ${{ matrix.rust }}
           components: clippy, rustfmt
           default: true
+      - name: Setup X11
+        if: contains(matrix.os, 'ubuntu')
+        # Required to build Druid
+        run: |
+          sudo apt-get update
+          sudo apt-get install -yqq libx11-dev libpanago1.0-dev libxkbcommon-dev libxkbcommon11-dev
       - name: Check
         uses: actions-rs/cargo@v1
         with:
