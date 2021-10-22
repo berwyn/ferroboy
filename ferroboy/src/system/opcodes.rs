@@ -73,7 +73,10 @@ static INTERNAL_OPCODES: &[(u8, &'static dyn Operation)] = &[
     // Rank 2 opcodes
     (0x20, &JumpRelativeOperation(JumpRelativeFlag::NotZero)),
     (0x21, &Load16ImmediateOperation(WideRegister::Hl)),
-    (0x22, &Load8AbsoluteOperation(Load8AbsoluteTarget::HLPositive)),
+    (
+        0x22,
+        &Load8AbsoluteOperation(Load8AbsoluteTarget::HLPositive),
+    ),
     (0x23, &Inc16Operation(WideRegister::Hl)),
     (0x24, &Inc8Operation(Register::H)),
     (0x25, &Dec8Operation(Register::H)),
@@ -88,7 +91,10 @@ static INTERNAL_OPCODES: &[(u8, &'static dyn Operation)] = &[
     // Rank 3 opcodes
     (0x30, &JumpRelativeOperation(JumpRelativeFlag::NotCarry)),
     (0x31, &Load16ImmediateOperation(WideRegister::Sp)),
-    (0x32, &Load8AbsoluteOperation(Load8AbsoluteTarget::HLNegative)),
+    (
+        0x32,
+        &Load8AbsoluteOperation(Load8AbsoluteTarget::HLNegative),
+    ),
     (0x33, &Inc16Operation(WideRegister::Sp)),
     (0x38, &JumpRelativeOperation(JumpRelativeFlag::Carry)),
     (0x39, &Add16Operation(WideRegister::Sp)),
