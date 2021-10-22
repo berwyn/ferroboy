@@ -197,6 +197,51 @@ impl Disassemble for Load8FromMemoryOperation {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+pub enum Load8AbsoluteTarget {
+    HLNegative,
+    HLPositive,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct Load8AbsoluteOperation(pub Load8AbsoluteTarget);
+
+impl Operation for Load8AbsoluteOperation {
+    fn act(&self, state: &mut State) -> crate::Result<()> {
+        let target = state.cpu.get16(WideRegister::Hl);
+        let value = state.cpu.get(Register::A);
+        let new_address = match self.0 {
+            Load8AbsoluteTarget::HLNegative => target - 1,
+            Load8AbsoluteTarget::HLPositive => target + 1,
+        };
+
+        state.mmu[target] = value;
+        state.cpu.set16(WideRegister::Hl, new_address);
+        state.cpu.increment_clock(2);
+
+        Ok(())
+    }
+}
+
+impl Disassemble for Load8AbsoluteOperation {
+    fn disassemble(
+        &self,
+        _cartridge: &Cartridge,
+        _offset: usize,
+    ) -> crate::Result<AssemblyInstruction> {
+        self.describe()
+    }
+
+    // TODO: Only supports LD (HL-), A
+    fn describe(&self) -> crate::Result<AssemblyInstruction> {
+        AssemblyInstructionBuilder::new()
+            .with_command("LD")
+            .with_arg("(HL-)")
+            .with_arg("A")
+            .build()
+    }
+}
+
 // TODO: LD (HL),d8 (0x36)
 // TODO: LD (a16),SP (0x08)
 // TODO: LD (HL+,A) / LD (HL-),A

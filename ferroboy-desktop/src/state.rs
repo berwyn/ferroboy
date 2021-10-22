@@ -1,3 +1,10 @@
-use std::sync::{Arc, RwLock};
+use druid::Data;
 
-pub type State = Arc<RwLock<ferroboy::State>>;
+#[derive(Clone, PartialEq, Eq)]
+pub struct State(pub ferroboy::State);
+
+impl Data for State {
+    fn same(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}

@@ -25,11 +25,12 @@ pub fn graphics_buffer() -> impl Widget<crate::state::State> {
 
 fn step_button() -> impl Widget<crate::state::State> {
     Button::new("Step").on_click(|context, _data, _env| {
+        let handle = context.get_external_handle();
         context.submit_command(Command::new(
             crate::selectors::SELECTOR_STEP,
-            (),
+            handle,
             Target::Auto,
-        ))
+        ));
     })
 }
 
@@ -41,11 +42,7 @@ fn register_table() -> impl Widget<crate::state::State> {
         Flex::row()
             .with_child(Label::new(format!("{}", r)))
             .with_child(Label::new(move |data: &crate::state::State, _env: &Env| {
-                if let Ok(data) = data.read() {
-                    data.cpu.get(r).to_string()
-                } else {
-                    "Err".into()
-                }
+                data.0.cpu.get(r).to_string()
             }))
     }) {
         widget.add_child(child);
@@ -57,11 +54,7 @@ fn register_table() -> impl Widget<crate::state::State> {
         Flex::row()
             .with_child(Label::new(format!("{}", r)))
             .with_child(Label::new(move |data: &crate::state::State, _env: &Env| {
-                if let Ok(data) = data.read() {
-                    data.cpu.get16(r).to_string()
-                } else {
-                    "Err".into()
-                }
+                data.0.cpu.get16(r).to_string()
             }))
     }) {
         widget.add_child(child);

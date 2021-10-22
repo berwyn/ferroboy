@@ -1,6 +1,5 @@
 use std::{
     ops::{Index, IndexMut},
-    rc::Rc,
     sync::Arc,
 };
 
@@ -13,6 +12,7 @@ use crate::Cartridge;
 /// mapped into the RAM at different offsets. This struct does much
 /// the same as the hardware version did, mapping the various memory
 /// addresses to the actual implementors.
+#[derive(Clone, PartialEq, Eq)]
 pub struct Mmu {
     cartridge: Arc<Option<Cartridge>>,
     memory: [u8; 0x10000],

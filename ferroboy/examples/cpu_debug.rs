@@ -25,7 +25,7 @@ pub fn main() {
     loop {
         match tick(&mut state) {
             Ok(_) => {}
-            Err(msg) => panic!(msg),
+            Err(msg) => std::panic::panic_any(msg),
         }
     }
 }

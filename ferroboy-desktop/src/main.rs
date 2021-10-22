@@ -23,8 +23,9 @@ fn main() -> Result<(), PlatformError> {
         )
         .build();
 
-    let state = Arc::new(RwLock::new(state));
-    prep_emulation(&state);
+    let mut state = crate::state::State(state);
+
+    prep_emulation(&mut state);
 
     // If we're in step mode, we don't need to spawn the background thread to
     // step the emulation, since we'll only step when the user asks us to.
@@ -40,29 +41,23 @@ fn main() -> Result<(), PlatformError> {
         .launch(state)
 }
 
-fn prep_emulation(state: &state::State) {
+fn prep_emulation(state: &mut state::State) {
     // TODO: This doesn't actually deal with boot ROM
-    let mut state = state.write().expect("Couldn't write to startup state!");
-    ferroboy::start(&mut state).expect("Couldn't start emulation!");
+    ferroboy::start(&mut state.0).expect("Couldn't start emulation!");
 }
 
+// TODO: This was fine for an Arc but doesn't work like this
 fn run_emulation(state: &state::State) {
-    let target = state.clone();
+    let mut target = state.clone();
 
     std::thread::spawn(move || loop {
         let start = std::time::Instant::now();
 
-        match target.write() {
-            Ok(mut state) => {
-                if state.is_halted() {
-                    break;
-                } else {
-                    ferroboy::tick(&mut state)
-                }
-            }
-            Err(_) => break,
+        if target.0.is_halted() {
+            break;
+        } else {
+            ferroboy::tick(&mut target.0).expect("Unable to step emulation!");
         }
-        .unwrap();
 
         let end = std::time::Instant::now();
         let duration = end - start;

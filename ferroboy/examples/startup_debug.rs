@@ -26,7 +26,7 @@ fn main() {
                         }
                     }
                 }
-                Err(message) => panic!(message),
+                Err(message) => std::panic::panic_any(message),
             }
         }
         Err(_) => panic!("Couldn't open file {}", path),

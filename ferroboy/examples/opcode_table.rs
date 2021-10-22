@@ -2,8 +2,7 @@ use ferroboy::Operation;
 use prettytable::{Cell, Row, Table};
 
 fn print_header(table: &mut Table) {
-    let mut cells: Vec<Cell> = Vec::new();
-    cells.push(Cell::new(""));
+    let mut cells: Vec<Cell> = vec![Cell::new("")];
 
     for value in 0x0..=0xF {
         let text = format!("{:02X}", value);

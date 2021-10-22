@@ -24,7 +24,7 @@ impl Default for Flags {
 }
 
 /// An implementation of the Gameboy's LR35902 CPU.
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cpu {
     halted: bool,
     interrupts_enabled: bool,

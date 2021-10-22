@@ -1,4 +1,4 @@
-use druid::AppDelegate;
+use druid::{AppDelegate, Target};
 
 pub struct TopLevelDelegate;
 
@@ -12,12 +12,12 @@ impl AppDelegate<crate::state::State> for TopLevelDelegate {
         _env: &druid::Env,
     ) -> druid::Handled {
         if cmd.is(crate::selectors::SELECTOR_STEP) {
-            let state = data.clone();
-            let mut state = state
-                .write()
-                .expect("Unable to get handle on state to step!");
+            ferroboy::tick(&mut data.0).expect("Unable to step state!");
 
-            ferroboy::tick(&mut state).expect("Unable to step state!");
+            let handle = cmd.get_unchecked(crate::selectors::SELECTOR_STEP);
+            handle
+                .submit_command(crate::selectors::SELECTOR_STEP_COMPLETE, (), Target::Auto)
+                .expect("Unable to mark step as completed!");
 
             return druid::Handled::Yes;
         }

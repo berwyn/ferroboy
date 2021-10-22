@@ -1,4 +1,4 @@
-use std::{rc::Rc, sync::Arc};
+use std::sync::Arc;
 
 use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 
@@ -6,7 +6,7 @@ use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 ///
 /// This struct serves as the overall wrapper for the emulation system
 /// and holds all the references to the various sub-systems.
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct State {
     pub config: Config,
     pub cpu: Cpu,
