@@ -26,6 +26,20 @@ pub enum WideRegister {
     Pc,
 }
 
+impl WideRegister {
+    pub fn variants() -> impl std::iter::Iterator<Item = WideRegister> {
+        vec![
+            WideRegister::Af,
+            WideRegister::Bc,
+            WideRegister::De,
+            WideRegister::Hl,
+            WideRegister::Sp,
+            WideRegister::Pc,
+        ]
+        .into_iter()
+    }
+}
+
 impl core::convert::TryFrom<WideRegister> for (Register, Register) {
     type Error = crate::Error;
 

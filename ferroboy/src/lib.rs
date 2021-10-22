@@ -7,15 +7,18 @@ pub use crate::{
 };
 
 #[cfg(feature = "introspection")]
-pub use crate::{operations::Operation, system::OPCODES};
+pub use crate::{
+    operations::Operation,
+    system::{Register, WideRegister, OPCODES},
+};
 
 #[cfg(feature = "disassembly")]
 pub use crate::assembly::*;
 
-use crate::{error::Error, system::WideRegister};
+use crate::error::Error;
 
 #[cfg(not(feature = "introspection"))]
-use crate::system::OPCODES;
+use crate::system::{WideRegister, OPCODES};
 
 pub mod error;
 

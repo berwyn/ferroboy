@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 
@@ -6,12 +6,12 @@ use crate::system::{Cartridge, Config, Cpu, Mmu, WideRegister};
 ///
 /// This struct serves as the overall wrapper for the emulation system
 /// and holds all the references to the various sub-systems.
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct State {
     pub config: Config,
     pub cpu: Cpu,
     pub mmu: Mmu,
-    pub cartridge: Rc<Option<Cartridge>>,
+    pub cartridge: Arc<Option<Cartridge>>,
 }
 
 impl State {
@@ -20,9 +20,9 @@ impl State {
     }
 
     pub fn load_cartridge(&mut self, cartridge: Cartridge) {
-        let rc = Rc::new(Some(cartridge));
-        self.mmu = Mmu::new(rc.clone());
-        self.cartridge = rc;
+        let cart = Arc::new(Some(cartridge));
+        self.mmu = Mmu::new(cart.clone());
+        self.cartridge = cart;
     }
 
     pub(crate) fn read_byte(&mut self) -> crate::Result<u8> {
@@ -35,8 +35,8 @@ impl State {
     }
 
     pub(crate) fn read_word(&mut self) -> crate::Result<(u8, u8)> {
-        let high = self.read_byte()?;
         let low = self.read_byte()?;
+        let high = self.read_byte()?;
 
         Ok((high, low))
     }
@@ -70,7 +70,7 @@ impl State {
 
 impl Default for State {
     fn default() -> Self {
-        let cartridge = Rc::new(None);
+        let cartridge = Arc::new(None);
 
         Self {
             config: Config::default(),
@@ -103,13 +103,13 @@ impl StateBuilder {
     }
 
     pub fn build(self) -> State {
-        let rc = Rc::new(self.cartridge);
+        let cart = Arc::new(self.cartridge);
 
         State {
             config: self.config,
             cpu: Default::default(),
-            mmu: Mmu::new(rc.clone()),
-            cartridge: rc,
+            mmu: Mmu::new(cart.clone()),
+            cartridge: cart,
         }
     }
 }
@@ -141,7 +141,7 @@ mod tests {
 
         let word = state.read_word().unwrap();
 
-        assert_eq!((0xBE, 0xEF), word);
+        assert_eq!((0xEF, 0xBE), word);
         assert_eq!(0x02, state.cpu.get16(WideRegister::Pc));
     }
 }

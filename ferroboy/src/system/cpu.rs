@@ -24,7 +24,7 @@ impl Default for Flags {
 }
 
 /// An implementation of the Gameboy's LR35902 CPU.
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Cpu {
     halted: bool,
     interrupts_enabled: bool,
@@ -49,7 +49,7 @@ pub struct Cpu {
 }
 
 impl Cpu {
-    pub(crate) fn get(&self, register: Register) -> u8 {
+    pub fn get(&self, register: Register) -> u8 {
         match register {
             Register::A => self.a,
             Register::F => self.f.bits,
@@ -62,7 +62,7 @@ impl Cpu {
         }
     }
 
-    pub(crate) fn get16(&self, register: WideRegister) -> u16 {
+    pub fn get16(&self, register: WideRegister) -> u16 {
         match register {
             WideRegister::Sp => self.sp,
             WideRegister::Pc => self.pc,

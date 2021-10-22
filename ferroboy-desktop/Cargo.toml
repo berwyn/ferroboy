@@ -1,12 +1,11 @@
 [package]
-name = "ferroboy-dasm"
+name = "ferroboy-desktop"
 version = "0.1.0"
 authors = ["berwyn <berwyn.codeweaver@gmail.com>"]
 edition = "2021"
 rust-version = "1.56"
 
 [dependencies]
-eyre = "0.6.5"
-jane-eyre = "0.3.0"
-ferroboy = { path = "../ferroboy" }
+druid = { version = "0.7.0", features = ["image"] }
+ferroboy = { path = "../ferroboy", features = ["introspection"] }
 pico-args = "0.4.2"

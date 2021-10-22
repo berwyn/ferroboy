@@ -20,6 +20,23 @@ pub enum Register {
     L,
 }
 
+impl Register {
+    /// Returns an iterator with all the variants of `Register`
+    pub fn variants() -> impl std::iter::Iterator<Item = Self> {
+        vec![
+            Register::A,
+            Register::B,
+            Register::C,
+            Register::D,
+            Register::E,
+            Register::F,
+            Register::H,
+            Register::L,
+        ]
+        .into_iter()
+    }
+}
+
 impl std::fmt::Display for Register {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(

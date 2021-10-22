@@ -123,7 +123,10 @@ fn load_rank_2_ops(map: &mut OpCodeMap) {
 
     map.insert(0x21, leak(Load16ImmediateOperation(WideRegister::Hl)));
 
-    // TODO(berwyn): 0x22 ld (hl+), A <-- what is HL+?
+    map.insert(
+        0x22,
+        leak(Load8AbsoluteOperation(Load8AbsoluteTarget::HLPositive)),
+    );
 
     map.insert(0x23, leak(Inc16Operation(WideRegister::Hl)));
 
@@ -154,7 +157,10 @@ fn load_rank_3_ops(map: &mut OpCodeMap) {
 
     map.insert(0x31, leak(Load16ImmediateOperation(WideRegister::Sp)));
 
-    // TODO(berwyn): 0x32 ld (hl-), A <-- what is HL-?
+    map.insert(
+        0x32,
+        leak(Load8AbsoluteOperation(Load8AbsoluteTarget::HLNegative)),
+    );
 
     map.insert(0x33, leak(Inc16Operation(WideRegister::Sp)));
 
