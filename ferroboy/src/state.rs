@@ -35,8 +35,8 @@ impl State {
     }
 
     pub(crate) fn read_word(&mut self) -> crate::Result<(u8, u8)> {
-        let high = self.read_byte()?;
         let low = self.read_byte()?;
+        let high = self.read_byte()?;
 
         Ok((high, low))
     }
