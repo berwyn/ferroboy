@@ -6,7 +6,7 @@ edition = "2021"
 rust-version = "1.56"
 
 [dependencies]
-eyre = "0.6.5"
+eyre = "0.6.6"
 jane-eyre = "0.3.0"
 ferroboy = { path = "../ferroboy" }
 pico-args = "0.4.2"
