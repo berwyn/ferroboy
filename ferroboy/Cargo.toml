@@ -16,7 +16,7 @@ thiserror = "1.0.30"
 
 [dev-dependencies]
 pico-args = "0.4.2"
-pretty_assertions = "1.0.0"
+pretty_assertions = "1.2.1"
 prettytable-rs = "0.8.0"
 
 [[example]]
